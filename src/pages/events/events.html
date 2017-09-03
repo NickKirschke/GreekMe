@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-navbar>
+    <ion-buttons start>
+      <button ion-button icon-only>
+            <ion-icon name="notifications-outline"></ion-icon>
+          </button>
+    </ion-buttons>
+    <ion-title>
+      Upcoming Events
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="goToCreateEvent()">
+          <ion-icon name="add"></ion-icon>
+        </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+<ion-content id="page4">
+  <!--  Add ngif with no events <h2 *ngif="eventItems.length"></h2> -->
+  <ion-list no-lines>
+    <!-- (click)="itemSelected(item.$key,item)" -->
+    <button ion-item text-wrap *ngFor="let item of eventItems |  async" class="chat-boxes" (click)="goToEvent(item.$key)">
+      <h2>{{item.name}}</h2>
+      <!-- <ion-note>Happening on: {{item.date | amDifference: today :'days' : true}} days</ion-note> -->
+      <ion-note>Happening on: {{item.date | amDateFormat: 'LL'}}</ion-note>
+      </button>
+  </ion-list>
+</ion-content>

@@ -1,0 +1,67 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      Signup
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content padding style="background:url(assets/img/t2UOwWEDRRKT9RFLZJS8_GM_Master01.png) no-repeat center;background-size:cover;"
+  id="page6">
+  <div id="signup-markdown1" *ngIf="error" class="show-list-numbers-and-dots error-box">
+    <p style="color:#000000;">
+      {{error}}
+    </p>
+  </div>
+  
+    <ion-list id="signup-list2" class="center-form">
+      <form class="input-form"(ngSubmit)="register(user)">
+      <ion-item id="signup-input3" class="ion-item-top">
+        <ion-label>
+          Name
+        </ion-label>
+        <ion-input type="text" placeholder="" name="user name" [(ngModel)]="user.name"></ion-input>
+      </ion-item>
+      <ion-item id="signup-input4" class="ion-item-middle">
+        <ion-label>
+          Email
+        </ion-label>
+        <ion-input type="email" placeholder="" name="user email" [(ngModel)]="user.email"></ion-input>
+      </ion-item>
+      <ion-item id="signup-input7" class="ion-item-middle">
+        <ion-label>
+          Organization ID
+        </ion-label>
+        <ion-input type="text" placeholder="" name="user org ID" [(ngModel)]="user.organization_ID"></ion-input>
+      </ion-item>
+      <ion-item id="signup-input6" class="ion-item-middle">
+        <ion-label>
+          Organization School
+        </ion-label>
+        <ion-input type="text" placeholder="" name="user org school" [(ngModel)]="user.organization_school"></ion-input>
+      </ion-item>
+      <ion-item class="ion-item-middle">
+        <ion-label>Role</ion-label>
+        <ion-select name="user role" [(ngModel)]="user.role">
+          <ion-option value="President">President</ion-option>
+          <ion-option value="Vice President">Vice President</ion-option>
+          <ion-option value="Chair Member">Chair Member</ion-option>
+          <ion-option value="Member">Member</ion-option>
+        </ion-select>
+      </ion-item>
+      <ion-item id="signup-input5" class="ion-item-bottom">
+        <ion-label>
+          Password
+        </ion-label>
+        <ion-input type="password" placeholder="" name="user password" [(ngModel)]="user.password"></ion-input>
+      </ion-item>
+
+      <div class="spacer" style="width:300px;height:47px;" id="signup-spacer2"></div>
+      <button id="signup-button3" ion-button class="button-positive" block>
+      Sign up
+      </button>
+    </form>
+    <button id="signup-button4" ion-button clear block style="color:goldenrod" (click)="goToLogin()">
+        Already have an account?
+      </button>
+    </ion-list>
+</ion-content>

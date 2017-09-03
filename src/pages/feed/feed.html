@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-navbar>
+    <ion-buttons start>
+      <button ion-button icon-only>
+        <ion-icon name="notifications-outline"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>
+      Feed
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="goToComposeFeed()">
+        <ion-icon name="add"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+<ion-content >
+    <!-- <ion-scroll> -->
+      <ion-list>
+  <!-- (click)="itemSelected(item.$key,item)" -->
+        <ion-item text-wrap *ngFor="let item of feedItems |  async"  class="chat-boxes">
+  
+          <ion-avatar item-start>
+            <img src="{{item.avatar_url}}">
+          </ion-avatar>
+          <h2>{{item.name}} {{i}}</h2>
+          <p>{{item.text}}</p>
+          <ion-note item-end>{{item.date | amTimeAgo}}</ion-note>
+        </ion-item>
+      </ion-list>
+  </ion-content>

@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-navbar>
+    <ion-buttons start>
+      <button ion-button icon-only>
+        <ion-icon name="notifications-outline"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>
+      GreekMe
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only *ngIf="validRole" (click)="goToComposeBroadcast()">
+        <ion-icon name="add"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+  <div #fixed ion-fixed class>
+    <img style="display:block;width:100%;height:150px;margin-left:auto;margin-right:auto;" src="{{image}}" />
+  </div>
+</ion-header>
+<ion-content>
+  
+  <!-- <ion-scroll> -->
+    <ion-list style="margin-top:150px;">
+
+      <ion-list-header>Today</ion-list-header>
+<!-- (click)="itemSelected(item.$key,item)" -->
+      <ion-item text-wrap *ngFor="let item of broadcastItems |  async"  class="chat-boxes">
+
+        <ion-avatar item-start>
+          <img src="{{item.avatar_url}}">
+        </ion-avatar>
+        <h2>{{item.name}}</h2>
+        <p>{{item.text}}</p>
+        <ion-note item-end>{{item.date | amTimeAgo}}</ion-note>
+      </ion-item>
+    </ion-list>
+</ion-content>

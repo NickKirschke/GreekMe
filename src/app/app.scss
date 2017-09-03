@@ -1,16 +1,92 @@
-// http://ionicframework.com/docs/theming/
 
+.center-form{
 
-// App Global Sass
-// --------------------------------------------------
-// Put style rules here that you want to apply globally. These
-// styles are for the entire app and not just one component.
-// Additionally, this file can be also used as an entry point
-// to import other Sass files to be included in the output CSS.
-//
-// Shared Sass variables, which can be used to adjust Ionic's
-// default Sass variables, belong in "theme/variables.scss".
-//
-// To declare rules for a specific mode, create a child rule
-// for the .md, .ios, or .wp mode classes. The mode class is
-// automatically applied to the <body> element in the app.
+  width:290px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.input-form {
+  .ion-item-top{
+    background-color: rgba(255,255,255,0.5);
+    border-color: rgba(255,255,255,0);
+    border-radius: 4px 4px 0px 0px;
+  }
+  .ion-item-middle {
+    background-color: rgba(255,255,255,0.5);
+    border-color: rgba(255,255,255,0);
+  }
+  .ion-item-bottom{
+    background-color: rgba(255,255,255,0.5);
+    border-color: rgba(255,255,255,0);
+    border-radius: 0px 0px 4px 4px;
+    }
+   .button-positive{
+    opacity:0.5;
+    background-color:goldenrod;
+    
+  }
+}
+.error-box{
+  padding:10px;
+  // border: 1px solid #e42112;
+  // background-color: #ef473a;
+  border: 1px solid goldenrod;
+  background-color:goldenrod;
+  color: white;
+  border-radius:4px;
+  margin-bottom:10px;
+
+  p{
+    color:white;
+    margin:0px;
+  }
+}
+.top-container{
+  height: calc(100%);
+  overflow:scroll;
+}
+.top-bc{
+  // top: calc(25%);
+  height: calc(75%);
+  overflow:scroll;
+}
+
+.bottom-form{
+  position:absolute;
+  bottom:0px;
+  display:block;
+  width:100%;
+  background-color:white;
+  button{
+    margin:0px !important;
+  }
+}
+.chat-boxes {
+  ion-note {
+    font-size: 12px;
+    align-self: flex-start;
+    margin-top: 14px;
+  }
+}
+.top-event-box {
+  height:40%;
+  width:100%;
+  overflow:scroll;
+}
+.outer-content {
+  ion-list:first-child {
+    margin-top: 32px;
+  }
+  ion-list + ion-list {
+    margin-top: 0;
+  }
+}
+.list-avatar {
+  ion-note {
+    font-size: 12px;
+    align-self: flex-start;
+    margin-top: 14px;
+  }
+}

@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      Login
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content padding style="background:url(assets/img/8d9YHCdTlOXCBqO65zNP_GM_Master01.png) no-repeat center;background-size:cover;" id="page5">
+  <div id="login-markdown1" *ngIf="error" class="show-list-numbers-and-dots error-box">
+    <p style="color:#000000;">{{error}}</p>
+  </div>
+  
+    <ion-list class="center-form" id="login-list1">
+      <form class="input-form" (ngSubmit)="login(user)">
+      <ion-item id="login-input1" class="ion-item-top">
+        <ion-label>Email</ion-label>
+        <ion-input type="email" name="user email"[(ngModel)]="user.email"></ion-input>
+      </ion-item>
+
+      <ion-item id="login-input2" class="ion-item-bottom">
+        <ion-label>
+          Password
+        </ion-label>
+        <ion-input type="password" name="user password" [(ngModel)]="user.password"></ion-input>
+      </ion-item>
+      <div class="spacer" style="height:40px;" id="login-spacer1"></div>
+      <button id="login-button1" ion-button block class="button-positive">
+        Log in
+      </button>
+    </form>
+    <button id="login-button2"ion-button clear style="color:goldenrod;"  block (click)="goToSignup()">Register</button>
+    </ion-list>
+</ion-content>

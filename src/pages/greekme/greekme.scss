@@ -1,0 +1,14 @@
+page-greekme {
+    .no-scroll {
+        .scroll-content {
+            overflow: hidden !important;
+        }
+        ion-list {
+            overflow: auto;
+        }
+    }
+    // .ion-fixed {
+    //     width: 100;
+    // }
+      
+}
