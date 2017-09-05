@@ -55,9 +55,9 @@ export class FirebaseServiceProvider {
   }
 
 // Accesses the event attendingList by key
-getEventAttendingList(key: String,organization_ID: String) {
-  return this.afDB.list('/organization/'+organization_ID+'/event/'+key+'/attendingList/').map(array=> array.reverse()) as FirebaseListObservable<any[]>;
-}
+  getEventAttendingList(key: String,organization_ID: String) {
+    return this.afDB.list('/organization/'+organization_ID+'/event/'+key+'/attendingList/').map(array=> array.reverse()) as FirebaseListObservable<any[]>;
+  }
 
   // Returns the event list for the organization
   getOrgEventList(organization_ID: String) {
@@ -66,7 +66,7 @@ getEventAttendingList(key: String,organization_ID: String) {
 
   // Adds an event to a user's list of events that they are "going" to
   getUserEventList(uid: String) {
-    return this.afDB.list('/users/'+uid+'/eventAttendingList/').map(array=> array.reverse()) as FirebaseListObservable<Event>;
+    return this.afDB.list('/users/'+uid+'/eventAttendingList/').map(array=> array.reverse()) as FirebaseListObservable<any[]>;
   }
 
   // Returns the broadcast list for the greekme page

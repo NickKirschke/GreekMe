@@ -24,7 +24,7 @@ export class EventsPage {
   firebaseStorage = firebase.storage();
   user = {} as User;
   eventItems: FirebaseListObservable<Event>;
-  attendingItems: FirebaseListObservable<Event>;
+  attendingItems: FirebaseListObservable<any[]>;
   constructor(
     private afAuth: AngularFireAuth,
     public navCtrl: NavController,

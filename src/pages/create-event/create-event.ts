@@ -27,7 +27,7 @@ export class CreateEventPage {
   firebaseStorage = firebase.storage();
   user = {} as User;
   eventItems: FirebaseListObservable<Event>;
-  attendingItems: FirebaseListObservable<Event>;
+  attendingItems: FirebaseListObservable<any[]>;
   event = {} as Event;
   
   constructor(
@@ -64,7 +64,8 @@ export class CreateEventPage {
     console.log(newEventKey);
     var updates = {};
      var nameObj = {
-       name: this.user.name
+       name: this.user.name,
+       avatar_url: this.user.avatar_url
      };
      var eventObj = {
        name: this.event.name

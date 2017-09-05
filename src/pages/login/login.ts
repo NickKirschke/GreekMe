@@ -36,8 +36,8 @@ export class LoginPage {
           this.navCtrl.setRoot(TabsControllerPage);
         }
       });
-    } catch(e) {
-      var trimmedMessage = /^.*:\s*(.*)$/.exec(e.message);
+    } catch(error) {
+      var trimmedMessage = /^.*:\s*(.*)$/.exec(error.message);
       this.error = trimmedMessage[1];
     }
   }

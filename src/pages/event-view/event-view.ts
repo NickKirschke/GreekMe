@@ -25,6 +25,10 @@ export class EventViewPage {
   event: FirebaseObjectObservable<Event>;
   attendingList: FirebaseListObservable<any[]>;
   eventInfo: string ='details';
+  attendingStatus: boolean = false;
+  isCreator: boolean = false;
+  eventId;
+  userAttendingList: FirebaseListObservable<any[]>;
   constructor(
     private afAuth: AngularFireAuth,
     public navCtrl: NavController,
@@ -34,27 +38,77 @@ export class EventViewPage {
     private storage: Storage,
     public navParams: NavParams) {
     this.afAuth.authState.subscribe(data=> {
-      var eventId = navParams.get("eventId");
+      this.eventId = navParams.get("eventId");
       if(data && data.email && data.uid) {
          const userGrab =  this.userService.currentUserInfo();
          userGrab.then((result) =>{
            this.user = result as User;           
-           this.event = this.firebaseService.getEventInfo(eventId, this.user.organization_ID);
-           this.attendingList = this.firebaseService.getEventAttendingList(eventId, this.user.organization_ID);
-           this.attendingList.subscribe(console.log);
-           console.log(this.attendingList.$ref);
+           this.event = this.firebaseService.getEventInfo(this.eventId, this.user.organization_ID);
+           this.attendingList = this.firebaseService.getEventAttendingList(this.eventId, this.user.organization_ID);
+           this.userAttendingList = this.firebaseService.getUserEventList(this.user.uid);
+          //  this.attendingList.subscribe(console.log);
+           this.checkCreator();
+           this.checkAttending();
+          //  console.log(this.attendingList.$ref);
         });        
       } else {
         this.app.getRootNavs()[0].setRoot(LoginPage);
       }
     });
-    
   }
   logout() {
     this.afAuth.auth.signOut();
   }
-  isCreator() {
-
-  } 
-
+  checkCreator() {
+    this.event.subscribe(res =>{
+       if (res.creatorUid===this.user.uid) {
+        this.isCreator = true;
+      }
+    });
+  }
+  checkAttending() {
+    try {
+    var isAttending = false;
+    this.attendingList.subscribe(items => {
+      const filtered = items.filter(item =>{
+        if(item.$key === this.user.uid) {
+          console.log("HE IS ATTENDING");
+          isAttending = true;
+         return true;
+        }
+        console.log("IS NOT ATTENDING");
+        return false;
+    })});
+    console.log(isAttending);
+    this.attendingStatus = isAttending;
+    } catch (e) {
+      console.log("sad");
+    }
+  }
+  rsvpYes() {
+    var eventName;
+    // Add event to user attendList, add user to this.eventAttendinglist
+    this.event.subscribe(res => eventName = res.name);
+    var updates = {};
+    var nameObj = {
+      name: this.user.name,
+      avatar_url: this.user.avatar_url
+    };
+    var eventObj = {
+      name: eventName
+    }
+    updates['/organization/'+this.user.organization_ID+'/event/'+this.eventId+'/attendingList/'+this.user.uid] =  nameObj;  
+    updates['/users/'+this.user.uid+'/eventsAttending/'+this.eventId] = eventObj;
+    firebase.database().ref().update(updates).then(function() {
+    console.log("Event Added!");
+    }).catch( function(error) {
+      console.log(error);
+    });
+      this.attendingStatus = true; 
+  }
+  rsvpNo() {
+    this.attendingList.remove(this.user.uid);
+    this.userAttendingList.remove(this.eventId);
+    this.attendingStatus = false;
+  }
 }
