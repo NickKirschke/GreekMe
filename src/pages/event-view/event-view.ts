@@ -74,10 +74,11 @@ export class EventViewPage {
         if(item.$key === this.user.uid) {
           console.log("HE IS ATTENDING");
           isAttending = true;
-         return true;
-        }
+          return true;
+        } else {
         console.log("IS NOT ATTENDING");
         return false;
+        }
     })});
     console.log(isAttending);
     this.attendingStatus = isAttending;

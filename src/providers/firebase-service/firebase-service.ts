@@ -61,7 +61,7 @@ export class FirebaseServiceProvider {
 
   // Returns the event list for the organization
   getOrgEventList(organization_ID: String) {
-    return this.afDB.list('/organization/'+organization_ID+'/event/').map(array=> array.reverse()) as FirebaseListObservable<Event>;
+    return this.afDB.list('/organization/'+organization_ID+'/event/').map(array => array.reverse()) as FirebaseListObservable<Event>;
   }
 
   // Adds an event to a user's list of events that they are "going" to
