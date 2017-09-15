@@ -14,6 +14,7 @@ import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import { CreateEventPage } from '../create-event/create-event';
 import { Event } from "../../models/event";
+import { ToastController } from 'ionic-angular';
 
 @Component({
   selector: 'page-event-view',
@@ -36,7 +37,8 @@ export class EventViewPage {
     private app: App,
     private userService: UserServiceProvider,
     private storage: Storage,
-    public navParams: NavParams) {
+    public navParams: NavParams,
+    public toastCtrl: ToastController) {
     this.afAuth.authState.subscribe(data=> {
       this.eventId = navParams.get("eventId");
       if(data && data.email && data.uid) {
@@ -105,10 +107,26 @@ export class EventViewPage {
       console.log(error);
     });
     this.attendingStatus = true; 
+    this.yesToast();
   }
   rsvpNo() {
+    this.noToast();
     this.attendingList.remove(this.user.uid);
     this.userAttendingList.remove(this.eventId);
     this.attendingStatus = false;
+  }
+  yesToast() {
+    let toast = this.toastCtrl.create({
+      message: 'RSVP YES',
+      duration: 3000
+    });
+    toast.present();
+  }
+  noToast() {
+    let toast = this.toastCtrl.create({
+      message: 'RSVP NO',
+      duration: 3000
+    });
+    toast.present();
   }
 }
