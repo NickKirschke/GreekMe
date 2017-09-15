@@ -7,5 +7,4 @@ export interface Event {
     location: any;
     info: any;
     attendingList: FirebaseListObservable<any[]>;
-    
 }

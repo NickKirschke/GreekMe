@@ -15,6 +15,7 @@ import 'firebase/storage';
 import { CreateEventPage } from '../create-event/create-event';
 import { Event } from "../../models/event";
 import { EventViewPage } from '../event-view/event-view';
+import * as moment from 'moment';
 
 @Component({
   selector: 'page-events',
@@ -23,8 +24,7 @@ import { EventViewPage } from '../event-view/event-view';
 export class EventsPage {
   firebaseStorage = firebase.storage();
   user = {} as User;
-  eventItems: FirebaseListObservable<Event>;
-  attendingItems: FirebaseListObservable<any[]>;
+  eventItems: FirebaseListObservable<any>;
   constructor(
     private afAuth: AngularFireAuth,
     public navCtrl: NavController,
@@ -38,7 +38,7 @@ export class EventsPage {
          userGrab.then((result) =>{
            this.user = result as User;           
            this.eventItems = this.firebaseService.getOrgEventList(this.user.organization_ID);
-           this.attendingItems = this.firebaseService.getUserEventList(this.user.uid);           
+           this.removeOldEvents();
         });        
       } else {
         this.app.getRootNavs()[0].setRoot(LoginPage);
@@ -57,5 +57,17 @@ export class EventsPage {
       eventId: key
     }
     this.navCtrl.push(EventViewPage,paramObj);
+  }
+  removeOldEvents() {
+    // Removes events that are 1 day old.
+    this.eventItems.subscribe(arr =>
+      arr.forEach(element => {
+        var tempDate = moment(element.date);
+        if (tempDate.diff(moment()) < -86400000) {
+          this.eventItems.remove(element.$key);
+        }
+      }));
+    // var datee = moment('2017-08-29T20:59:51-04:00');
+    // console.log(datee.diff(moment()));
   }
 }

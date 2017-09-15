@@ -19,7 +19,7 @@
     <!-- <ion-scroll> -->
       <ion-list>
   <!-- (click)="itemSelected(item.$key,item)" -->
-        <ion-item text-wrap *ngFor="let item of feedItems |  async"  class="chat-boxes">
+        <ion-item text-wrap *ngFor="let item of feedItems |  async | orderBy: '-date' "  class="chat-boxes">
   
           <ion-avatar item-start>
             <img src="{{item.avatar_url}}">

@@ -25,7 +25,7 @@
 
       <ion-list-header>Today</ion-list-header>
 <!-- (click)="itemSelected(item.$key,item)" -->
-      <ion-item text-wrap *ngFor="let item of broadcastItems |  async"  class="chat-boxes">
+      <ion-item text-wrap *ngFor="let item of broadcastItems |  async | orderBy: '-date'"  class="chat-boxes">
 
         <ion-avatar item-start>
           <img src="{{item.avatar_url}}">

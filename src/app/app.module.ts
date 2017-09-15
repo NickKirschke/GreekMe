@@ -28,6 +28,7 @@ import {IonicStorageModule} from "@ionic/storage";
 import {UserServiceProvider } from "../providers/user-service/user-service";
 import { MomentModule } from 'angular2-moment';
 import { EventViewPage } from '../pages/event-view/event-view';
+import {NgPipesModule} from 'ngx-pipes';
 
 
 @NgModule({
@@ -56,7 +57,8 @@ import { EventViewPage } from '../pages/event-view/event-view';
     AngularFireModule.initializeApp(FIREBASE_CONST),
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot(),
-    MomentModule
+    MomentModule,
+    NgPipesModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [

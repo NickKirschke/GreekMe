@@ -56,22 +56,22 @@ export class FirebaseServiceProvider {
 
 // Accesses the event attendingList by key
   getEventAttendingList(key: String,organization_ID: String) {
-    return this.afDB.list('/organization/'+organization_ID+'/event/'+key+'/attendingList/').map(array=> array.reverse()) as FirebaseListObservable<any[]>;
+    return this.afDB.list('/organization/'+organization_ID+'/event/'+key+'/attendingList/').map(array=> array) as FirebaseListObservable<any[]>;
   }
 
   // Returns the event list for the organization
   getOrgEventList(organization_ID: String) {
-    return this.afDB.list('/organization/'+organization_ID+'/event/').map(array => array.reverse()) as FirebaseListObservable<Event>;
+    return this.afDB.list('/organization/'+organization_ID+'/event/').map(array => array) as FirebaseListObservable<Event>;
   }
 
   // Adds an event to a user's list of events that they are "going" to
   getUserEventList(uid: String) {
-    return this.afDB.list('/users/'+uid+'/eventAttendingList/').map(array=> array.reverse()) as FirebaseListObservable<any[]>;
+    return this.afDB.list('/users/'+uid+'/eventAttendingList/').map(array=> array) as FirebaseListObservable<any[]>;
   }
 
   // Returns the broadcast list for the greekme page
   getBroadcastList(organization_ID: String) {
-    return this.afDB.list('/organization/'+organization_ID+'/broadcast/').map(array=> array.reverse()) as FirebaseListObservable<Broadcast>;
+    return this.afDB.list('/organization/'+organization_ID+'/broadcast/').map(array=> array) as FirebaseListObservable<Broadcast>;
   }
 
   addToBroadcastList(broadcast: Broadcast, organization_ID: String) {
@@ -81,7 +81,7 @@ export class FirebaseServiceProvider {
 
   // Returns the feed list for the organization 
   getFeedList(organization_ID: String) {
-    return this.afDB.list('/organization/'+organization_ID+'/message/').map(array=> array.reverse()) as FirebaseListObservable<Broadcast>;
+    return this.afDB.list('/organization/'+organization_ID+'/message/').map(array=> array) as FirebaseListObservable<Broadcast>;
   }
 
   // Adds a feed to the feed list for the organization (Feed uses same structure as broadcast)

@@ -68,19 +68,19 @@ export class EventViewPage {
   }
   checkAttending() {
     try {
+    console.log("Userid: "+this.user.uid);
     var isAttending = false;
     this.attendingList.subscribe(items => {
       const filtered = items.filter(item =>{
-        if(item.$key === this.user.uid) {
-          console.log("HE IS ATTENDING");
+        if(item.$key === this.user.uid) {          
+          console.log("Attending set to true");
           isAttending = true;
           return true;
-        } else {
-        console.log("IS NOT ATTENDING");
-        return false;
-        }
+        } 
+        console.log(item.$key);
+        return false;        
     })});
-    console.log(isAttending);
+    console.log("Attending: " + isAttending);
     this.attendingStatus = isAttending;
     } catch (e) {
       console.log("sad");
@@ -88,7 +88,6 @@ export class EventViewPage {
   }
   rsvpYes() {
     var eventName;
-    // Add event to user attendList, add user to this.eventAttendinglist
     this.event.subscribe(res => eventName = res.name);
     var updates = {};
     var nameObj = {
@@ -105,7 +104,7 @@ export class EventViewPage {
     }).catch( function(error) {
       console.log(error);
     });
-      this.attendingStatus = true; 
+    this.attendingStatus = true; 
   }
   rsvpNo() {
     this.attendingList.remove(this.user.uid);
