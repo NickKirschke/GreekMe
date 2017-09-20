@@ -34,11 +34,10 @@
       <hr/>
       <h6> Details:</h6>
       <p> {{ (event | async)?.info}}</p>
-      <label>RSVP: 
-        <button ion-button small [outline]="!attendingStatus" (click)="rsvpYes()">Going!</button>
-        <button ion-button small [outline]="attendingStatus" (click)="rsvpNo()">Can't Go</button>
-        <button ion-button small *ngIf="isCreator" (click)="editMode()">Edit Event</button> 
-      </label>
+      <label>RSVP:</label>
+      <button ion-button small id="yesButton" [outline]="!attendingStatus" (click)="rsvpYes()">Going!</button>
+      <button ion-button small id="noButton" [outline]="attendingStatus" (click)="rsvpNo()">Can't Go</button>
+      <button ion-button small *ngIf="isCreator" (click)="editMode()">Edit Event</button> 
       
     </ion-list>
 
