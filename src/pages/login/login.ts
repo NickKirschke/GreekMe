@@ -4,7 +4,8 @@ import { SignupPage } from '../signup/signup';
 import {User} from "../../models/user";
 import {AngularFireAuth} from "angularfire2/auth/auth";
 import {FirebaseServiceProvider} from "../../providers/firebase-service/firebase-service";
-import {TabsControllerPage } from "../tabs-controller/tabs-controller"
+import {TabsControllerPage } from "../tabs-controller/tabs-controller";
+import { LoadingController } from 'ionic-angular';
 
 
 @Component({
@@ -17,7 +18,8 @@ export class LoginPage {
   constructor(
     private afAuth: AngularFireAuth,
     public navCtrl: NavController,
-    public firebaseService: FirebaseServiceProvider) {
+    public firebaseService: FirebaseServiceProvider,
+    public loadingCtrl: LoadingController) {
   }
   // Method used to transfer user to signup page
   goToSignup(params){
@@ -27,6 +29,11 @@ export class LoginPage {
   // Method used to log in
   async login(user: User) {
     try { // Checks to see if user credentials exist
+        var loader = this.loadingCtrl.create({
+        content: "Logging in...",
+        dismissOnPageChange: true
+      });
+      loader.present();
       const result = this.afAuth.auth.signInWithEmailAndPassword(user.email, user.password);
       // If successful login, retrieve uid then access user info from db.
       this.afAuth.authState.subscribe(data=> {
@@ -39,6 +46,9 @@ export class LoginPage {
     } catch(error) {
       var trimmedMessage = /^.*:\s*(.*)$/.exec(error.message);
       this.error = trimmedMessage[1];
+    } finally {
+      loader.dismiss();
     }
   }
+
 }

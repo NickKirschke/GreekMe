@@ -69,6 +69,32 @@
     align-self: flex-start;
     margin-top: 14px;
   }
+  .comments {
+    margin-top: 8px;
+    font-size: 12px;
+    .comment-badge {
+      margin-left: 3px;
+      margin-right: 15px;
+    }
+    .like-badge {
+      margin-left: 3px;
+    }
+  }
+}
+#notification-button {            
+  position: relative;
+  width: 42px;
+  top:1px;
+  right: 1px;
+  overflow: visible!important;
+}
+
+.notifications-badge {
+  background-color: red;
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  border-radius: 100%;
 }
 .top-event-box {
   height:40%;
