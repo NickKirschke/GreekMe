@@ -34,7 +34,7 @@ export class LoginPage {
         dismissOnPageChange: true
       });
       loader.present();
-      const result = this.afAuth.auth.signInWithEmailAndPassword(user.email, user.password);
+      const result =  await this.afAuth.auth.signInWithEmailAndPassword(user.email, user.password);
       // If successful login, retrieve uid then access user info from db.
       this.afAuth.authState.subscribe(data=> {
         if (data) {
@@ -43,9 +43,13 @@ export class LoginPage {
           this.navCtrl.setRoot(TabsControllerPage);
         }
       });
-    } catch(error) {
-      var trimmedMessage = /^.*:\s*(.*)$/.exec(error.message);
-      this.error = trimmedMessage[1];
+    } catch(e) {
+      var trimmedMessage = /^.*:\s*(.*)$/.exec(e.message);
+      if(trimmedMessage == null) {
+        this.error = e.message;
+      } else {
+        this.error = trimmedMessage[1];
+      }
     } finally {
       loader.dismiss();
     }

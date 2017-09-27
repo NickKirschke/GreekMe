@@ -123,7 +123,7 @@ export class EventViewPage {
   }
   noToast() {
     let toast = this.toastCtrl.create({
-      message: 'Removed you fro the attending list.',
+      message: 'Removed you from the attending list.',
       duration: 3000
     });
     toast.present();

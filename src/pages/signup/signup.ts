@@ -43,7 +43,7 @@ export class SignupPage {
       if(trimmedMessage == null) {
         this.error = e.message;
       } else {
-      this.error = trimmedMessage[1];
+        this.error = trimmedMessage[1];
       }
     } finally {
       loader.dismiss();
