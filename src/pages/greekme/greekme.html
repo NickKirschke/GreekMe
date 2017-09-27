@@ -34,9 +34,7 @@
         <ion-note item-end>{{item.date | amTimeAgo}}</ion-note>
         <ion-row class ="comments"(click)="itemSelected(item.$key,item)">
           Comments
-          <ion-badge class="comment-badge">3</ion-badge>
-          Likes
-          <ion-badge class="like-badge">2</ion-badge>
+          <ion-badge class="comment-badge">{{item.numOfComments}}</ion-badge>
         </ion-row>
       </ion-item>
     </ion-list>

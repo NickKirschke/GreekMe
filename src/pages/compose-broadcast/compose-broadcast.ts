@@ -55,6 +55,7 @@ export class ComposeBroadcastPage {
         tempBroadcast.avatar_url = this.user.avatar_url;
         tempBroadcast.uid = this.user.uid;
         tempBroadcast.name = this.user.name;
+        tempBroadcast.numOfComments = 0;
         tempBroadcast.date = moment().toISOString();
         this.firebaseService.addToBroadcastList(tempBroadcast,this.user.organization_ID);
         this.navCtrl.setRoot(GreekMePage);

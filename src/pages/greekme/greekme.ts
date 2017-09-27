@@ -41,17 +41,20 @@ export class GreekMePage {
       if(data && data.email && data.uid) {
          const userGrab =  this.userService.currentUserInfo();
          userGrab.then((result) =>{
-           this.user = result as User;           
-           this.broadcastItems = this.firebaseService.getBroadcastList(this.user.organization_ID);
-           if (this.user.role == 'President' || this.user.role == ('Vice President') || this.user.role == ('Chair Member')) {
+          this.user = result as User;           
+          this.broadcastItems = this.firebaseService.getBroadcastList(this.user.organization_ID);
+          if (this.user.role == 'President' || this.user.role == ('Vice President') || this.user.role == ('Chair Member'))
+          {
             this.validRole = true;
-            }
-           const imageGrab = this.firebaseService.getGreetingImage(this.user.organization_ID);
-           imageGrab.then((result) =>{
-             this.image = result;
-           },(error) => {
+          }
+          const imageGrab = this.firebaseService.getGreetingImage(this.user.organization_ID);
+          imageGrab.then((result) =>
+          {
+            this.image = result;
+          },(error) => 
+          {
             this.image ='https://firebasestorage.googleapis.com/v0/b/greekme-7475a.appspot.com/o/GM_Default.png?alt=media&token=6bc30d40-17a2-40bb-9af7-edff78112780';
-           });
+          });
         });        
       } else {
         this.app.getRootNavs()[0].setRoot(LoginPage);
@@ -65,22 +68,16 @@ export class GreekMePage {
   goToComposeBroadcast() {
     this.navCtrl.push(ComposeBroadcastPage);
   }
+
   ionViewDidEnter() {
     this.fixedHeight =this.mapElement.nativeElement.offsetHeight;
     
   }
-  ionViewWillLoad() {
-    
-    // this.afAuth.authState.subscribe(data=> {
-    //   if(data && data.email && data.uid) {
-    //     this.user = this.userService.currentUserInfo();
-    //     // this.userData = this.firebaseService.testGetUserData(data.uid);
-    //
-    //   } else {
-    //     this.app.getRootNavs()[0].setRoot(LoginPage);
-    //   }
-    // });
+
+  calculateCommentLength(orgId: String, broadcastId: String) {
+    this.firebaseService.getCommentListBroadcast(orgId, broadcastId);
   }
+
   itemSelected(key: String, item: Broadcast) {
     item.key = key;
     // console.log(item);

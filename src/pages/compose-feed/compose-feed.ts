@@ -9,8 +9,6 @@ import {User} from "../../models/user";
 import { Broadcast } from "../../models/broadcast";
 import {UserServiceProvider} from "../../providers/user-service/user-service";
 import {FirebaseObjectObservable} from "angularfire2/database/firebase_object_observable";
-import {async} from "rxjs/scheduler/async";
-import {Storage} from "@ionic/storage";
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import * as moment from 'moment';
@@ -31,8 +29,7 @@ export class ComposeFeedPage {
     public navCtrl: NavController,
     public firebaseService: FirebaseServiceProvider,
     private app: App,
-    private userService: UserServiceProvider,
-    private storage: Storage) {
+    private userService: UserServiceProvider) {
       
     
     this.afAuth.authState.subscribe(data=> {

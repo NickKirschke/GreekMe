@@ -1,3 +1,4 @@
+import {FirebaseListObservable} from "angularfire2/database/firebase_list_observable";
 export interface Broadcast {
     avatar_url: any;
     text: any;
@@ -5,4 +6,6 @@ export interface Broadcast {
     date: any;
     uid: any;
     key: any;
+    attendingList: FirebaseListObservable<any[]>;
+    numOfComments: any;
 }

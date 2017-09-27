@@ -90,8 +90,8 @@ export class FirebaseServiceProvider {
     this.afDB.list('/organization/'+organization_ID+'/message/').push(broadcast);
   }
 
-  // Returns the Thread for the broadcast
-  getThreadListBroadcast(organization_ID: String, broadcast_ID: String) {
+  // Returns the comments for the broadcast
+  getCommentListBroadcast(organization_ID: String, broadcast_ID: String) {
     return this.afDB.list('/organization/'+organization_ID+'/broadcast/'+broadcast_ID+'/thread').map(array=> array) as FirebaseListObservable<Broadcast>;
   }
 

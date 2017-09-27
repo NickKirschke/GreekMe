@@ -21,7 +21,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { FirebaseServiceProvider } from '../providers/firebase-service/firebase-service';
 import { HttpModule } from '@angular/http';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
-import {AngularFireModule, FirebaseApp} from 'angularfire2';
+import {AngularFireModule} from 'angularfire2';
 import { FIREBASE_CONST } from "./app.firebase.config";
 import { AngularFireAuthModule } from "angularfire2/auth/auth.module";
 import {IonicStorageModule} from "@ionic/storage";

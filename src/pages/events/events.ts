@@ -1,19 +1,15 @@
-import {Component, ViewChild, ElementRef} from '@angular/core';
-import {NavController, App, NavParams} from 'ionic-angular';
+import {Component} from '@angular/core';
+import {NavController, App} from 'ionic-angular';
 import {FirebaseListObservable} from "angularfire2/database/firebase_list_observable";
 import {FirebaseServiceProvider} from "../../providers/firebase-service/firebase-service";
 import {AngularFireAuth} from "angularfire2/auth/auth";
 import { LoginPage } from "../login/login";
 import {User} from "../../models/user";
-import {Broadcast} from "../../models/broadcast";
 import {UserServiceProvider} from "../../providers/user-service/user-service";
-import {FirebaseObjectObservable} from "angularfire2/database/firebase_object_observable";
-import {async} from "rxjs/scheduler/async";
 import {Storage} from "@ionic/storage";
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import { CreateEventPage } from '../create-event/create-event';
-import { Event } from "../../models/event";
 import { EventViewPage } from '../event-view/event-view';
 import * as moment from 'moment';
 
@@ -30,8 +26,7 @@ export class EventsPage {
     public navCtrl: NavController,
     public firebaseService: FirebaseServiceProvider,
     private app: App,
-    private userService: UserServiceProvider,
-    private storage: Storage) {
+    private userService: UserServiceProvider) {
     this.afAuth.authState.subscribe(data=> {
       if(data && data.email && data.uid) {
          const userGrab =  this.userService.currentUserInfo();
