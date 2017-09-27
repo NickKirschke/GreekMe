@@ -6,7 +6,8 @@ import {AngularFireAuth} from "angularfire2/auth/auth";
 import {FirebaseServiceProvider} from "../../providers/firebase-service/firebase-service";
 import {Storage} from "@ionic/storage";
 import {GreekMePage} from "../greekme/greekme";
-import {TabsControllerPage } from "../tabs-controller/tabs-controller"
+import {TabsControllerPage } from "../tabs-controller/tabs-controller";
+import { LoadingController } from 'ionic-angular';
 
 
 @Component({
@@ -22,10 +23,16 @@ export class SignupPage {
     private afAuth: AngularFireAuth,
     public navCtrl: NavController,
     public firebaseService: FirebaseServiceProvider,
-    private storage: Storage) {
+    private storage: Storage,
+    public loadingCtrl: LoadingController) {
   }
   async register(user: User) {
     try {
+      var loader = this.loadingCtrl.create({
+        content: "Registering...",
+        dismissOnPageChange: true
+      });
+      loader.present();
       const result = await this.afAuth.auth.createUserWithEmailAndPassword(user.email, user.password);
       this.user.password='';
       this.user.uid ='';
@@ -36,8 +43,10 @@ export class SignupPage {
       if(trimmedMessage == null) {
         this.error = e.message;
       } else {
-      this.error = trimmedMessage[1];
+        this.error = trimmedMessage[1];
       }
+    } finally {
+      loader.dismiss();
     }
   }
 

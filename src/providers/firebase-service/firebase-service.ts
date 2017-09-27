@@ -90,6 +90,11 @@ export class FirebaseServiceProvider {
     this.afDB.list('/organization/'+organization_ID+'/message/').push(broadcast);
   }
 
+  // Returns the Thread for the broadcast
+  getThreadListBroadcast(organization_ID: String, broadcast_ID: String) {
+    return this.afDB.list('/organization/'+organization_ID+'/broadcast/'+broadcast_ID+'/thread').map(array=> array) as FirebaseListObservable<Broadcast>;
+  }
+
   // Retrieves and stores the user data locally
   getUserDetails(uid) {
     this.user = this.afDB.object('/users/'+uid,{preserveSnapshot: true});

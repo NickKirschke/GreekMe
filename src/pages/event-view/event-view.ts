@@ -70,7 +70,6 @@ export class EventViewPage {
   }
   checkAttending() {
     try {
-    console.log("Userid: "+this.user.uid);
     var isAttending = false;
     this.attendingList.subscribe(items => {
       const filtered = items.filter(item =>{
@@ -85,7 +84,7 @@ export class EventViewPage {
     console.log("Attending: " + isAttending);
     this.attendingStatus = isAttending;
     } catch (e) {
-      console.log("sad");
+      this.errorToast();
     }
   }
   rsvpYes() {
@@ -117,14 +116,28 @@ export class EventViewPage {
   }
   yesToast() {
     let toast = this.toastCtrl.create({
-      message: 'RSVP YES',
+      message: 'You are going to this event!',
       duration: 3000
     });
     toast.present();
   }
   noToast() {
     let toast = this.toastCtrl.create({
-      message: 'RSVP NO',
+      message: 'Removed you from the attending list.',
+      duration: 3000
+    });
+    toast.present();
+  }
+  errorToast() {
+    let toast = this.toastCtrl.create({
+      message: 'ERROR',
+      duration: 3000
+    });
+    toast.present();
+  }
+  checkToast() {
+    let toast = this.toastCtrl.create({
+      message: 'Checking attending',
       duration: 3000
     });
     toast.present();

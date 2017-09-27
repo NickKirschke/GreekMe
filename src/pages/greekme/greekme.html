@@ -24,15 +24,20 @@
     <ion-list style="margin-top:150px;">
 
       <ion-list-header>Today</ion-list-header>
-<!-- (click)="itemSelected(item.$key,item)" -->
       <ion-item text-wrap *ngFor="let item of broadcastItems |  async | orderBy: '-date'"  class="chat-boxes">
-
+        
         <ion-avatar item-start>
           <img src="{{item.avatar_url}}">
         </ion-avatar>
         <h2>{{item.name}}</h2>
         <p>{{item.text}}</p>
         <ion-note item-end>{{item.date | amTimeAgo}}</ion-note>
+        <ion-row class ="comments"(click)="itemSelected(item.$key,item)">
+          Comments
+          <ion-badge class="comment-badge">3</ion-badge>
+          Likes
+          <ion-badge class="like-badge">2</ion-badge>
+        </ion-row>
       </ion-item>
     </ion-list>
 </ion-content>

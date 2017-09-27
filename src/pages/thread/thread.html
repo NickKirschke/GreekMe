@@ -10,9 +10,16 @@
     <ion-title>{{broadcast.key}}</ion-title>
   </ion-navbar>
 
-</ion-header>
+</ion-header> 
 
 
-<ion-content padding>
-
+<ion-content>
+    <ion-card>
+        <ion-card-header>
+          {{broadcast.name}} said:
+        </ion-card-header>
+        <ion-card-content>
+          {{broadcast.text}}
+        </ion-card-content>
+      </ion-card>
 </ion-content>
