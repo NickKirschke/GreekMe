@@ -30,6 +30,7 @@ export class GreekMePage {
   // should be each tab's root Page
   broadcastItems: FirebaseListObservable<Broadcast>;
   image: any;
+  userLikedList: FirebaseListObservable<any>;
   constructor(
     private afAuth: AngularFireAuth,
     public navCtrl: NavController,
@@ -43,16 +44,14 @@ export class GreekMePage {
          userGrab.then((result) =>{
           this.user = result as User;           
           this.broadcastItems = this.firebaseService.getBroadcastList(this.user.organization_ID);
-          if (this.user.role == 'President' || this.user.role == ('Vice President') || this.user.role == ('Chair Member'))
-          {
+          this.userLikedList = this.firebaseService.getUserLikedList(this.user.uid);
+          if (this.user.role == 'President' || this.user.role == ('Vice President') || this.user.role == ('Chair Member')){
             this.validRole = true;
           }
           const imageGrab = this.firebaseService.getGreetingImage(this.user.organization_ID);
-          imageGrab.then((result) =>
-          {
+          imageGrab.then((result) => {
             this.image = result;
-          },(error) => 
-          {
+          },(error) => {
             this.image ='https://firebasestorage.googleapis.com/v0/b/greekme-7475a.appspot.com/o/GM_Default.png?alt=media&token=6bc30d40-17a2-40bb-9af7-edff78112780';
           });
         });        
@@ -76,6 +75,62 @@ export class GreekMePage {
 
   calculateCommentLength(orgId: String, broadcastId: String) {
     this.firebaseService.getCommentListBroadcast(orgId, broadcastId);
+  }
+
+  doLike(item, num) {
+    var updates = {};
+    var userLikeObj = {
+      name: this.user.name
+    }
+    var broadcastLikeObj = {
+      name: item.text
+    }
+    var currentLikes;
+    var numOfLikesRef = firebase.database().ref('/organization/'+this.user.organization_ID+'/broadcast/'+item.$key+'/numOfLikes');
+    numOfLikesRef.on('value', function(snapshot) {
+      currentLikes = snapshot.val();
+    });
+    updates['/organization/'+this.user.organization_ID+'/broadcast/'+item.$key+'/likeList/'+this.user.uid] =  userLikeObj;  
+    updates['/users/'+this.user.uid+'/likeList/'+item.$key] = broadcastLikeObj;
+    updates['/organization/'+this.user.organization_ID+'/broadcast/'+item.$key+'/numOfLikes/'] = currentLikes + 1;
+    firebase.database().ref().update(updates).then(function() {
+    console.log("Like added ");
+    console.log(item);
+    console.log(num);
+    }).catch( function(error) {
+       console.log(error);
+    });
+  }
+
+  doUnlike(item) {
+    var updates = {};
+    var currentLikes;
+    var numOfLikesRef = firebase.database().ref('/organization/'+this.user.organization_ID+'/broadcast/'+item.$key+'/numOfLikes');
+    numOfLikesRef.on('value', function(snapshot) {
+      currentLikes = snapshot.val();
+    });
+    updates['/organization/'+this.user.organization_ID+'/broadcast/'+item.$key+'/likeList/'+this.user.uid] =  null;  
+    updates['/users/'+this.user.uid+'/likeList/'+item.$key] = null;
+    updates['/organization/'+this.user.organization_ID+'/broadcast/'+item.$key+'/numOfLikes/'] = currentLikes - 1;
+    firebase.database().ref().update(updates).then(function() {
+    console.log("Like removed");
+    }).catch( function(error) {
+       console.log(error);
+    });
+  }
+
+  // Make a attirbute 
+
+  isLiked(key: String) {
+    // var liked = false;
+    // this.userLikedList.forEach(like =>{
+    //   if(like.$key = key) {
+    //     liked = true;
+    //     // console.log("user liked this: " + key);
+    //     return true;
+    //   }
+    // return false;})
+    // return liked;
   }
 
   itemSelected(key: String, item: Broadcast) {

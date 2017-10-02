@@ -6,6 +6,8 @@ export interface Broadcast {
     date: any;
     uid: any;
     key: any;
-    attendingList: FirebaseListObservable<any[]>;
+    commentList: FirebaseListObservable<any>;
+    likeList: FirebaseListObservable<any>;
     numOfComments: any;
+    numOfLikes: any;
 }

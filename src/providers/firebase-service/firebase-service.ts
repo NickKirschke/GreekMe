@@ -95,6 +95,11 @@ export class FirebaseServiceProvider {
     return this.afDB.list('/organization/'+organization_ID+'/broadcast/'+broadcast_ID+'/thread').map(array=> array) as FirebaseListObservable<Broadcast>;
   }
 
+  // Return a user's Liked list
+  getUserLikedList(uid: String) {
+    return this.afDB.list('users/'+uid+'/likedList').map(array => array) as FirebaseListObservable<any>;
+  }
+
   // Retrieves and stores the user data locally
   getUserDetails(uid) {
     this.user = this.afDB.object('/users/'+uid,{preserveSnapshot: true});

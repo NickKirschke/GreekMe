@@ -35,7 +35,8 @@ export class ThreadPage {
      public firebaseService: FirebaseServiceProvider,
      private app: App,
      private userService: UserServiceProvider,
-     private storage: Storage) {
+     private storage: Storage) 
+  {
     this.broadcast.avatar_url = navParams.get("avatar_url");
     this.broadcast.text = navParams.get("text");
     this.broadcast.name= navParams.get("name");

@@ -9,5 +9,6 @@ export interface User {
   uid: any;
   role: any;
   eventsAttending: FirebaseListObservable<any[]>;
+  likeList: FirebaseListObservable<any>;
 
 }
