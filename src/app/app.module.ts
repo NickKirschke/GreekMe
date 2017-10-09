@@ -15,20 +15,20 @@ import { EventDetailsPage } from '../pages/event-details/event-details';
 import { CreateEventPage } from '../pages/create-event/create-event';
 import { EditProfilePage } from '../pages/edit-profile/edit-profile';
 import { ThreadPage } from '../pages/thread/thread';
-
+import { ComposeThreadPage } from '../pages/compose-thread/compose-thread';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { FirebaseServiceProvider } from '../providers/firebase-service/firebase-service';
 import { HttpModule } from '@angular/http';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
-import {AngularFireModule} from 'angularfire2';
+import { AngularFireModule } from 'angularfire2';
 import { FIREBASE_CONST } from "./app.firebase.config";
 import { AngularFireAuthModule } from "angularfire2/auth/auth.module";
-import {IonicStorageModule} from "@ionic/storage";
-import {UserServiceProvider } from "../providers/user-service/user-service";
+import { IonicStorageModule } from "@ionic/storage";
+import { UserServiceProvider } from "../providers/user-service/user-service";
 import { MomentModule } from 'angular2-moment';
 import { EventViewPage } from '../pages/event-view/event-view';
-import {NgPipesModule} from 'ngx-pipes';
+import { NgPipesModule } from 'ngx-pipes';
 
 
 @NgModule({
@@ -47,7 +47,8 @@ import {NgPipesModule} from 'ngx-pipes';
     CreateEventPage,
     EditProfilePage,
     ThreadPage,
-    EventViewPage
+    EventViewPage,
+    ComposeThreadPage
   ],
   imports: [
     BrowserModule,
@@ -76,7 +77,8 @@ import {NgPipesModule} from 'ngx-pipes';
     CreateEventPage,
     EditProfilePage,
     ThreadPage,
-    EventViewPage
+    EventViewPage,
+    ComposeThreadPage
   ],
   providers: [
     StatusBar,

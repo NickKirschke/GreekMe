@@ -77,7 +77,7 @@ export class GreekMePage {
     this.firebaseService.getCommentListBroadcast(orgId, broadcastId);
   }
 
-  doLike(item, num) {
+  doLike(item) {
     var updates = {};
     var userLikeObj = {
       name: this.user.name
@@ -96,7 +96,7 @@ export class GreekMePage {
     firebase.database().ref().update(updates).then(function() {
     console.log("Like added ");
     console.log(item);
-    console.log(num);
+    //console.log(num)
     }).catch( function(error) {
        console.log(error);
     });

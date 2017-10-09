@@ -10,6 +10,7 @@ import {async} from "rxjs/scheduler/async";
 import {Storage} from "@ionic/storage";
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
+import { ComposeThreadPage } from '../compose-thread/compose-thread';
 /**
  * Generated class for the ThreadPage page.
  *
@@ -35,8 +36,7 @@ export class ThreadPage {
      public firebaseService: FirebaseServiceProvider,
      private app: App,
      private userService: UserServiceProvider,
-     private storage: Storage) 
-  {
+     private storage: Storage) {
     this.broadcast.avatar_url = navParams.get("avatar_url");
     this.broadcast.text = navParams.get("text");
     this.broadcast.name= navParams.get("name");
@@ -47,6 +47,11 @@ export class ThreadPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ThreadPage');
+  }
+  goToComposeThread() {
+    this.navCtrl.push(ComposeThreadPage,{
+      key: this.broadcast.key
+    } );
   }
 
 }

@@ -1,0 +1,65 @@
+import { Component } from '@angular/core';
+import { NavController, App, NavParams } from 'ionic-angular';
+import {FirebaseListObservable} from "angularfire2/database/firebase_list_observable";
+import {FirebaseServiceProvider} from "../../providers/firebase-service/firebase-service";
+import {AngularFireAuth} from "angularfire2/auth/auth";
+import { LoginPage } from "../login/login";
+import { GreekMePage } from '../greekme/greekme';
+import {User} from "../../models/user";
+import { Broadcast } from "../../models/broadcast";
+import {UserServiceProvider} from "../../providers/user-service/user-service";
+import {FirebaseObjectObservable} from "angularfire2/database/firebase_object_observable";
+import {async} from "rxjs/scheduler/async";
+import {Storage} from "@ionic/storage";
+import * as firebase from 'firebase/app';
+import 'firebase/storage';
+import * as moment from 'moment';
+
+@Component({
+  selector: 'page-compose-thread',
+  templateUrl: 'compose-thread.html',
+})
+export class ComposeThreadPage {
+  firebaseStorage = firebase.storage();
+  user = {} as User;
+  tempBroadcast = {} as Broadcast;
+  broadcastItems: FirebaseListObservable<Broadcast>;
+  error ='';
+  broadcastKey = "";
+  constructor(
+      private afAuth: AngularFireAuth,
+      public navCtrl: NavController,
+      public firebaseService: FirebaseServiceProvider,
+      private app: App,
+      private userService: UserServiceProvider,
+      private storage: Storage,
+      public navParams: NavParams) {
+      this.afAuth.authState.subscribe(data=> {
+        if(data && data.email && data.uid) {
+           const userGrab =  this.userService.currentUserInfo();
+           userGrab.then((result) =>{
+             this.user = result as User;
+             this.broadcastItems = this.firebaseService.getBroadcastList(this.user.organization_ID);
+           });
+          } else {
+            this.app.getRootNavs()[0].setRoot(LoginPage);
+          }
+        });
+        this.broadcastKey = this.navParams.get("key");
+      }
+      composeThread(tempBroadcast: Broadcast) {
+        if(tempBroadcast.text == null || tempBroadcast.text == '') {
+          this.error = "Message cannot be blank!";
+        } else {
+          this.error = "";
+          tempBroadcast.avatar_url = this.user.avatar_url;
+          tempBroadcast.uid = this.user.uid;
+          tempBroadcast.name = this.user.name;
+          tempBroadcast.date = moment().toISOString();
+          this.firebaseService.addToBroadcastList(tempBroadcast,this.user.organization_ID);
+          this.navCtrl.setRoot(GreekMePage);
+        }
+        // this.firebaseService.addToBroadcastList
+      }
+}
+
