@@ -30,6 +30,7 @@ export class ThreadPage {
   // should be each tab's root Page
   broadcastItems: FirebaseListObservable<Broadcast>;
   broadcast = {} as Broadcast;
+  orgId = "";
   constructor(public navCtrl: NavController,
      public navParams: NavParams,
      private afAuth: AngularFireAuth,
@@ -37,17 +38,18 @@ export class ThreadPage {
      private app: App,
      private userService: UserServiceProvider,
      private storage: Storage) {
+
     this.broadcast.avatar_url = navParams.get("avatar_url");
     this.broadcast.text = navParams.get("text");
     this.broadcast.name= navParams.get("name");
     this.broadcast.date = navParams.get("date");
     this.broadcast.uid = navParams.get("uid");
     this.broadcast.key = navParams.get("key");
+    this.orgId = navParams.get("orgId");
+    this.broadcastItems = this.firebaseService.getCommentListBroadcast(this.orgId, this.broadcast.key);    
+    // Get the list to APPEAR DAMNIT
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad ThreadPage');
-  }
   goToComposeThread() {
     this.navCtrl.push(ComposeThreadPage,{
       key: this.broadcast.key

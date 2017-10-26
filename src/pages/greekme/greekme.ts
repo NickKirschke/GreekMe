@@ -142,7 +142,8 @@ export class GreekMePage {
       name: item.name,
       date: item.date,
       uid: item.uid,
-      key: item.key
+      key: item.key,
+      orgId: this.user.organization_ID
     });
   }
 }

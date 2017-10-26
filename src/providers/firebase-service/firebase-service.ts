@@ -79,6 +79,12 @@ export class FirebaseServiceProvider {
     this.afDB.list('/organization/'+organization_ID+'/broadcast/').push(broadcast);
   }
 
+  //Adds a comment to a broadcast commentList
+  addCommentToBroadcast(broadcast: Broadcast, organization_ID: String, key: String) {
+    // console.log(broadcast);
+    this.afDB.list('/organization/'+organization_ID+'/broadcast/'+key+'/commentList/').push(broadcast);
+  }
+
   // Returns the feed list for the organization 
   getFeedList(organization_ID: String) {
     return this.afDB.list('/organization/'+organization_ID+'/message/').map(array=> array) as FirebaseListObservable<Broadcast>;

@@ -51,12 +51,25 @@ export class ComposeThreadPage {
         if(tempBroadcast.text == null || tempBroadcast.text == '') {
           this.error = "Message cannot be blank!";
         } else {
+          var currentNumOfComments = 0;
+          var numOfCommentsRef = firebase.database().ref('/organization/'+this.user.organization_ID+'/broadcast/'+this.broadcastKey+'/numOfComments');
+          numOfCommentsRef.on('value', function(snapshot) {
+            currentNumOfComments = snapshot.val();
+            console.log(currentNumOfComments);
+          });
           this.error = "";
           tempBroadcast.avatar_url = this.user.avatar_url;
           tempBroadcast.uid = this.user.uid;
           tempBroadcast.name = this.user.name;
           tempBroadcast.date = moment().toISOString();
-          this.firebaseService.addToBroadcastList(tempBroadcast,this.user.organization_ID);
+          this.firebaseService.addCommentToBroadcast(tempBroadcast,this.user.organization_ID, this.broadcastKey);
+          var updates = {};
+          updates['/organization/'+this.user.organization_ID+'/broadcast/'+this.broadcastKey+'/numOfComments/'] = currentNumOfComments + 1;
+          firebase.database().ref().update(updates).then(function() {
+            console.log("Comment Added!");
+            }).catch( function(error) {
+              console.log(error);
+            });
           this.navCtrl.setRoot(GreekMePage);
         }
         // this.firebaseService.addToBroadcastList
