@@ -12,6 +12,7 @@ import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import { Event } from "../../models/event";
 import { ToastController } from 'ionic-angular';
+import { EventDetailsPage } from '../event-details/event-details';
 
 @Component({
   selector: 'page-event-view',
@@ -35,6 +36,7 @@ export class EventViewPage {
     private userService: UserServiceProvider,
     public navParams: NavParams,
     public toastCtrl: ToastController) {
+
     this.afAuth.authState.subscribe(data=> {
       this.eventId = navParams.get("eventId");
       if(data && data.email && data.uid) {
@@ -57,6 +59,7 @@ export class EventViewPage {
   logout() {
     this.afAuth.auth.signOut();
   }
+
   checkCreator() {
     this.event.subscribe(res =>{
        if (res.creatorUid===this.user.uid) {
@@ -64,6 +67,7 @@ export class EventViewPage {
       }
     });
   }
+
   checkAttending() {
     try {
     var isAttending = false;
@@ -76,13 +80,14 @@ export class EventViewPage {
         } 
         console.log(item.$key);
         return false;        
-    })});
-    console.log("Attending: " + isAttending);
+      })
+    });
     this.attendingStatus = isAttending;
     } catch (e) {
-      this.errorToast();
+      this.toast("Error when checking attendance");
     }
   }
+
   rsvpYes() {
     var eventName;
     this.event.subscribe(res => eventName = res.name);
@@ -97,45 +102,30 @@ export class EventViewPage {
     updates['/organization/'+this.user.organization_ID+'/event/'+this.eventId+'/attendingList/'+this.user.uid] =  nameObj;  
     updates['/users/'+this.user.uid+'/eventsAttending/'+this.eventId] = eventObj;
     firebase.database().ref().update(updates).then(function() {
-    console.log("Event Added!");
     }).catch( function(error) {
       console.log(error);
     });
     this.attendingStatus = true; 
-    this.yesToast();
+    this.toast("You are going to this event!");
   }
+
   rsvpNo() {
-    this.noToast();
+    this.toast("Remove you from the attending list.");
     this.attendingList.remove(this.user.uid);
     this.userAttendingList.remove(this.eventId);
     this.attendingStatus = false;
   }
-  yesToast() {
+
+  toast(text) {
     let toast = this.toastCtrl.create({
-      message: 'You are going to this event!',
-      duration: 3000
+      message: text,
+      duration: 2000,
+      position: 'middle'
     });
     toast.present();
   }
-  noToast() {
-    let toast = this.toastCtrl.create({
-      message: 'Removed you from the attending list.',
-      duration: 3000
-    });
-    toast.present();
-  }
-  errorToast() {
-    let toast = this.toastCtrl.create({
-      message: 'ERROR',
-      duration: 3000
-    });
-    toast.present();
-  }
-  checkToast() {
-    let toast = this.toastCtrl.create({
-      message: 'Checking attending',
-      duration: 3000
-    });
-    toast.present();
+  
+  editEvent() {
+    this.navCtrl.push(EventDetailsPage);
   }
 }

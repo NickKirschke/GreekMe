@@ -98,7 +98,7 @@ export class FirebaseServiceProvider {
 
   // Returns the comments for the broadcast
   getCommentListBroadcast(organization_ID: String, broadcast_ID: String) {
-    return this.afDB.list('/organization/'+organization_ID+'/broadcast/'+broadcast_ID+'/thread').map(array=> array) as FirebaseListObservable<Broadcast>;
+    return this.afDB.list('/organization/'+organization_ID+'/broadcast/'+broadcast_ID+'/commentList/').map(array=> array) as FirebaseListObservable<Broadcast>;
   }
 
   // Return a user's Liked list

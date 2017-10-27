@@ -1,0 +1,10 @@
+Edit Event tab
+optimize indexing (view the bookmarked pages) Remove the forced angular directives and input indexes into the list of items allowing like and unlike
+Comments on Feed page
+profile page
+notifications
+push notifications
+Make the load screen better, Show gm page for a second
+
+/// End game
+refactor DB with everyone under school

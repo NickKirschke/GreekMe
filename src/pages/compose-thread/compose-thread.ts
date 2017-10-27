@@ -70,7 +70,7 @@ export class ComposeThreadPage {
             }).catch( function(error) {
               console.log(error);
             });
-          this.navCtrl.setRoot(GreekMePage);
+          this.navCtrl.pop();
         }
         // this.firebaseService.addToBroadcastList
       }

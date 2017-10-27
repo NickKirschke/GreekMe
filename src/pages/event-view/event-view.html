@@ -37,7 +37,7 @@
       <label>RSVP:</label>
       <button ion-button small id="yesButton" [outline]="!attendingStatus" (click)="rsvpYes()">Going!</button>
       <button ion-button small id="noButton" [outline]="attendingStatus" (click)="rsvpNo()">Can't Go</button>
-      <button ion-button small *ngIf="isCreator" (click)="editMode()">Edit Event</button> 
+      <button ion-button small *ngIf="isCreator" (click)="editEvent()">Edit Event</button> 
       
     </ion-list>
 

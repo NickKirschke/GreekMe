@@ -95,7 +95,6 @@ export class GreekMePage {
     updates['/organization/'+this.user.organization_ID+'/broadcast/'+item.$key+'/numOfLikes/'] = currentLikes + 1;
     firebase.database().ref().update(updates).then(function() {
     console.log("Like added ");
-    console.log(item);
     //console.log(num)
     }).catch( function(error) {
        console.log(error);

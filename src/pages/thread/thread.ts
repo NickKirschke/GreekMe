@@ -46,8 +46,7 @@ export class ThreadPage {
     this.broadcast.uid = navParams.get("uid");
     this.broadcast.key = navParams.get("key");
     this.orgId = navParams.get("orgId");
-    this.broadcastItems = this.firebaseService.getCommentListBroadcast(this.orgId, this.broadcast.key);    
-    // Get the list to APPEAR DAMNIT
+    this.broadcastItems = this.firebaseService.getCommentListBroadcast(this.orgId, this.broadcast.key);   
   }
 
   goToComposeThread() {
