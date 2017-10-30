@@ -1,4 +1,4 @@
-import {FirebaseListObservable} from "angularfire2/database/firebase_list_observable";
+import {AngularFireList} from "angularfire2/database";
 export interface Event {
     creator: any;
     creatorUid: any;
@@ -6,5 +6,5 @@ export interface Event {
     date: any;
     location: any;
     info: any;
-    attendingList: FirebaseListObservable<any[]>;
+    attendingList: AngularFireList<any[]>;
 }

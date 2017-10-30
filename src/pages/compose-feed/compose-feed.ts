@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, App } from 'ionic-angular';
-import {FirebaseListObservable} from "angularfire2/database/firebase_list_observable";
+import {AngularFireList} from "angularfire2/database";
 import {FirebaseServiceProvider} from "../../providers/firebase-service/firebase-service";
 import {AngularFireAuth} from "angularfire2/auth/auth";
 import { LoginPage } from "../login/login";
@@ -8,21 +8,21 @@ import { FeedPage } from '../feed/feed';
 import {User} from "../../models/user";
 import { Broadcast } from "../../models/broadcast";
 import {UserServiceProvider} from "../../providers/user-service/user-service";
-import {FirebaseObjectObservable} from "angularfire2/database/firebase_object_observable";
+import {AngularFireObject} from "angularfire2/database";
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import * as moment from 'moment';
-
+import { Observable } from 'rxjs/Observable';
 @Component({
   selector: 'page-compose-feed',
   templateUrl: 'compose-feed.html'
 })
 export class ComposeFeedPage {
   firebaseStorage = firebase.storage();
-  userData: FirebaseObjectObservable<User>
+  userData: AngularFireObject<User>
   user = {} as User;
   tempFeed = {} as Broadcast;
-  feedItems: FirebaseListObservable<Broadcast>;
+  feedItems: Observable<any>;
   error ='';
   constructor(
     private afAuth: AngularFireAuth,
@@ -37,7 +37,7 @@ export class ComposeFeedPage {
          const userGrab =  this.userService.currentUserInfo();
          userGrab.then((result) =>{
            this.user = result as User;
-           this.feedItems = this.firebaseService.getFeedList(this.user.organization_ID);
+           this.feedItems = this.firebaseService.getFeedList(this.user.organization_ID).snapshotChanges();
          });
         } else {
           this.app.getRootNavs()[0].setRoot(LoginPage);

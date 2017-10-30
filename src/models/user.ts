@@ -1,4 +1,4 @@
-import {FirebaseListObservable} from "angularfire2/database/firebase_list_observable";
+import {AngularFireList} from "angularfire2/database";
 export interface User {
   name: any;
   email: any;
@@ -8,7 +8,7 @@ export interface User {
   avatar_url: any;
   uid: any;
   role: any;
-  eventsAttending: FirebaseListObservable<any[]>;
-  likeList: FirebaseListObservable<any>;
+  eventsAttending: AngularFireList<any[]>;
+  likeList: AngularFireList<any>;
 
 }

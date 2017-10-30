@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {NavController, App} from 'ionic-angular';
-import {FirebaseListObservable} from "angularfire2/database/firebase_list_observable";
+import {AngularFireList} from "angularfire2/database";
 import {FirebaseServiceProvider} from "../../providers/firebase-service/firebase-service";
 import {AngularFireAuth} from "angularfire2/auth/auth";
 import { LoginPage } from "../login/login";
@@ -12,6 +12,7 @@ import 'firebase/storage';
 import { CreateEventPage } from '../create-event/create-event';
 import { EventViewPage } from '../event-view/event-view';
 import * as moment from 'moment';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'page-events',
@@ -20,7 +21,7 @@ import * as moment from 'moment';
 export class EventsPage {
   firebaseStorage = firebase.storage();
   user = {} as User;
-  eventItems: FirebaseListObservable<any>;
+  eventItems: Observable<any>;
   constructor(
     private afAuth: AngularFireAuth,
     public navCtrl: NavController,
@@ -32,7 +33,7 @@ export class EventsPage {
          const userGrab =  this.userService.currentUserInfo();
          userGrab.then((result) =>{
            this.user = result as User;           
-           this.eventItems = this.firebaseService.getOrgEventList(this.user.organization_ID);
+           this.eventItems = this.firebaseService.getOrgEventList(this.user.organization_ID).snapshotChanges();
            this.removeOldEvents();
         });        
       } else {
@@ -55,13 +56,25 @@ export class EventsPage {
   }
   removeOldEvents() {
     // Removes events that are 1 day old.
-    this.eventItems.subscribe(arr =>
-      arr.forEach(element => {
-        var tempDate = moment(element.date);
-        if (tempDate.diff(moment()) < -86400000) {
-          this.eventItems.remove(element.$key);
-        }
-      }));
+    // this.eventItems.subscribe(arr =>
+    //   arr.forEach(element => {
+    //     var tempDate = moment(element.date);
+    //     if (tempDate.diff(moment()) < -86400000) {
+    //       this.eventItems.remove(element.$key);
+    //     }
+    //   }));
+
+    //5.0
+    this.eventItems.forEach(element => {
+        console.log(element);    
+      // var tempDate = moment(element.date);
+          // if (tempDate.diff(moment()) < -86400000) {
+          //   this.eventItems.remove(element.$key);
+          // }
+        });
+        // const $key = action.payload.key;
+        // const data = { $key, ...action.payload.val() };
+        // return data;
     // var datee = moment('2017-08-29T20:59:51-04:00');
     // console.log(datee.diff(moment()));
   }

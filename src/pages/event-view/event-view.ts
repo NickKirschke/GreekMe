@@ -1,18 +1,19 @@
 import {Component} from '@angular/core';
 import {NavController, App, NavParams} from 'ionic-angular';
-import {FirebaseListObservable} from "angularfire2/database/firebase_list_observable";
+import {AngularFireList} from "angularfire2/database";
 import {FirebaseServiceProvider} from "../../providers/firebase-service/firebase-service";
 import {AngularFireAuth} from "angularfire2/auth/auth";
 import { LoginPage } from "../login/login";
 import {User} from "../../models/user";
 import {UserServiceProvider} from "../../providers/user-service/user-service";
-import {FirebaseObjectObservable} from "angularfire2/database/firebase_object_observable";
+import {AngularFireObject} from "angularfire2/database";
 import {Storage} from "@ionic/storage";
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import { Event } from "../../models/event";
 import { ToastController } from 'ionic-angular';
 import { EventDetailsPage } from '../event-details/event-details';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'page-event-view',
@@ -21,13 +22,13 @@ import { EventDetailsPage } from '../event-details/event-details';
 export class EventViewPage {
   firebaseStorage = firebase.storage();
   user = {} as User;
-  event: FirebaseObjectObservable<Event>;
-  attendingList: FirebaseListObservable<any[]>;
+  event: Observable<any>;
+  attendingList: AngularFireList<any[]>;
   eventInfo: string ='details';
   attendingStatus: boolean = false;
   isCreator: boolean = false;
   eventId;
-  userAttendingList: FirebaseListObservable<any[]>;
+  userAttendingList: AngularFireList<any[]>;
   constructor(
     private afAuth: AngularFireAuth,
     public navCtrl: NavController,
@@ -43,7 +44,7 @@ export class EventViewPage {
          const userGrab =  this.userService.currentUserInfo();
          userGrab.then((result) =>{
            this.user = result as User;           
-           this.event = this.firebaseService.getEventInfo(this.eventId, this.user.organization_ID);
+           this.event = this.firebaseService.getEventInfo(this.eventId, this.user.organization_ID).snapshotChanges();
            this.attendingList = this.firebaseService.getEventAttendingList(this.eventId, this.user.organization_ID);
            this.userAttendingList = this.firebaseService.getUserEventList(this.user.uid);
           //  this.attendingList.subscribe(console.log);
@@ -61,36 +62,75 @@ export class EventViewPage {
   }
 
   checkCreator() {
-    this.event.subscribe(res =>{
-       if (res.creatorUid===this.user.uid) {
+    // this.event.subscribe(res =>{
+    //    if (res.creatorUid===this.user.uid) {
+    //     this.isCreator = true;
+    //   }
+    // });
+
+    //5.0
+    this.event.map(action => {
+      const $key = action.payload.key;
+      const data = { $key, ...action.payload.val() };
+      return data;
+    }).subscribe(item => {
+      if (item.creatorUid===this.user.uid) {
         this.isCreator = true;
       }
     });
   }
 
   checkAttending() {
+    // try {
+    // var isAttending = false;
+    // this.attendingList.subscribe(items => {
+    //   const filtered = items.filter(item =>{
+    //     if(item.$key === this.user.uid) {          
+    //       console.log("Attending set to true");
+    //       isAttending = true;
+    //       return true;
+    //     } 
+    //     console.log(item.$key);
+    //     return false;        
+    //   })
+    // });
+    // this.attendingStatus = isAttending;
+    // } catch (e) {
+    //   this.toast("Error when checking attendance");
+    // }
+
+    //5.0
     try {
-    var isAttending = false;
-    this.attendingList.subscribe(items => {
-      const filtered = items.filter(item =>{
-        if(item.$key === this.user.uid) {          
-          console.log("Attending set to true");
-          isAttending = true;
-          return true;
-        } 
-        console.log(item.$key);
-        return false;        
-      })
-    });
-    this.attendingStatus = isAttending;
-    } catch (e) {
-      this.toast("Error when checking attendance");
-    }
+      var isAttending = false;
+      this.attendingList.snapshotChanges().map(action => {
+        const data = action.values();
+        console.log("Inside check attending");
+        console.log(data);
+        return data;
+      }).subscribe(items => {
+        const filtered = items.next(item =>{
+          if(item.key === this.user.uid) {          
+            console.log("Attending set to true");
+            isAttending = true;
+            return true;
+          } 
+          console.log(item.key);
+          return false;        
+        })
+      });
+      this.attendingStatus = isAttending;
+      } catch (e) {
+        this.toast("Error when checking attendance");
+      }
   }
 
   rsvpYes() {
     var eventName;
-    this.event.subscribe(res => eventName = res.name);
+    this.event.map(action => {
+      const $key = action.payload.key;
+      const data = { $key, ...action.payload.val() };
+      return data;}
+    ).map(res => eventName = res.name);
     var updates = {};
     var nameObj = {
       name: this.user.name,

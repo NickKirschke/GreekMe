@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {NavController, App} from 'ionic-angular';
-import {FirebaseListObservable} from "angularfire2/database/firebase_list_observable";
+import {AngularFireList} from "angularfire2/database";
 import {FirebaseServiceProvider} from "../../providers/firebase-service/firebase-service";
 import {AngularFireAuth} from "angularfire2/auth/auth";
 import { LoginPage } from "../login/login";
@@ -12,7 +12,7 @@ import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import * as moment from 'moment';
 import { Event } from "../../models/event";
-
+import { Observable } from 'rxjs/Observable';
 
 
 
@@ -23,8 +23,8 @@ import { Event } from "../../models/event";
 export class CreateEventPage {
   firebaseStorage = firebase.storage();
   user = {} as User;
-  eventItems: FirebaseListObservable<Event>;
-  attendingItems: FirebaseListObservable<any[]>;
+  eventItems: Observable<any>;
+  attendingItems: Observable<any[]>;
   event = {} as Event;
   
   constructor(
@@ -38,8 +38,8 @@ export class CreateEventPage {
          const userGrab =  this.userService.currentUserInfo();
          userGrab.then((result) =>{
            this.user = result as User;           
-           this.eventItems = this.firebaseService.getOrgEventList(this.user.organization_ID);
-           this.attendingItems = this.firebaseService.getUserEventList(this.user.uid);  
+           this.eventItems = this.firebaseService.getOrgEventList(this.user.organization_ID).valueChanges();
+           this.attendingItems = this.firebaseService.getUserEventList(this.user.uid).valueChanges();  
           //  this.event.attendingList = this.firebaseService.getEventAttendingList(this.)         
         });        
       } else {
@@ -55,7 +55,7 @@ export class CreateEventPage {
   createEvent() {
     this.event.creator = this.user.name;
     this.event.creatorUid = this.user.uid;
-    var newEventKey = this.eventItems.push(this.event).key;
+    var newEventKey = this.firebaseService.getOrgEventList(this.user.organization_ID).push(this.event).key;
     // this.eventItems.push(this.event);
     console.log(newEventKey);
     var updates = {};

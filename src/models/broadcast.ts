@@ -1,4 +1,4 @@
-import {FirebaseListObservable} from "angularfire2/database/firebase_list_observable";
+import {AngularFireList } from "angularfire2/database";
 export interface Broadcast {
     avatar_url: any;
     text: any;
@@ -6,8 +6,8 @@ export interface Broadcast {
     date: any;
     uid: any;
     key: any;
-    commentList: FirebaseListObservable<any>;
-    likeList: FirebaseListObservable<any>;
+    commentList: AngularFireList<any>;
+    likeList: AngularFireList<any>;
     numOfComments: any;
     numOfLikes: any;
 }

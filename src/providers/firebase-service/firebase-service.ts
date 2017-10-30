@@ -5,10 +5,10 @@ import { AngularFireDatabase } from "angularfire2/database/database";
 import {AngularFireAuth} from "angularfire2/auth/auth";
 import {Storage} from "@ionic/storage";
 import {User} from "../../models/user";
-import {FirebaseObjectObservable} from "angularfire2/database/firebase_object_observable";
+import {AngularFireObject} from "angularfire2/database";
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
-import {FirebaseListObservable} from "angularfire2/database/firebase_list_observable";
+import {AngularFireList} from "angularfire2/database";
 import { Broadcast } from "../../models/broadcast";
 import { Event } from "../../models/event"
 /*
@@ -19,8 +19,8 @@ import { Event } from "../../models/event"
 */
 @Injectable()
 export class FirebaseServiceProvider {
-  user: FirebaseObjectObservable<any[]>
-  userData: FirebaseObjectObservable<User>
+  user: AngularFireObject<any[]>
+  userData: AngularFireObject<User>
   firebaseStorage = firebase.storage();
   constructor(public afDB: AngularFireDatabase,
   private afAuth: AngularFireAuth,
@@ -56,22 +56,22 @@ export class FirebaseServiceProvider {
 
 // Accesses the event attendingList by key
   getEventAttendingList(key: String,organization_ID: String) {
-    return this.afDB.list('/organization/'+organization_ID+'/event/'+key+'/attendingList/').map(array=> array) as FirebaseListObservable<any[]>;
+    return this.afDB.list('/organization/'+organization_ID+'/event/'+key+'/attendingList/');
   }
 
   // Returns the event list for the organization
   getOrgEventList(organization_ID: String) {
-    return this.afDB.list('/organization/'+organization_ID+'/event/').map(array => array) as FirebaseListObservable<Event>;
+    return this.afDB.list('/organization/'+organization_ID+'/event/');
   }
 
   // Adds an event to a user's list of events that they are "going" to
   getUserEventList(uid: String) {
-    return this.afDB.list('/users/'+uid+'/eventAttendingList/').map(array=> array) as FirebaseListObservable<any[]>;
+    return this.afDB.list('/users/'+uid+'/eventAttendingList/');
   }
 
   // Returns the broadcast list for the greekme page
   getBroadcastList(organization_ID: String) {
-    return this.afDB.list('/organization/'+organization_ID+'/broadcast/').map(array=> array) as FirebaseListObservable<Broadcast>;
+    return this.afDB.list('/organization/'+organization_ID+'/broadcast/');
   }
 
   addToBroadcastList(broadcast: Broadcast, organization_ID: String) {
@@ -87,7 +87,7 @@ export class FirebaseServiceProvider {
 
   // Returns the feed list for the organization 
   getFeedList(organization_ID: String) {
-    return this.afDB.list('/organization/'+organization_ID+'/message/').map(array=> array) as FirebaseListObservable<Broadcast>;
+    return this.afDB.list('/organization/'+organization_ID+'/message/');
   }
 
   // Adds a feed to the feed list for the organization (Feed uses same structure as broadcast)
@@ -98,24 +98,42 @@ export class FirebaseServiceProvider {
 
   // Returns the comments for the broadcast
   getCommentListBroadcast(organization_ID: String, broadcast_ID: String) {
-    return this.afDB.list('/organization/'+organization_ID+'/broadcast/'+broadcast_ID+'/commentList/').map(array=> array) as FirebaseListObservable<Broadcast>;
+    return this.afDB.list('/organization/'+organization_ID+'/broadcast/'+broadcast_ID+'/commentList/');
   }
 
   // Return a user's Liked list
   getUserLikedList(uid: String) {
-    return this.afDB.list('users/'+uid+'/likedList').map(array => array) as FirebaseListObservable<any>;
+    return this.afDB.list('users/'+uid+'/likedList');
   }
 
   // Retrieves and stores the user data locally
+  // getUserDetails(uid) {
+  //   this.user = this.afDB.object('/users/'+uid);
+  //   if (this.user){
+  //     // Retrieves user details from the DB and stores locally
+  //     this.user.subscribe(snapshots => {
+  //         snapshots.forEach(snapshot => {
+  //           this.storage.set(snapshot.key, snapshot.val());
+  //         });
+  //       })
+  //   } else {
+  //     console.log("User is undefined");
+  //   }
+  // }
+
+  //5.0
   getUserDetails(uid) {
-    this.user = this.afDB.object('/users/'+uid,{preserveSnapshot: true});
+    this.user = this.afDB.object('/users/'+uid);
     if (this.user){
       // Retrieves user details from the DB and stores locally
-      this.user.subscribe(snapshots => {
-          snapshots.forEach(snapshot => {
-            this.storage.set(snapshot.key, snapshot.val());
-          });
-        })
+      this.user.snapshotChanges().map(action =>{
+        const $key = action.payload.key;
+        const data = { $key, ...action.payload.val() };
+        return data;
+      }).forEach(field => {
+        this.storage.set(field.key, field.val);
+        console.log(field.key + " " + field.vak)
+      })
     } else {
       console.log("User is undefined");
     }

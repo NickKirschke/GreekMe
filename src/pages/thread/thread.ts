@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, App, NavParams } from 'ionic-angular';
 import { Broadcast } from '../../models/broadcast';
-import {FirebaseListObservable} from "angularfire2/database/firebase_list_observable";
+import {AngularFireList} from "angularfire2/database";
 import {FirebaseServiceProvider} from "../../providers/firebase-service/firebase-service";
 import {AngularFireAuth} from "angularfire2/auth/auth";
 import {User} from "../../models/user";
@@ -11,6 +11,7 @@ import {Storage} from "@ionic/storage";
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import { ComposeThreadPage } from '../compose-thread/compose-thread';
+import { Observable } from 'rxjs/Observable';
 /**
  * Generated class for the ThreadPage page.
  *
@@ -28,7 +29,7 @@ export class ThreadPage {
   validRole=false;
   // this tells the tabs component which Pages
   // should be each tab's root Page
-  broadcastItems: FirebaseListObservable<Broadcast>;
+  broadcastItems: Observable<any>;
   broadcast = {} as Broadcast;
   orgId = "";
   constructor(public navCtrl: NavController,
@@ -46,7 +47,7 @@ export class ThreadPage {
     this.broadcast.uid = navParams.get("uid");
     this.broadcast.key = navParams.get("key");
     this.orgId = navParams.get("orgId");
-    this.broadcastItems = this.firebaseService.getCommentListBroadcast(this.orgId, this.broadcast.key);   
+    this.broadcastItems = this.firebaseService.getCommentListBroadcast(this.orgId, this.broadcast.key).valueChanges();   
   }
 
   goToComposeThread() {

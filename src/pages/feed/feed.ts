@@ -1,13 +1,13 @@
 import {Component} from '@angular/core';
 import {NavController, App} from 'ionic-angular';
-import {FirebaseListObservable} from "angularfire2/database/firebase_list_observable";
+import {AngularFireList} from "angularfire2/database";
 import {FirebaseServiceProvider} from "../../providers/firebase-service/firebase-service";
 import {AngularFireAuth} from "angularfire2/auth/auth";
 import { LoginPage } from "../login/login";
 import {User} from "../../models/user";
 import {Broadcast} from "../../models/broadcast";
 import {UserServiceProvider} from "../../providers/user-service/user-service";
-import {FirebaseObjectObservable} from "angularfire2/database/firebase_object_observable";
+import {AngularFireObject} from "angularfire2/database";
 import {Storage} from "@ionic/storage";
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
@@ -19,11 +19,11 @@ import { ComposeFeedPage } from '../compose-feed/compose-feed';
 })
 export class FeedPage {
   firebaseStorage = firebase.storage();
-  userData: FirebaseObjectObservable<User>
+  userData: AngularFireObject<User>
   user = {} as User;
   // this tells the tabs component which Pages
   // should be each tab's root Page
-  feedItems: FirebaseListObservable<Broadcast>;
+  feedItems: AngularFireList<Broadcast>;
   constructor(
     private afAuth: AngularFireAuth,
     public navCtrl: NavController,
