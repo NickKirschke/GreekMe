@@ -12,6 +12,8 @@ import {Storage} from "@ionic/storage";
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import { ComposeFeedPage } from '../compose-feed/compose-feed';
+import { Observable } from 'rxjs/Observable';
+
 
 @Component({
   selector: 'page-feed',
@@ -23,7 +25,7 @@ export class FeedPage {
   user = {} as User;
   // this tells the tabs component which Pages
   // should be each tab's root Page
-  feedItems: AngularFireList<Broadcast>;
+  feedItems: Observable<any>;
   constructor(
     private afAuth: AngularFireAuth,
     public navCtrl: NavController,
@@ -35,7 +37,11 @@ export class FeedPage {
          const userGrab =  this.userService.currentUserInfo();
          userGrab.then((result) =>{
            this.user = result as User;           
-           this.feedItems = this.firebaseService.getFeedList(this.user.organization_ID);
+           this.feedItems = this.firebaseService.getFeedList(this.user.organization_ID).snapshotChanges().map(action => {
+            return action.map(c => ({
+              key: c.payload.key, ...c.payload.val()
+            }));
+          });;
         });        
       } else {
         this.app.getRootNavs()[0].setRoot(LoginPage);

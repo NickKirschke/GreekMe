@@ -44,8 +44,16 @@ export class GreekMePage {
          const userGrab =  this.userService.currentUserInfo();
          userGrab.then((result) =>{
           this.user = result as User;           
-          this.broadcastItems = this.firebaseService.getBroadcastList(this.user.organization_ID).valueChanges();
-          this.userLikedList = this.firebaseService.getUserLikedList(this.user.uid).snapshotChanges();
+          this.broadcastItems = this.firebaseService.getBroadcastList(this.user.organization_ID).snapshotChanges().map(action => {
+            return action.map(c => ({
+              key: c.payload.key, ...c.payload.val()
+            }));
+          });
+          this.userLikedList = this.firebaseService.getUserLikedList(this.user.uid).snapshotChanges().map(action => {
+            return action.map(c => ({
+              key: c.payload.key, ...c.payload.val()
+            }));
+          });;
           if (this.user.role == 'President' || this.user.role == ('Vice President') || this.user.role == ('Chair Member')){
             this.validRole = true;
           }
@@ -133,10 +141,8 @@ export class GreekMePage {
     // return liked;
   }
 
-  itemSelected(key: String, item: Broadcast) {
-    
-    item.key = key;
-    console.log(key);
+  itemSelected(item) {
+    console.log(item);
     // console.log(item);
     this.navCtrl.push(ThreadPage, {
       avatar_url: item.avatar_url,
@@ -146,7 +152,7 @@ export class GreekMePage {
       uid: item.uid,
       key: item.key,
       orgId: this.user.organization_ID
-    });
+    });                                                                                                                                          
   }
 }
 

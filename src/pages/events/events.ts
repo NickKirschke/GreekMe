@@ -33,7 +33,11 @@ export class EventsPage {
          const userGrab =  this.userService.currentUserInfo();
          userGrab.then((result) =>{
            this.user = result as User;           
-           this.eventItems = this.firebaseService.getOrgEventList(this.user.organization_ID).snapshotChanges();
+           this.eventItems = this.firebaseService.getOrgEventList(this.user.organization_ID).snapshotChanges().map(action => {
+            return action.map(c => ({
+              key: c.payload.key, ...c.payload.val()
+            }));
+          });
            this.removeOldEvents();
         });        
       } else {

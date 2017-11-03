@@ -23,12 +23,12 @@ export class EventViewPage {
   firebaseStorage = firebase.storage();
   user = {} as User;
   event: Observable<any>;
-  attendingList: AngularFireList<any[]>;
+  attendingList: Observable<any>;
   eventInfo: string ='details';
   attendingStatus: boolean = false;
   isCreator: boolean = false;
   eventId;
-  userAttendingList: AngularFireList<any[]>;
+  userAttendingList: Observable<any>;
   constructor(
     private afAuth: AngularFireAuth,
     public navCtrl: NavController,
@@ -44,9 +44,17 @@ export class EventViewPage {
          const userGrab =  this.userService.currentUserInfo();
          userGrab.then((result) =>{
            this.user = result as User;           
-           this.event = this.firebaseService.getEventInfo(this.eventId, this.user.organization_ID).snapshotChanges();
-           this.attendingList = this.firebaseService.getEventAttendingList(this.eventId, this.user.organization_ID);
-           this.userAttendingList = this.firebaseService.getUserEventList(this.user.uid);
+           this.event = this.firebaseService.getEventInfo(this.eventId, this.user.organization_ID).valueChanges();
+           this.attendingList = this.firebaseService.getEventAttendingList(this.eventId, this.user.organization_ID).snapshotChanges().map(action => {
+            return action.map(c => ({
+              key: c.payload.key, ...c.payload.val()
+            }));
+          });
+           this.userAttendingList = this.firebaseService.getUserEventList(this.user.uid).snapshotChanges().map(action => {
+            return action.map(c => ({
+              key: c.payload.key, ...c.payload.val()
+            }));
+          });
           //  this.attendingList.subscribe(console.log);
            this.checkCreator();
            this.checkAttending();
@@ -102,12 +110,7 @@ export class EventViewPage {
     //5.0
     try {
       var isAttending = false;
-      this.attendingList.snapshotChanges().map(action => {
-        const data = action.values();
-        console.log("Inside check attending");
-        console.log(data);
-        return data;
-      }).subscribe(items => {
+      this.attendingList.subscribe(items => {
         const filtered = items.next(item =>{
           if(item.key === this.user.uid) {          
             console.log("Attending set to true");
@@ -150,10 +153,10 @@ export class EventViewPage {
   }
 
   rsvpNo() {
-    this.toast("Remove you from the attending list.");
-    this.attendingList.remove(this.user.uid);
-    this.userAttendingList.remove(this.eventId);
-    this.attendingStatus = false;
+    // this.toast("Remove you from the attending list.");
+    // this.attendingList.remove(this.user.uid);
+    // this.userAttendingList.remove(this.eventId);
+    // this.attendingStatus = false;
   }
 
   toast(text) {

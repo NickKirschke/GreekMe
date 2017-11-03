@@ -1,3 +1,4 @@
+Finish versioning update, feed page and event page info
 Edit Event tab
 optimize indexing (view the bookmarked pages) Remove the forced angular directives and input indexes into the list of items allowing like and unlike
 Comments on Feed page
