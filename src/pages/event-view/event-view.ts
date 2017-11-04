@@ -43,21 +43,24 @@ export class EventViewPage {
       if(data && data.email && data.uid) {
          const userGrab =  this.userService.currentUserInfo();
          userGrab.then((result) =>{
-           this.user = result as User;           
-           this.event = this.firebaseService.getEventInfo(this.eventId, this.user.organization_ID).valueChanges();
-           this.attendingList = this.firebaseService.getEventAttendingList(this.eventId, this.user.organization_ID).snapshotChanges().map(action => {
+          this.user = result as User;           
+          this.event = this.firebaseService.getEventInfo(this.eventId, this.user.organization_ID).valueChanges();
+          this.attendingList = this.firebaseService.getEventAttendingList(this.eventId, this.user.organization_ID).snapshotChanges().map(action => {
             return action.map(c => ({
               key: c.payload.key, ...c.payload.val()
             }));
           });
-           this.userAttendingList = this.firebaseService.getUserEventList(this.user.uid).snapshotChanges().map(action => {
+          this.attendingList.subscribe(console);
+          this.userAttendingList = this.firebaseService.getUserEventList(this.user.uid).snapshotChanges().map(action => {
             return action.map(c => ({
               key: c.payload.key, ...c.payload.val()
             }));
           });
+          
+          this.userAttendingList.subscribe(console);
           //  this.attendingList.subscribe(console.log);
-           this.checkCreator();
-           this.checkAttending();
+          this.checkCreator();
+          this.checkAttending();
           //  console.log(this.attendingList.$ref);
         });        
       } else {

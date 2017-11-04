@@ -66,7 +66,7 @@ export class FirebaseServiceProvider {
 
   // Adds an event to a user's list of events that they are "going" to
   getUserEventList(uid: String) {
-    return this.afDB.list('/users/'+uid+'/eventAttendingList/');
+    return this.afDB.list('/users/'+uid+'/eventAttending/');
   }
 
   // Returns the broadcast list for the greekme page
