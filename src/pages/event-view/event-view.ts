@@ -147,8 +147,8 @@ export class EventViewPage {
       // });
     
       //struggle
-      this.event.subscribe(e => { this.eventName = e.name, console.log(e)});
-      console.log(this.eventName);
+      // this.event.subscribe(e => { this.eventName = e.name, console.log(e)});
+      // console.log(this.eventName);
       // var updates = {};
       // var nameObj = {
       //   name: this.user.name,
