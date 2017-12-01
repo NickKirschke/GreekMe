@@ -70,7 +70,7 @@ export class EventsPage {
 
     //5.0
     this.eventItems.forEach(element => {
-        console.log(element);    
+        // console.log(element);    
       // var tempDate = moment(element.date);
           // if (tempDate.diff(moment()) < -86400000) {
           //   this.eventItems.remove(element.$key);

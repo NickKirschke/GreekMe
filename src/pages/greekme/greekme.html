@@ -31,7 +31,7 @@
         </ion-avatar>
         <h2>{{item.name }}</h2>
         <p>{{item.text}}</p>
-        <ion-note item-end>{{item.dat| amTimeAgo}}</ion-note>
+        <ion-note item-end>{{item.date | amTimeAgo}}</ion-note>
         <ion-row class ="comments">
           <label (click)="itemSelected(item)">Comments</label>
           <ion-badge class="comment-badge">{{item.numOfComments}}</ion-badge>

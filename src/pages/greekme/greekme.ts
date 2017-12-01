@@ -87,27 +87,28 @@ export class GreekMePage {
   }
 
   doLike(item) {
-    var updates = {};
-    var userLikeObj = {
-      name: this.user.name
-    }
-    var broadcastLikeObj = {
-      name: item.text
-    }
-    var currentLikes;
-    var numOfLikesRef = firebase.database().ref('/organization/'+this.user.organization_ID+'/broadcast/'+item.$key+'/numOfLikes');
-    numOfLikesRef.on('value', function(snapshot) {
-      currentLikes = snapshot.val();
-    });
-    updates['/organization/'+this.user.organization_ID+'/broadcast/'+item.$key+'/likeList/'+this.user.uid] =  userLikeObj;  
-    updates['/users/'+this.user.uid+'/likeList/'+item.$key] = broadcastLikeObj;
-    updates['/organization/'+this.user.organization_ID+'/broadcast/'+item.$key+'/numOfLikes/'] = currentLikes + 1;
-    firebase.database().ref().update(updates).then(function() {
-    console.log("Like added ");
-    //console.log(num)
-    }).catch( function(error) {
-       console.log(error);
-    });
+    console.log(item);
+    // var updates = {};
+    // var userLikeObj = {
+    //   name: this.user.name
+    // }
+    // var broadcastLikeObj = {
+    //   name: item.text
+    // }
+    // var currentLikes;
+    // var numOfLikesRef = firebase.database().ref('/organization/'+this.user.organization_ID+'/broadcast/'+item.$key+'/numOfLikes');
+    // numOfLikesRef.on('value', function(snapshot) {
+    //   currentLikes = snapshot.val();
+    // });
+    // updates['/organization/'+this.user.organization_ID+'/broadcast/'+item.$key+'/likeList/'+this.user.uid] =  userLikeObj;  
+    // updates['/users/'+this.user.uid+'/likeList/'+item.$key] = broadcastLikeObj;
+    // updates['/organization/'+this.user.organization_ID+'/broadcast/'+item.$key+'/numOfLikes/'] = currentLikes + 1;
+    // firebase.database().ref().update(updates).then(function() {
+    // console.log("Like added ");
+    // //console.log(num)
+    // }).catch( function(error) {
+    //    console.log(error);
+    // });
   }
 
   doUnlike(item) {

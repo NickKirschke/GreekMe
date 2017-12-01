@@ -50,12 +50,16 @@ export class FirebaseServiceProvider {
   
   // Accesses the event information by key
   getEventInfo(key: String,organization_ID: String) {
-    const temp = this.afDB.object('/organization/'+organization_ID+'/event/'+key);
-    return temp;
+    return this.afDB.object<Event>('/organization/'+organization_ID+'/event/'+key);
+  }
+
+  // Accesses the event information by key
+  getEventInfo2(key: String,organization_ID: String) {
+    return this.afDB.object<Event>('/organization/'+organization_ID+'/event/'+key);
   }
 
 // Accesses the event attendingList by key
-  getEventAttendingList(key: String,organization_ID: String) {
+  getEventAttendingList(key, organization_ID) {
     return this.afDB.list('/organization/'+organization_ID+'/event/'+key+'/attendingList/');
   }
 
