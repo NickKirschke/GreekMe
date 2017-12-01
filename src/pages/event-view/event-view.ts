@@ -146,6 +146,7 @@ export class EventViewPage {
       //   this.eventName = action.payload.val().name;
       // });
     
+      //struggle
       this.event.subscribe(e => { this.eventName = e.name, console.log(e)});
       console.log(this.eventName);
       // var updates = {};
