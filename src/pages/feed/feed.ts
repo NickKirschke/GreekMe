@@ -26,6 +26,7 @@ export class FeedPage {
   // this tells the tabs component which Pages
   // should be each tab's root Page
   feedItems: Observable<any>;
+  feedItemRef: AngularFireList<any>;
   constructor(
     private afAuth: AngularFireAuth,
     public navCtrl: NavController,
@@ -36,11 +37,13 @@ export class FeedPage {
       if(data && data.email && data.uid) {
          const userGrab =  this.userService.currentUserInfo();
          userGrab.then((result) =>{
-           this.user = result as User;           
-           this.feedItems = this.firebaseService.getFeedList(this.user.organization_ID).snapshotChanges().map(action => {
+           this.user = result as User;
+           this.feedItemRef = this.firebaseService.getFeedList(this.user.organization_ID);
+           this.feedItems = this.feedItemRef.snapshotChanges().map(action => {
             return action.map(c => ({
               key: c.payload.key, ...c.payload.val()
-            }));
+            })).reverse();
+            
           });;
         });        
       } else {

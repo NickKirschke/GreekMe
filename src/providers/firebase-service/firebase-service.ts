@@ -106,8 +106,8 @@ export class FirebaseServiceProvider {
   }
 
   // Return a user's Liked list
-  getUserLikedList(uid: String) {
-    return this.afDB.list('users/'+uid+'/likedList');
+  getUserLikeList(uid: String) {
+    return this.afDB.list('users/'+uid+'/likeList');
   }
 
   // Retrieves and stores the user data locally

@@ -31,6 +31,8 @@ export class EventViewPage {
   event2: Observable<Event>;
   userAttendingList: Observable<any>;
   eventName: String;
+  attendingListRef: AngularFireList<any>;
+  
   constructor(
     private afAuth: AngularFireAuth,
     public navCtrl: NavController,
@@ -47,7 +49,8 @@ export class EventViewPage {
         userGrab.then((result) => {
           this.user = result as User;
           this.event = this.firebaseService.getEventInfo(this.eventId, this.user.organization_ID).valueChanges();
-          this.attendingList = this.firebaseService.getEventAttendingList(this.eventId, this.user.organization_ID).snapshotChanges().map(action => {
+          this.attendingListRef = this.firebaseService.getEventAttendingList(this.eventId, this.user.organization_ID)
+          this.attendingList = this.attendingListRef.snapshotChanges().map(action => {
             return action.map(c => ({
               key: c.payload.key, ...c.payload.val()
             }));
@@ -149,38 +152,40 @@ export class EventViewPage {
       //struggle
       // this.event.subscribe(e => { this.eventName = e.name, console.log(e)});
       // console.log(this.eventName);
-      // var updates = {};
-      // var nameObj = {
-      //   name: this.user.name,
-      //   avatar_url: this.user.avatar_url
-      // };
+      var updates = {};
+      var nameObj = {
+        name: this.user.name,
+        avatar_url: this.user.avatar_url
+      };
       // var eventObj = {
       //   name: eventName
       // }
-      // updates['/organization/' + this.user.organization_ID + '/event/' + this.eventId + '/attendingList/' + this.user.uid] = nameObj;
+      updates['/organization/' + this.user.organization_ID + '/event/' + this.eventId + '/attendingList/' + this.user.uid] = nameObj;
       // updates['/users/' + this.user.uid + '/eventsAttending/' + this.eventId] = eventObj;
-      // firebase.database().ref().update(updates).then(function () {
-      // }).catch(function (error) {
-      //   console.log(error);
-      // });
-      // this.attendingStatus = true;
-      // this.toast("You are going to this event!");
+      firebase.database().ref().update(updates).then(function () {
+      }).catch(function (error) {
+        console.log(error);
+      });
+      this.attendingStatus = true;
+      this.toast("You are going to this event!");
     }
   }
 
   rsvpNo() {
-    console.log(this.eventName);
-    // this.toast("Remove you from the attending list.");
-    // this.attendingList.remove(this.user.uid);
+    // console.log(this.eventName);
+    if (this.attendingStatus) {
+    this.toast("Remove you from the attending list.");
+    this.attendingListRef.remove(this.user.uid);
     // this.userAttendingList.remove(this.eventId);
-    // this.attendingStatus = false;
+    this.attendingStatus = false;
+    }
   }
 
   toast(text) {
     let toast = this.toastCtrl.create({
       message: text,
       duration: 2000,
-      position: 'middle'
+      position: 'top'
     });
     toast.present();
   }

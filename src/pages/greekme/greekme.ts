@@ -1,15 +1,15 @@
-import {Component, ViewChild, ElementRef} from '@angular/core';
-import {NavController, App, NavParams} from 'ionic-angular';
-import {AngularFireList} from "angularfire2/database";
-import {FirebaseServiceProvider} from "../../providers/firebase-service/firebase-service";
-import {AngularFireAuth} from "angularfire2/auth/auth";
+import { Component, ViewChild, ElementRef } from '@angular/core';
+import { NavController, App, NavParams } from 'ionic-angular';
+import { AngularFireList } from "angularfire2/database";
+import { FirebaseServiceProvider } from "../../providers/firebase-service/firebase-service";
+import { AngularFireAuth } from "angularfire2/auth/auth";
 import { LoginPage } from "../login/login";
-import {User} from "../../models/user";
-import {Broadcast} from "../../models/broadcast";
-import {UserServiceProvider} from "../../providers/user-service/user-service";
-import {AngularFireObject} from "angularfire2/database";
-import {async} from "rxjs/scheduler/async";
-import {Storage} from "@ionic/storage";
+import { User } from "../../models/user";
+import { Broadcast } from "../../models/broadcast";
+import { UserServiceProvider } from "../../providers/user-service/user-service";
+import { AngularFireObject } from "angularfire2/database";
+import { async } from "rxjs/scheduler/async";
+import { Storage } from "@ionic/storage";
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import { ComposeBroadcastPage } from '../compose-broadcast/compose-broadcast';
@@ -21,15 +21,16 @@ import { Observable } from 'rxjs/Observable';
   templateUrl: 'greekme.html'
 })
 export class GreekMePage {
-  @ViewChild('fixed')mapElement: ElementRef;
+  @ViewChild('fixed') mapElement: ElementRef;
   fixedHeight: any;
   firebaseStorage = firebase.storage();
   userData: AngularFireObject<User>
   user = {} as User;
-  validRole=false;
+  validRole = false;
   // this tells the tabs component which Pages
   // should be each tab's root Page
   broadcastItems: Observable<any>;
+  broadcastItemRef: AngularFireList<any>;
   image: any;
   userLikedList: Observable<any>;
   constructor(
@@ -39,31 +40,32 @@ export class GreekMePage {
     private app: App,
     private userService: UserServiceProvider,
     private storage: Storage) {
-    this.afAuth.authState.subscribe(data=> {
-      if(data && data.email && data.uid) {
-         const userGrab =  this.userService.currentUserInfo();
-         userGrab.then((result) =>{
-          this.user = result as User;           
-          this.broadcastItems = this.firebaseService.getBroadcastList(this.user.organization_ID).snapshotChanges().map(action => {
+    this.afAuth.authState.subscribe(data => {
+      if (data && data.email && data.uid) {
+        const userGrab = this.userService.currentUserInfo();
+        userGrab.then((result) => {
+          this.user = result as User;
+          this.broadcastItemRef = this.firebaseService.getBroadcastList(this.user.organization_ID);
+          this.broadcastItems = this.broadcastItemRef.snapshotChanges().map(action => {
             return action.map(c => ({
               key: c.payload.key, ...c.payload.val()
-            }));
+            })).reverse();
           });
-          this.userLikedList = this.firebaseService.getUserLikedList(this.user.uid).snapshotChanges().map(action => {
+          this.userLikedList = this.firebaseService.getUserLikeList(this.user.uid).snapshotChanges().map(action => {
             return action.map(c => ({
               key: c.payload.key, ...c.payload.val()
             }));
           });;
-          if (this.user.role == 'President' || this.user.role == ('Vice President') || this.user.role == ('Chair Member')){
+          if (this.user.role == 'President' || this.user.role == ('Vice President') || this.user.role == ('Chair Member')) {
             this.validRole = true;
           }
           const imageGrab = this.firebaseService.getGreetingImage(this.user.organization_ID);
           imageGrab.then((result) => {
             this.image = result;
-          },(error) => {
-            this.image ='https://firebasestorage.googleapis.com/v0/b/greekme-7475a.appspot.com/o/GM_Default.png?alt=media&token=6bc30d40-17a2-40bb-9af7-edff78112780';
+          }, (error) => {
+            this.image = 'https://firebasestorage.googleapis.com/v0/b/greekme-7475a.appspot.com/o/GM_Default.png?alt=media&token=6bc30d40-17a2-40bb-9af7-edff78112780';
           });
-        });        
+        });
       } else {
         this.app.getRootNavs()[0].setRoot(LoginPage);
       }
@@ -72,59 +74,96 @@ export class GreekMePage {
   logout() {
     this.afAuth.auth.signOut();
   }
-  
+
   goToComposeBroadcast() {
     this.navCtrl.push(ComposeBroadcastPage);
   }
 
   ionViewDidEnter() {
-    this.fixedHeight =this.mapElement.nativeElement.offsetHeight;
-    
+    this.fixedHeight = this.mapElement.nativeElement.offsetHeight;
+
   }
+
 
   calculateCommentLength(orgId: String, broadcastId: String) {
     this.firebaseService.getCommentListBroadcast(orgId, broadcastId);
   }
 
   doLike(item) {
-    console.log(item);
-    // var updates = {};
-    // var userLikeObj = {
-    //   name: this.user.name
-    // }
-    // var broadcastLikeObj = {
-    //   name: item.text
-    // }
-    // var currentLikes;
-    // var numOfLikesRef = firebase.database().ref('/organization/'+this.user.organization_ID+'/broadcast/'+item.$key+'/numOfLikes');
-    // numOfLikesRef.on('value', function(snapshot) {
-    //   currentLikes = snapshot.val();
-    // });
-    // updates['/organization/'+this.user.organization_ID+'/broadcast/'+item.$key+'/likeList/'+this.user.uid] =  userLikeObj;  
-    // updates['/users/'+this.user.uid+'/likeList/'+item.$key] = broadcastLikeObj;
-    // updates['/organization/'+this.user.organization_ID+'/broadcast/'+item.$key+'/numOfLikes/'] = currentLikes + 1;
-    // firebase.database().ref().update(updates).then(function() {
-    // console.log("Like added ");
-    // //console.log(num)
-    // }).catch( function(error) {
-    //    console.log(error);
-    // });
+    this.userLikedList.subscribe(console.log);
+    const promise = new Promise((resolve, reject) => {
+      this.userLikedList.subscribe(items => {
+        for (let i of items) {
+          if (i.key === item.key) {
+            console.log(i.key);
+            console.log(item.key);
+            console.log("Liked set to true");
+            resolve(true);
+          }
+        }
+        resolve(false);
+      });
+    });
+    promise.then((res) => {
+      console.log(res);
+      if (res) {
+        // Do unlike
+        var updates = {};
+        var currentLikes;
+        var numOfLikesRef = firebase.database().ref('/organization/' + this.user.organization_ID + '/broadcast/' + item.key + '/numOfLikes');
+        numOfLikesRef.on('value', function (snapshot) {
+          currentLikes = snapshot.val();
+        });
+        updates['/organization/' + this.user.organization_ID + '/broadcast/' + item.key + '/likeList/' + this.user.uid] = null;
+        updates['/users/' + this.user.uid + '/likeList/' + item.key] = null;
+        updates['/organization/' + this.user.organization_ID + '/broadcast/' + item.key + '/numOfLikes/'] = currentLikes - 1;
+        firebase.database().ref().update(updates).then(function () {
+          console.log("Like removed");
+        }).catch(function (error) {
+          console.log(error);
+        });
+      } else {
+        // Do like
+        var updates = {};
+        var userLikeObj = {
+          name: this.user.name
+        }
+        var broadcastLikeObj = {
+          name: item.text
+        }
+        var currentLikes;
+        var numOfLikesRef = firebase.database().ref('/organization/' + this.user.organization_ID + '/broadcast/' + item.$key + '/numOfLikes');
+        numOfLikesRef.on('value', function (snapshot) {
+          currentLikes = snapshot.val();
+        });
+        updates['/organization/' + this.user.organization_ID + '/broadcast/' + item.key + '/likeList/' + this.user.uid] = userLikeObj;
+        updates['/users/' + this.user.uid + '/likeList/' + item.key] = broadcastLikeObj;
+        updates['/organization/' + this.user.organization_ID + '/broadcast/' + item.key + '/numOfLikes/'] = currentLikes + 1;
+        firebase.database().ref().update(updates).then(function () {
+          console.log("Like added ");
+          // console.log(document.getElementById("0"));
+          //console.log(num)
+        }).catch(function (error) {
+          console.log(error);
+        });
+      }
+    });
   }
 
   doUnlike(item) {
     var updates = {};
     var currentLikes;
-    var numOfLikesRef = firebase.database().ref('/organization/'+this.user.organization_ID+'/broadcast/'+item.$key+'/numOfLikes');
-    numOfLikesRef.on('value', function(snapshot) {
+    var numOfLikesRef = firebase.database().ref('/organization/' + this.user.organization_ID + '/broadcast/' + item.$key + '/numOfLikes');
+    numOfLikesRef.on('value', function (snapshot) {
       currentLikes = snapshot.val();
     });
-    updates['/organization/'+this.user.organization_ID+'/broadcast/'+item.$key+'/likeList/'+this.user.uid] =  null;  
-    updates['/users/'+this.user.uid+'/likeList/'+item.$key] = null;
-    updates['/organization/'+this.user.organization_ID+'/broadcast/'+item.$key+'/numOfLikes/'] = currentLikes - 1;
-    firebase.database().ref().update(updates).then(function() {
-    console.log("Like removed");
-    }).catch( function(error) {
-       console.log(error);
+    updates['/organization/' + this.user.organization_ID + '/broadcast/' + item.$key + '/likeList/' + this.user.uid] = null;
+    updates['/users/' + this.user.uid + '/likeList/' + item.$key] = null;
+    updates['/organization/' + this.user.organization_ID + '/broadcast/' + item.$key + '/numOfLikes/'] = currentLikes - 1;
+    firebase.database().ref().update(updates).then(function () {
+      console.log("Like removed");
+    }).catch(function (error) {
+      console.log(error);
     });
   }
 
@@ -153,7 +192,7 @@ export class GreekMePage {
       uid: item.uid,
       key: item.key,
       orgId: this.user.organization_ID
-    });                                                                                                                                          
+    });
   }
 }
 
