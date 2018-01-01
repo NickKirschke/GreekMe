@@ -19,14 +19,21 @@
     <!-- <ion-scroll> -->
       <ion-list>
   <!-- (click)="itemSelected(item.$key,item)" -->
-        <ion-item text-wrap *ngFor="let item of feedItems |  async"  class="chat-boxes">
-  
-          <ion-avatar item-start>
-            <img src="{{item.avatar_url}}">
-          </ion-avatar>
-          <h2>{{item.name}}</h2>
-          <p>{{item.text}}</p>
-          <ion-note item-end>{{item.date | amTimeAgo}}</ion-note>
-        </ion-item>
+  <ion-item text-wrap *ngFor="let item of (feedItems |  async); let i = index" [attr.id]="i" class="chat-boxes">
+    
+    <ion-avatar item-start>
+      <img src="{{item.avatar_url}}">
+    </ion-avatar>
+    <h2>{{item.name }}</h2>
+    <p>{{item.text}}</p>
+    <ion-note item-end>{{item.date | amTimeAgo}}</ion-note>
+    <ion-row class ="comments">
+      <label (click)="itemSelected(item)">Comments</label>
+      <ion-badge class="comment-badge">{{item.numOfComments}}</ion-badge>
+      <ion-icon name="heart" isActive="false" (click)="doLike(item)"></ion-icon>
+      <!-- <ion-icon name="heart" *ngIf="isLiked(item.$key)" (click)="doUnlike(item)"></ion-icon> -->
+      <ion-badge class="comment-badge">{{item.numOfLikes}} </ion-badge>
+    </ion-row>
+  </ion-item>
       </ion-list>
   </ion-content>

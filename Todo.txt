@@ -1,9 +1,11 @@
-broadcasts are now indexed, utilize to manipulate the icon. Currently an issue with liking happening multiple times.
-Comments on Feed page
+On the app the liking feature refreshes the page
+broadcasts are now indexed, utilize to manipulate the icon.
+
 profile page
 notifications
 push notifications
 Make the load screen better, Show gm page for a second (cordova plugins)
+
 
 /// End game
 refactor DB with everyone under school

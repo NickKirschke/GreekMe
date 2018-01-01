@@ -53,6 +53,8 @@ export class ComposeFeedPage {
         tempFeed.uid = this.user.uid;
         tempFeed.name = this.user.name;
         tempFeed.date = moment().toISOString();
+        tempFeed.numOfComments = 0;
+        tempFeed.numOfLikes = 0;
         this.firebaseService.addToFeedList(tempFeed,this.user.organization_ID);
         this.navCtrl.setRoot(FeedPage);
       }

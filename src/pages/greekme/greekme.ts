@@ -55,7 +55,7 @@ export class GreekMePage {
             return action.map(c => ({
               key: c.payload.key, ...c.payload.val()
             }));
-          });;
+          });
           if (this.user.role == 'President' || this.user.role == ('Vice President') || this.user.role == ('Chair Member')) {
             this.validRole = true;
           }
@@ -90,13 +90,11 @@ export class GreekMePage {
   }
 
   doLike(item) {
-    this.userLikedList.subscribe(console.log);
+    //console.log(document.getElementById('0'));
     const promise = new Promise((resolve, reject) => {
       this.userLikedList.subscribe(items => {
         for (let i of items) {
           if (i.key === item.key) {
-            console.log(i.key);
-            console.log(item.key);
             console.log("Liked set to true");
             resolve(true);
           }
@@ -105,7 +103,6 @@ export class GreekMePage {
       });
     });
     promise.then((res) => {
-      console.log(res);
       if (res) {
         // Do unlike
         var updates = {};
@@ -117,6 +114,7 @@ export class GreekMePage {
         updates['/organization/' + this.user.organization_ID + '/broadcast/' + item.key + '/likeList/' + this.user.uid] = null;
         updates['/users/' + this.user.uid + '/likeList/' + item.key] = null;
         updates['/organization/' + this.user.organization_ID + '/broadcast/' + item.key + '/numOfLikes/'] = currentLikes - 1;
+        
         firebase.database().ref().update(updates).then(function () {
           console.log("Like removed");
         }).catch(function (error) {
@@ -150,22 +148,22 @@ export class GreekMePage {
     });
   }
 
-  doUnlike(item) {
-    var updates = {};
-    var currentLikes;
-    var numOfLikesRef = firebase.database().ref('/organization/' + this.user.organization_ID + '/broadcast/' + item.$key + '/numOfLikes');
-    numOfLikesRef.on('value', function (snapshot) {
-      currentLikes = snapshot.val();
-    });
-    updates['/organization/' + this.user.organization_ID + '/broadcast/' + item.$key + '/likeList/' + this.user.uid] = null;
-    updates['/users/' + this.user.uid + '/likeList/' + item.$key] = null;
-    updates['/organization/' + this.user.organization_ID + '/broadcast/' + item.$key + '/numOfLikes/'] = currentLikes - 1;
-    firebase.database().ref().update(updates).then(function () {
-      console.log("Like removed");
-    }).catch(function (error) {
-      console.log(error);
-    });
-  }
+  // doUnlike(item) {
+  //   var updates = {};
+  //   var currentLikes;
+  //   var numOfLikesRef = firebase.database().ref('/organization/' + this.user.organization_ID + '/broadcast/' + item.$key + '/numOfLikes');
+  //   numOfLikesRef.on('value', function (snapshot) {
+  //     currentLikes = snapshot.val();
+  //   });
+  //   updates['/organization/' + this.user.organization_ID + '/broadcast/' + item.$key + '/likeList/' + this.user.uid] = null;
+  //   updates['/users/' + this.user.uid + '/likeList/' + item.$key] = null;
+  //   updates['/organization/' + this.user.organization_ID + '/broadcast/' + item.$key + '/numOfLikes/'] = currentLikes - 1;
+  //   firebase.database().ref().update(updates).then(function () {
+  //     console.log("Like removed");
+  //   }).catch(function (error) {
+  //     console.log(error);
+  //   });
+  // }
 
   // Make a attirbute 
 

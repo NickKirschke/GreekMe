@@ -89,6 +89,12 @@ export class FirebaseServiceProvider {
     this.afDB.list('/organization/'+organization_ID+'/broadcast/'+key+'/commentList/').push(broadcast);
   }
 
+  //Adds a comment to a message commentList
+  addCommentToMessage(broadcast: Broadcast, organization_ID: String, key: String) {
+    // console.log(broadcast);
+    this.afDB.list('/organization/'+organization_ID+'/message/'+key+'/commentList/').push(broadcast);
+  }
+
   // Returns the feed list for the organization 
   getFeedList(organization_ID: String) {
     return this.afDB.list('/organization/'+organization_ID+'/message/');
@@ -103,6 +109,11 @@ export class FirebaseServiceProvider {
   // Returns the comments for the broadcast
   getCommentListBroadcast(organization_ID: String, broadcast_ID: String) {
     return this.afDB.list('/organization/'+organization_ID+'/broadcast/'+broadcast_ID+'/commentList/');
+  }
+
+  // Returns the comments for the message
+  getCommentListMessage(organization_ID: String, message_ID: String) {
+    return this.afDB.list('/organization/'+organization_ID+'/message/'+message_ID+'/commentList/');
   }
 
   // Return a user's Liked list

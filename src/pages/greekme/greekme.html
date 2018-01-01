@@ -24,7 +24,7 @@
     <ion-list style="margin-top:150px;">
 
       <ion-list-header>Today</ion-list-header>
-      <ion-item text-wrap *ngFor="let item of (broadcastItems |  async); let i = index" [attr.data-index]="i" class="chat-boxes">
+      <ion-item text-wrap *ngFor="let item of (broadcastItems |  async); let i = index" [attr.id]="i" class="chat-boxes">
         
         <ion-avatar item-start>
           <img src="{{item.avatar_url}}">

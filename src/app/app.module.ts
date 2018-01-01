@@ -29,8 +29,8 @@ import { UserServiceProvider } from "../providers/user-service/user-service";
 import { MomentModule } from 'angular2-moment';
 import { EventViewPage } from '../pages/event-view/event-view';
 import { NgPipesModule } from 'ngx-pipes';
-
-
+import { MessageThreadPage } from '../pages/message-thread/message-thread';
+import { ComposeThreadMessagePage } from '../pages/compose-thread-message/compose-thread-message';
 @NgModule({
   declarations: [
     MyApp,
@@ -48,7 +48,9 @@ import { NgPipesModule } from 'ngx-pipes';
     EditProfilePage,
     ThreadPage,
     EventViewPage,
-    ComposeThreadPage
+    ComposeThreadPage,
+    MessageThreadPage,
+    ComposeThreadMessagePage
   ],
   imports: [
     BrowserModule,
@@ -78,7 +80,9 @@ import { NgPipesModule } from 'ngx-pipes';
     EditProfilePage,
     ThreadPage,
     EventViewPage,
-    ComposeThreadPage
+    ComposeThreadPage,
+    MessageThreadPage,
+    ComposeThreadMessagePage
   ],
   providers: [
     StatusBar,
