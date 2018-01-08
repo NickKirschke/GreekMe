@@ -11,6 +11,7 @@ import {LoginPage} from "../login/login";
 export class ProfilePage {
   // this tells the tabs component which Pages
   // should be each tab's root Page
+  App: App;
   constructor(private afAuth: AngularFireAuth, public navCtrl: NavController, public firebaseService: FirebaseServiceProvider, private app: App) {
 
     // var o = this.broadcastItems.forEach(item => {
@@ -18,12 +19,12 @@ export class ProfilePage {
     // });
     // console.log("check login");
     // this.logout();
-    this.logout(app);
+    this.App = app; 
   }
 
-  logout(appLocal: App) {
+  logout() {
     this.afAuth.auth.signOut();
-    appLocal.getRootNav().setRoot(LoginPage);
+    this.App.getRootNav().setRoot(LoginPage);
   }
 
 }

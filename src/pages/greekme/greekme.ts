@@ -89,8 +89,11 @@ export class GreekMePage {
     this.firebaseService.getCommentListBroadcast(orgId, broadcastId);
   }
 
-  doLike(item) {
-    //console.log(document.getElementById('0'));
+  doLike(item,index) {   
+    var outline = document.getElementById(index);
+    var heart = document.getElementById(index+"h");
+    console.log(outline);
+    console.log(heart);
     const promise = new Promise((resolve, reject) => {
       this.userLikedList.subscribe(items => {
         for (let i of items) {
@@ -105,6 +108,9 @@ export class GreekMePage {
     promise.then((res) => {
       if (res) {
         // Do unlike
+        console.log("doing unlike");
+        outline.style.display = "inline-block";
+        heart.style.display = "none";
         var updates = {};
         var currentLikes;
         var numOfLikesRef = firebase.database().ref('/organization/' + this.user.organization_ID + '/broadcast/' + item.key + '/numOfLikes');
@@ -122,6 +128,9 @@ export class GreekMePage {
         });
       } else {
         // Do like
+        console.log("doing like");
+        outline.style.display = "none";
+        heart.style.display = "inline-block";
         var updates = {};
         var userLikeObj = {
           name: this.user.name

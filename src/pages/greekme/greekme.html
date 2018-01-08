@@ -24,7 +24,7 @@
     <ion-list style="margin-top:150px;">
 
       <ion-list-header>Today</ion-list-header>
-      <ion-item text-wrap *ngFor="let item of (broadcastItems |  async); let i = index" [attr.id]="i" class="chat-boxes">
+      <ion-item text-wrap *ngFor="let item of (broadcastItems |  async); let i = index" class="chat-boxes">
         
         <ion-avatar item-start>
           <img src="{{item.avatar_url}}">
@@ -35,8 +35,8 @@
         <ion-row class ="comments">
           <label (click)="itemSelected(item)">Comments</label>
           <ion-badge class="comment-badge">{{item.numOfComments}}</ion-badge>
-          <ion-icon name="heart" isActive="false" (click)="doLike(item)"></ion-icon>
-          <!-- <ion-icon name="heart" *ngIf="isLiked(item.$key)" (click)="doUnlike(item)"></ion-icon> -->
+          <ion-icon name="heart" isActive="false" [attr.id] ="i" (click)="doLike(item,i)"></ion-icon>
+          <ion-icon name="heart" [attr.id]="i+'h'" (click)="doLike(item,i)"></ion-icon>
           <ion-badge class="comment-badge">{{item.numOfLikes}} </ion-badge>
         </ion-row>
       </ion-item>
