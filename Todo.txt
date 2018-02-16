@@ -11,3 +11,6 @@ Make the load screen better, Show gm page for a second (cordova plugins)
 /// End game
 refactor DB with everyone under school
 Edit Event tab
+
+
+Need to handle the asynchronous nature of this, really the only problem

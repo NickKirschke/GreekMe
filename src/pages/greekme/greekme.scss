@@ -7,6 +7,14 @@ page-greekme {
             overflow: auto;
         }
     }
+    .hideHeart {
+        display: none;
+        visibility: hidden;
+    }
+    .showHeart {
+        display: inline-block;
+        visibility: visible;
+    }
     // .ion-fixed {
     //     width: 100;
     // }

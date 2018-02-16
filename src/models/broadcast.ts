@@ -10,4 +10,6 @@ export interface Broadcast {
     likeList: AngularFireList<any>;
     numOfComments: any;
     numOfLikes: any;
+    liked: boolean;
+    iconName: string;
 }

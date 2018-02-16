@@ -5,6 +5,7 @@ import { FirebaseServiceProvider } from "../../providers/firebase-service/fireba
 import { AngularFireAuth } from "angularfire2/auth/auth";
 import { LoginPage } from "../login/login";
 import { User } from "../../models/user";
+import { UserLike } from "../../models/userLike";
 import { Broadcast } from "../../models/broadcast";
 import { UserServiceProvider } from "../../providers/user-service/user-service";
 import { AngularFireObject } from "angularfire2/database";
@@ -15,6 +16,8 @@ import 'firebase/storage';
 import { ComposeBroadcastPage } from '../compose-broadcast/compose-broadcast';
 import { ThreadPage } from '../thread/thread';
 import { Observable } from 'rxjs/Observable';
+import { PACKAGE_ROOT_URL } from '@angular/core/src/application_tokens';
+import { getAllLifecycleHooks } from '@angular/compiler/src/lifecycle_reflector';
 
 @Component({
   selector: 'page-greekme',
@@ -27,12 +30,10 @@ export class GreekMePage {
   userData: AngularFireObject<User>
   user = {} as User;
   validRole = false;
-  // this tells the tabs component which Pages
-  // should be each tab's root Page
-  broadcastItems: Observable<any>;
+  broadcastItems: Observable<Broadcast[]>;
   broadcastItemRef: AngularFireList<any>;
   image: any;
-  userLikedList: Observable<any>;
+  userLikedList: Observable<UserLike[]>;
   constructor(
     private afAuth: AngularFireAuth,
     public navCtrl: NavController,
@@ -46,15 +47,11 @@ export class GreekMePage {
         userGrab.then((result) => {
           this.user = result as User;
           this.broadcastItemRef = this.firebaseService.getBroadcastList(this.user.organization_ID);
+          this.userLikedList = this.firebaseService.getUserLikeList(this.user.uid).valueChanges();
           this.broadcastItems = this.broadcastItemRef.snapshotChanges().map(action => {
             return action.map(c => ({
-              key: c.payload.key, ...c.payload.val()
+              key: c.payload.key, ...c.payload.val(), iconName: this.checkLike(c.key)
             })).reverse();
-          });
-          this.userLikedList = this.firebaseService.getUserLikeList(this.user.uid).snapshotChanges().map(action => {
-            return action.map(c => ({
-              key: c.payload.key, ...c.payload.val()
-            }));
           });
           if (this.user.role == 'President' || this.user.role == ('Vice President') || this.user.role == ('Chair Member')) {
             this.validRole = true;
@@ -74,6 +71,34 @@ export class GreekMePage {
   logout() {
     this.afAuth.auth.signOut();
   }
+  
+  checkLike(aKey: string) {
+    // var iconType = "stupid";
+    // this.userLikedList.forEach(items => {
+    //       console.log(items);
+    //       for (let i of items) {
+    //         if (i.key === aKey) {
+    //           iconType = "heart"
+    //         }
+    //       }
+    //     });
+    // if (iconType == "stupid") {
+    //   iconType = "heart-outline";
+    // }
+    // return iconType;
+    var inventory = [
+      {name: 'apples', quantity: 2},
+      {name: 'bananas', quantity: 0},
+      {name: 'cherries', quantity: 5}
+    ];
+    console.log(inventory.find(i=>i.name==="cherries"));
+    console.log(aKey);
+    let likeList: UserLike[] = [];
+    this.userLikedList.subscribe(items => items.forEach(item=> likeList.push(item)));
+    let a  = likeList.find(i => i.key === aKey);
+    console.log(a);
+    return "heart";
+  }
 
   goToComposeBroadcast() {
     this.navCtrl.push(ComposeBroadcastPage);
@@ -81,36 +106,61 @@ export class GreekMePage {
 
   ionViewDidEnter() {
     this.fixedHeight = this.mapElement.nativeElement.offsetHeight;
-
   }
-
 
   calculateCommentLength(orgId: String, broadcastId: String) {
     this.firebaseService.getCommentListBroadcast(orgId, broadcastId);
   }
 
-  doLike(item,index) {   
-    var outline = document.getElementById(index);
-    var heart = document.getElementById(index+"h");
-    console.log(outline);
-    console.log(heart);
-    const promise = new Promise((resolve, reject) => {
-      this.userLikedList.subscribe(items => {
-        for (let i of items) {
-          if (i.key === item.key) {
-            console.log("Liked set to true");
-            resolve(true);
-          }
-        }
-        resolve(false);
-      });
+  doLike(item, index) {
+    var heart = document.getElementById(index);
+    var outline = document.getElementById(index + "o");
+    // const promise = new Promise((resolve, reject) => {
+    //   this.userLikedList.forEach(items => {
+    //     console.log(items);
+    //     var count = 0;
+    //     for (let i of items) {
+    //       if (i.key === item.key) {
+    //         console.log("Liked set to true" + count);
+    //         resolve(true);
+    //         count++;
+    //       }
+    //       count++;
+    //     }
+    //     console.log("resolving false");
+    //     resolve(false);
+    //   });
+    // });
+    // const promise = new Promise((resolve) => {
+    //   var result: boolean = false;
+    //   const a = new Promise((resolve) => {
+    //     this.userLikedList.forEach(likes => likes.forEach(like => {
+    //       if (like.key === item.key) {
+    //         resolve(true);
+    //       }
+    //     }));
+    //   }).catch(err => console.log("no match"));
+    //   a.then(function(res) {
+    //     if(res) {
+    //       resolve(true);
+    //     } else {
+    //       resolve(false);
+    //     }
+    //   }).catch(error => console.log(error))
+    // });
+    const promise = Promise.resolve(this.userLikedList).then(function (results) {
+      return results.forEach(likes => likes.some(like => like.key === item.key)).then(function (res) {
+        // console.log(res);
+      })
     });
+    
+    // console.log(promise);
     promise.then((res) => {
       if (res) {
         // Do unlike
         console.log("doing unlike");
-        outline.style.display = "inline-block";
-        heart.style.display = "none";
+        heart.classList.toggle("hideHeart");
+        outline.classList.toggle("hideHeart");
         var updates = {};
         var currentLikes;
         var numOfLikesRef = firebase.database().ref('/organization/' + this.user.organization_ID + '/broadcast/' + item.key + '/numOfLikes');
@@ -120,26 +170,32 @@ export class GreekMePage {
         updates['/organization/' + this.user.organization_ID + '/broadcast/' + item.key + '/likeList/' + this.user.uid] = null;
         updates['/users/' + this.user.uid + '/likeList/' + item.key] = null;
         updates['/organization/' + this.user.organization_ID + '/broadcast/' + item.key + '/numOfLikes/'] = currentLikes - 1;
-        
+
         firebase.database().ref().update(updates).then(function () {
           console.log("Like removed");
+          console.log(outline);
+          console.log(heart);
         }).catch(function (error) {
+          console.log("Error");
           console.log(error);
         });
       } else {
         // Do like
         console.log("doing like");
-        outline.style.display = "none";
-        heart.style.display = "inline-block";
+        heart.classList.toggle("hideHeart");
+        outline.classList.toggle("hideHeart");
         var updates = {};
+        //This is the object stored on the broadcast like list
         var userLikeObj = {
           name: this.user.name
         }
+        //This is the object stored on the user's like list
         var broadcastLikeObj = {
-          name: item.text
+          name: item.text,
+          key: item.key
         }
         var currentLikes;
-        var numOfLikesRef = firebase.database().ref('/organization/' + this.user.organization_ID + '/broadcast/' + item.$key + '/numOfLikes');
+        var numOfLikesRef = firebase.database().ref('/organization/' + this.user.organization_ID + '/broadcast/' + item.key + '/numOfLikes');
         numOfLikesRef.on('value', function (snapshot) {
           currentLikes = snapshot.val();
         });
@@ -148,12 +204,18 @@ export class GreekMePage {
         updates['/organization/' + this.user.organization_ID + '/broadcast/' + item.key + '/numOfLikes/'] = currentLikes + 1;
         firebase.database().ref().update(updates).then(function () {
           console.log("Like added ");
+          console.log(outline);
+          console.log(heart);
           // console.log(document.getElementById("0"));
           //console.log(num)
         }).catch(function (error) {
+          console.log("Error");
           console.log(error);
+
         });
       }
+    }).catch(err => {
+      console.log("Error");
     });
   }
 

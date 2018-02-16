@@ -11,6 +11,7 @@ import 'firebase/storage';
 import {AngularFireList} from "angularfire2/database";
 import { Broadcast } from "../../models/broadcast";
 import { Event } from "../../models/event"
+import { UserLike } from '../../models/userLike';
 /*
   Generated class for the FirebaseServiceProvider provider.
 
@@ -118,7 +119,7 @@ export class FirebaseServiceProvider {
 
   // Return a user's Liked list
   getUserLikeList(uid: String) {
-    return this.afDB.list('users/'+uid+'/likeList');
+    return this.afDB.list<UserLike>('users/'+uid+'/likeList');
   }
 
   // Retrieves and stores the user data locally
