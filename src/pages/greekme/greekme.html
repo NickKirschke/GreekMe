@@ -36,10 +36,7 @@
         <ion-row class ="comments">
           <label (click)="itemSelected(item)">Comments</label>
           <ion-badge class="comment-badge">{{item.numOfComments}}</ion-badge>
-          <!-- <ion-icon name="heart" ng-class="{'showHeart': liked, 'hideHeart': !liked" [attr.id] ="i" (click)="liked=!liked" ng-init="liked=false"></ion-icon> -->
-          <!-- <ion-icon name="heart-outline" ng-class="{'hideHeart': liked, 'showHeart': !liked" [attr.id]="i+'o'" (click)="liked=!liked" ng-init="liked=true"></ion-icon> -->
-          <!-- <ion-icon class="hideHeart" name="heart" [attr.id] ="i" (click)="doLike(item,i)"></ion-icon>  -->
-          <ion-icon  [name]="item.iconName" [attr.id]="i+'o'" (click)="doLike(item,i)"></ion-icon> 
+          <ion-icon [name]="item.iconName" [attr.id]="i" (click)="doLike(item,i)"></ion-icon> 
           <ion-badge class="comment-badge">{{item.numOfLikes}} </ion-badge>
         </ion-row>
       </ion-item>

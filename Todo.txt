@@ -1,4 +1,4 @@
-Liking feature almost there, need to tilize class removal.
+
 
 On the app the liking feature refreshes the page
 broadcasts are now indexed, utilize to manipulate the icon.

@@ -33,7 +33,9 @@ export class GreekMePage {
   broadcastItems: Observable<Broadcast[]>;
   broadcastItemRef: AngularFireList<any>;
   image: any;
+  userLikedListRef: AngularFireList<any>;
   userLikedList: Observable<UserLike[]>;
+
   constructor(
     private afAuth: AngularFireAuth,
     public navCtrl: NavController,
@@ -42,37 +44,61 @@ export class GreekMePage {
     private userService: UserServiceProvider,
     private storage: Storage) {
     this.afAuth.authState.subscribe(data => {
-      if (data && data.email && data.uid) {
-        const userGrab = this.userService.currentUserInfo();
-        userGrab.then((result) => {
-          this.user = result as User;
-          this.broadcastItemRef = this.firebaseService.getBroadcastList(this.user.organization_ID);
-          this.userLikedList = this.firebaseService.getUserLikeList(this.user.uid).valueChanges();
-          this.broadcastItems = this.broadcastItemRef.snapshotChanges().map(action => {
-            return action.map(c => ({
-              key: c.payload.key, ...c.payload.val(), iconName: this.checkLike(c.key)
-            })).reverse();
-          });
-          if (this.user.role == 'President' || this.user.role == ('Vice President') || this.user.role == ('Chair Member')) {
-            this.validRole = true;
-          }
-          const imageGrab = this.firebaseService.getGreetingImage(this.user.organization_ID);
-          imageGrab.then((result) => {
-            this.image = result;
-          }, (error) => {
-            this.image = 'https://firebasestorage.googleapis.com/v0/b/greekme-7475a.appspot.com/o/GM_Default.png?alt=media&token=6bc30d40-17a2-40bb-9af7-edff78112780';
-          });
-        });
-      } else {
+      if (!data && !data.email && !data.uid) {
         this.app.getRootNavs()[0].setRoot(LoginPage);
       }
     });
   }
+  async ionViewDidLoad() {
+    // this.checkIcons();
+    await this.dataSetup();
+    await this.checkIcons();
+    console.log("after check");
+  }
+
   logout() {
     this.afAuth.auth.signOut();
   }
-  
-  checkLike(aKey: string) {
+
+
+  async dataSetup() {
+    const userGrab = await this.userService.currentUserInfo();
+    this.user = userGrab as User;
+    this.broadcastItemRef = await this.firebaseService.getBroadcastList(this.user.organization_ID);
+    this.userLikedListRef = await this.firebaseService.getUserLikeList(this.user.uid);
+    this.userLikedList = this.userLikedListRef.snapshotChanges().map(action => {
+      return action.map(c => ({
+        key: c.payload.key, ...c.payload.val()
+      }));
+    });
+    this.broadcastItems = this.broadcastItemRef.snapshotChanges().map(action => {
+      return action.map(c => ({
+        key: c.payload.key, ...c.payload.val(), iconName: "heart-outline"
+      })).reverse();
+    });
+    if (this.user.role == 'President' || this.user.role == ('Vice President') || this.user.role == ('Chair Member')) {
+      this.validRole = true;
+    }
+    const imageGrab = this.firebaseService.getGreetingImage(this.user.organization_ID);
+    imageGrab.then((result) => {
+      this.image = result;
+    }, (error) => {
+      this.image = 'https://firebasestorage.googleapis.com/v0/b/greekme-7475a.appspot.com/o/GM_Default.png?alt=media&token=6bc30d40-17a2-40bb-9af7-edff78112780';
+    });
+    console.log("data finished");
+  }
+
+
+
+  getLikeList() {
+    return new Promise((resolve, reject) => {
+      let likeList: UserLike[] = [];
+      this.userLikedListRef.valueChanges().subscribe(items => items.forEach(item => likeList.push(item)));
+      resolve(likeList);
+    });
+  }
+
+  async checkIcons() {
     // var iconType = "stupid";
     // this.userLikedList.forEach(items => {
     //       console.log(items);
@@ -86,18 +112,23 @@ export class GreekMePage {
     //   iconType = "heart-outline";
     // }
     // return iconType;
-    var inventory = [
-      {name: 'apples', quantity: 2},
-      {name: 'bananas', quantity: 0},
-      {name: 'cherries', quantity: 5}
-    ];
-    console.log(inventory.find(i=>i.name==="cherries"));
-    console.log(aKey);
+    // const likes = this.getLikeList();
+    // console.log(likes);
     let likeList: UserLike[] = [];
-    this.userLikedList.subscribe(items => items.forEach(item=> likeList.push(item)));
-    let a  = likeList.find(i => i.key === aKey);
-    console.log(a);
-    return "heart";
+    var index = 0;
+    this.userLikedList.subscribe(items => items.forEach(item => likeList.push(item)));
+    console.log("bacon");
+    this.broadcastItems.subscribe(items => items.forEach(item => {
+      if (likeList.find(i => i.key === item.key)) {
+        console.log(index.toString());
+        let itemToChange = document.getElementById(index.toString());
+        console.log(itemToChange);
+      }
+      index++;
+    }));
+    return "hear-outline";
+    // let a  = likeList.find(i => i.key === aKey);
+    // console.log(a);
   }
 
   goToComposeBroadcast() {
@@ -114,7 +145,14 @@ export class GreekMePage {
 
   doLike(item, index) {
     var heart = document.getElementById(index);
-    var outline = document.getElementById(index + "o");
+    if(item.iconName === 'heart-outline') {
+      item.iconName = 'heart';
+      console.log("heart");
+    } else {
+      item.iconName = 'heart-outline';
+
+      console.log("outline");
+    }
     // const promise = new Promise((resolve, reject) => {
     //   this.userLikedList.forEach(items => {
     //     console.log(items);
@@ -153,14 +191,14 @@ export class GreekMePage {
         // console.log(res);
       })
     });
-    
+
     // console.log(promise);
     promise.then((res) => {
       if (res) {
         // Do unlike
         console.log("doing unlike");
         heart.classList.toggle("hideHeart");
-        outline.classList.toggle("hideHeart");
+        // outline.classList.toggle("hideHeart");
         var updates = {};
         var currentLikes;
         var numOfLikesRef = firebase.database().ref('/organization/' + this.user.organization_ID + '/broadcast/' + item.key + '/numOfLikes');
@@ -173,7 +211,7 @@ export class GreekMePage {
 
         firebase.database().ref().update(updates).then(function () {
           console.log("Like removed");
-          console.log(outline);
+          // console.log(outline);
           console.log(heart);
         }).catch(function (error) {
           console.log("Error");
@@ -183,7 +221,7 @@ export class GreekMePage {
         // Do like
         console.log("doing like");
         heart.classList.toggle("hideHeart");
-        outline.classList.toggle("hideHeart");
+        // outline.classList.toggle("hideHeart");
         var updates = {};
         //This is the object stored on the broadcast like list
         var userLikeObj = {
@@ -204,7 +242,7 @@ export class GreekMePage {
         updates['/organization/' + this.user.organization_ID + '/broadcast/' + item.key + '/numOfLikes/'] = currentLikes + 1;
         firebase.database().ref().update(updates).then(function () {
           console.log("Like added ");
-          console.log(outline);
+          // console.log(outline);
           console.log(heart);
           // console.log(document.getElementById("0"));
           //console.log(num)
@@ -236,18 +274,12 @@ export class GreekMePage {
   //   });
   // }
 
-  // Make a attirbute 
+  // Make an attirbute 
 
-  isLiked(key: String) {
-    // var liked = false;
-    // this.userLikedList.forEach(like =>{
-    //   if(like.$key = key) {
-    //     liked = true;
-    //     // console.log("user liked this: " + key);
-    //     return true;
-    //   }
-    // return false;})
-    // return liked;
+  async isLiked(key: String) {
+    var liked = false;
+    const a = this.userLikedList.forEach(likes => likes.find(like => like.key === key));
+    a.then(res => {return res});
   }
 
   itemSelected(item) {
