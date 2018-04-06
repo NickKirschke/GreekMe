@@ -29,24 +29,26 @@
       <h2>{{(event | async)?.name}}</h2>
       <p>On {{(event | async )?.date | amDateFormat: 'LL'}}</p>
       <p>At {{(event | async)?.location}}</p>
-      <p>Made by: {{(event | async)?.creator}}      
-      <hr/>
-      <h6> Details:</h6>
-      <p> {{ (event | async)?.info}}</p>
-      <label>RSVP:</label>
-      <button ion-button small id="yesButton" [outline]="!attendingStatus" (click)="rsvpYes()">Going!</button>
-      <button ion-button small id="noButton" [outline]="attendingStatus" (click)="rsvpNo()">Can't Go</button>
-      <button ion-button small *ngIf="isCreator" (click)="editEvent()">Edit Event</button> 
-      
+      <p>Made by: {{(event | async)?.creator}}
+        <hr/>
+        <h6> Details:</h6>
+        <p> {{ (event | async)?.info}}</p>
+        <div>
+          <label>RSVP:</label>
+          <button ion-button small id="yesButton" [outline]="!attendingStatus" (click)="rsvpYes()" style="margin-bottom:14px;">Going!</button>
+          <button ion-button small id="noButton" [outline]="attendingStatus" (click)="rsvpNo()" style="margin-bottom:14px;">Can't Go</button>
+          <button ion-button small *ngIf="isCreator" (click)="editEvent()">Edit Event</button>
+        </div>
+
     </ion-list>
 
     <ion-list no-lines *ngSwitchCase="'attendingList'">
-        <ion-item *ngFor="let item of attendingList |  async">
-            <ion-avatar item-start>
-            <img src="{{item.avatar_url}}">
-          </ion-avatar>
-          <p>{{item.name}}</p>
-        </ion-item>
+      <ion-item *ngFor="let item of attendingList |  async">
+        <ion-avatar item-start>
+          <img src="{{item.avatar_url}}">
+        </ion-avatar>
+        <p>{{item.name}}</p>
+      </ion-item>
     </ion-list>
   </div>
 </ion-content>

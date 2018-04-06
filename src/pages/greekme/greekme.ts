@@ -44,7 +44,7 @@ export class GreekMePage {
     private userService: UserServiceProvider,
     private storage: Storage) {
     this.afAuth.authState.subscribe(data => {
-      if (!data && !data.email && !data.uid) {
+      if (!data || !data.email || !data.uid) {
         this.app.getRootNavs()[0].setRoot(LoginPage);
       }
     });
@@ -135,9 +135,9 @@ export class GreekMePage {
     this.navCtrl.push(ComposeBroadcastPage);
   }
 
-  ionViewDidEnter() {
-    this.fixedHeight = this.mapElement.nativeElement.offsetHeight;
-  }
+  // ionViewDidEnter() {
+  //   this.fixedHeight = this.mapElement.nativeElement.offsetHeight;
+  // }
 
   calculateCommentLength(orgId: String, broadcastId: String) {
     this.firebaseService.getCommentListBroadcast(orgId, broadcastId);

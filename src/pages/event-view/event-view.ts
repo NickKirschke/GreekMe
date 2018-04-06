@@ -174,7 +174,7 @@ export class EventViewPage {
   rsvpNo() {
     // console.log(this.eventName);
     if (this.attendingStatus) {
-    this.toast("Remove you from the attending list.");
+    this.toast("Removed you from the attending list.");
     this.attendingListRef.remove(this.user.uid);
     // this.userAttendingList.remove(this.eventId);
     this.attendingStatus = false;

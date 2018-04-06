@@ -11,12 +11,18 @@ import { Component } from '@angular/core';
   templateUrl: 'broadcast-row.html'
 })
 export class BroadcastRowComponent {
-
+  
+  avatar_url: string;
+  name: string;
   text: string;
+  date: string;
+  
+  
 
   constructor() {
     console.log('Hello BroadcastRowComponent Component');
     this.text = 'Hello World';
+    
   }
 
 }

@@ -67,7 +67,11 @@
   ion-note {
     font-size: 12px;
     align-self: flex-start;
-    margin-top: 14px;
+    margin-top: 10px;
+    position: absolute;
+    top:0;
+    right:0;
+    margin-right:14px;
   }
   .comments {
     margin-top: 8px;
@@ -76,6 +80,7 @@
     .comment-badge {
       margin-left: 3px;
       margin-right: 15px;
+      margin-top: -2px;
     }
   }
 }
