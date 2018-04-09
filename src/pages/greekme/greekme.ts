@@ -52,7 +52,6 @@ export class GreekMePage {
   async ionViewDidLoad() {
     // this.checkIcons();
     await this.dataSetup();
-    await this.checkIcons();
     console.log("after check");
   }
 
@@ -73,7 +72,7 @@ export class GreekMePage {
     });
     this.broadcastItems = this.broadcastItemRef.snapshotChanges().map(action => {
       return action.map(c => ({
-        key: c.payload.key, ...c.payload.val(), iconName: "heart-outline"
+        key: c.payload.key, ...c.payload.val(), iconName: this.checkIcons(c.payload.key)
       })).reverse();
     });
     if (this.user.role == 'President' || this.user.role == ('Vice President') || this.user.role == ('Chair Member')) {
@@ -85,7 +84,7 @@ export class GreekMePage {
     }, (error) => {
       this.image = 'https://firebasestorage.googleapis.com/v0/b/greekme-7475a.appspot.com/o/GM_Default.png?alt=media&token=6bc30d40-17a2-40bb-9af7-edff78112780';
     });
-    console.log("data finished");
+    console.log("End of data setup");
   }
 
 
@@ -98,7 +97,8 @@ export class GreekMePage {
     });
   }
 
-  async checkIcons() {
+  checkIcons(key: string) {
+
     // var iconType = "stupid";
     // this.userLikedList.forEach(items => {
     //       console.log(items);
@@ -115,20 +115,10 @@ export class GreekMePage {
     // const likes = this.getLikeList();
     // console.log(likes);
     let likeList: UserLike[] = [];
-    var index = 0;
-    this.userLikedList.subscribe(items => items.forEach(item => likeList.push(item)));
-    console.log("bacon");
-    this.broadcastItems.subscribe(items => items.forEach(item => {
-      if (likeList.find(i => i.key === item.key)) {
-        console.log(index.toString());
-        let itemToChange = document.getElementById(index.toString());
-        console.log(itemToChange);
-      }
-      index++;
-    }));
-    return "hear-outline";
-    // let a  = likeList.find(i => i.key === aKey);
-    // console.log(a);
+    const a = this.userLikedList.subscribe(items => items.forEach(item => likeList.push(item)));
+    // console.log("bacon");
+    // console.log(likeList);
+    return likeList.some(item => item.key === key) ? "heart" : "heart-outline";
   }
 
   goToComposeBroadcast() {
@@ -143,7 +133,8 @@ export class GreekMePage {
     this.firebaseService.getCommentListBroadcast(orgId, broadcastId);
   }
 
-  doLike(item, index) {
+  doLike(item, index, $event) {
+    console.log($event);
     var heart = document.getElementById(index);
     if(item.iconName === 'heart-outline') {
       item.iconName = 'heart';

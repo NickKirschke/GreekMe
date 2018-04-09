@@ -1,4 +1,4 @@
-import { NgModule, ErrorHandler } from '@angular/core';
+import { NgModule, ErrorHandler, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
@@ -31,6 +31,7 @@ import { EventViewPage } from '../pages/event-view/event-view';
 import { NgPipesModule } from 'ngx-pipes';
 import { MessageThreadPage } from '../pages/message-thread/message-thread';
 import { ComposeThreadMessagePage } from '../pages/compose-thread-message/compose-thread-message';
+import { BroadcastRowComponent } from '../components/broadcast-row/broadcast-row';
 @NgModule({
   declarations: [
     MyApp,
@@ -50,7 +51,8 @@ import { ComposeThreadMessagePage } from '../pages/compose-thread-message/compos
     EventViewPage,
     ComposeThreadPage,
     MessageThreadPage,
-    ComposeThreadMessagePage
+    ComposeThreadMessagePage,
+    BroadcastRowComponent
   ],
   imports: [
     BrowserModule,

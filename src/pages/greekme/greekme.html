@@ -17,15 +17,16 @@
 </ion-header>
 <ion-content>
   <div>
-    <img style="width:100%;height:150px;overflow:auto;" src="{{image}}" />
+    <img style="width:100%;height:150px;overflow:auto;" [src]="image" />
   </div>
   <ion-list>
-    <ion-list-header>Today</ion-list-header>
+    <broadcast-row text-wrap *ngFor="let item of (broadcastItems |  async); let i = index" class="chat-boxes" [broadcast]="item" (likeEmitter)="doLike(item, i, $event)"></broadcast-row>
+    <!-- <ion-list-header>Today</ion-list-header>
     <ion-item text-wrap *ngFor="let item of (broadcastItems |  async); let i = index" class="chat-boxes">
       <ion-avatar item-start style="align-self: flex-start;">
         <img src="{{item.avatar_url}}">
       </ion-avatar>
-      <h2 style="color: gray">{{item.name }}</h2>
+      <h2>{{item.name }}</h2>
       <p class="width:auto" style="color:black">{{item.text}}</p>
       <ion-note style="position: absolute;top:0;">{{item.date | amTimeAgo}}</ion-note>
       <ion-row class="comments">
@@ -34,6 +35,6 @@
         <ion-icon [name]="item.iconName" [attr.id]="i" (click)="doLike(item,i)"></ion-icon>
         <ion-badge class="comment-badge">{{item.numOfLikes}} </ion-badge>
       </ion-row>
-    </ion-item>
+    </ion-item> -->
   </ion-list>
 </ion-content>

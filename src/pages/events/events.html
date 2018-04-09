@@ -19,10 +19,10 @@
   <!--  Add ngif with no events <h2 *ngif="eventItems.length"></h2> -->
   <ion-list no-lines>
     <!-- (click)="itemSelected(item.$key,item)" -->
-    <button ion-item text-wrap *ngFor="let item of eventItems |  async | orderBy: 'date'" class="chat-boxes" (click)="goToEvent(item.key)">
+    <button ion-item text-wrap *ngFor="let item of eventItems |  async | orderBy: 'date'" (click)="goToEvent(item.key)">
       <h2>{{item.name}}</h2>
       <!-- <ion-note>Happening on: {{item.date | amDifference: today :'days' : true}} days</ion-note> -->
-      <ion-note>Happening on: {{item.date | amDateFormat: 'LL'}}</ion-note>
+      <h3>Happening on: {{item.date | amDateFormat: 'LL'}}</h3>
       </button>
   </ion-list>
 </ion-content>

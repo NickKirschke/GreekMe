@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { NavController, App } from 'ionic-angular';
-import {AngularFireList} from "angularfire2/database";
 import {FirebaseServiceProvider} from "../../providers/firebase-service/firebase-service";
 import {AngularFireAuth} from "angularfire2/auth/auth";
 import { LoginPage } from "../login/login";

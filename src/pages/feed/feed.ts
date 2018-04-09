@@ -8,7 +8,6 @@ import {User} from "../../models/user";
 import {Broadcast} from "../../models/broadcast";
 import {UserServiceProvider} from "../../providers/user-service/user-service";
 import {AngularFireObject} from "angularfire2/database";
-import {Storage} from "@ionic/storage";
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import { ComposeFeedPage } from '../compose-feed/compose-feed';
@@ -26,7 +25,7 @@ export class FeedPage {
   user = {} as User;
   // this tells the tabs component which Pages
   // should be each tab's root Page
-  feedItems: Observable<any>;
+  feedItems: Observable<Broadcast[]>;
   feedItemRef: AngularFireList<any>;
   userLikedList: Observable<any>;
   constructor(
@@ -43,7 +42,7 @@ export class FeedPage {
            this.feedItemRef = this.firebaseService.getFeedList(this.user.organization_ID);
            this.feedItems = this.feedItemRef.snapshotChanges().map(action => {
             return action.map(c => ({
-              key: c.payload.key, ...c.payload.val()
+              key: c.payload.key, ...c.payload.val(), iconName: "heart-outline"
             })).reverse();
           });
           this.userLikedList = this.firebaseService.getUserLikeList(this.user.uid).snapshotChanges().map(action => {
@@ -66,22 +65,36 @@ export class FeedPage {
   }
   doLike(item) {
     //console.log(document.getElementById('0'));
-    const promise = new Promise((resolve, reject) => {
-      this.userLikedList.subscribe(items => {
-        for (let i of items) {
-          if (i.key === item.key) {
-            console.log("Liked set to true");
-            resolve(true);
-          }
-        }
-        resolve(false);
-      });
+    if(item.iconName === 'heart-outline') {
+      item.iconName = 'heart';
+      console.log("heart");
+    } else {
+      item.iconName = 'heart-outline';
+
+      console.log("outline");
+    }
+
+    const promise = Promise.resolve(this.userLikedList).then(function (results) {
+      return results.forEach(likes => likes.some(like => like.key === item.key)).then(function (res) {
+        // console.log(res);
+      })
     });
+    // const promise = new Promise((resolve, reject) => {
+    //   this.userLikedList.subscribe(items => {
+    //     for (let i of items) {
+    //       if (i.key === item.key) {
+    //         console.log("Liked set to true");
+    //         resolve(true);
+    //       }
+    //     }
+    //     resolve(false);
+    //   });
+    // });
     promise.then((res) => {
       if (res) {
         // Do unlike
-        var updates = {};
-        var currentLikes;
+        let updates = {};
+        let currentLikes;
         let numOfLikesRef = firebase.database().ref('/organization/' + this.user.organization_ID + '/message/' + item.key + '/numOfLikes');
         numOfLikesRef.on('value', function (snapshot) {
           currentLikes = snapshot.val();
@@ -97,15 +110,16 @@ export class FeedPage {
         });
       } else {
         // Do like
-        var updates = {};
-        var userLikeObj = {
+        
+        let updates = {};
+        let userLikeObj = {
           name: this.user.name
         }
-        var messageLikeObj = {
+        let messageLikeObj = {
           name: item.text
         }
-        var currentLikes;
-        let numOfLikesRef = firebase.database().ref('/organization/' + this.user.organization_ID + '/broadcast/' + item.$key + '/numOfLikes');
+        let currentLikes;
+        let numOfLikesRef = firebase.database().ref('/organization/' + this.user.organization_ID + '/broadcast/' + item.key + '/numOfLikes');
         numOfLikesRef.on('value', function (snapshot) {
           currentLikes = snapshot.val();
         });

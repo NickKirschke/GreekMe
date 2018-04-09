@@ -18,8 +18,9 @@
 <ion-content >
     <!-- <ion-scroll> -->
       <ion-list>
+          <broadcast-row text-wrap *ngFor="let item of (feedItems |  async); let i = index" class="chat-boxes" [broadcast]="item" (likeEmitter)="doLike(item, i, $event)"></broadcast-row>
   <!-- (click)="itemSelected(item.$key,item)" -->
-  <ion-item text-wrap *ngFor="let item of (feedItems |  async); let i = index" [attr.id]="i" class="chat-boxes">
+  <!-- <ion-item text-wrap *ngFor="let item of (feedItems |  async); let i = index" [attr.id]="i" class="chat-boxes">
     
     <ion-avatar item-start>
       <img src="{{item.avatar_url}}">
@@ -32,8 +33,8 @@
       <ion-badge class="comment-badge">{{item.numOfComments}}</ion-badge>
       <ion-icon name="heart" isActive="false" (click)="doLike(item)"></ion-icon>
       <!-- <ion-icon name="heart" *ngIf="isLiked(item.$key)" (click)="doUnlike(item)"></ion-icon> -->
-      <ion-badge class="comment-badge">{{item.numOfLikes}} </ion-badge>
+      <!-- <ion-badge class="comment-badge">{{item.numOfLikes}} </ion-badge>
     </ion-row>
-  </ion-item>
+  </ion-item> -->
       </ion-list>
   </ion-content>

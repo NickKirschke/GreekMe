@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { AngularFireDatabase } from "angularfire2/database/database";
 import {AngularFireAuth} from "angularfire2/auth/auth";
@@ -8,7 +7,6 @@ import {User} from "../../models/user";
 import {AngularFireObject} from "angularfire2/database";
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
-import {AngularFireList} from "angularfire2/database";
 import { Broadcast } from "../../models/broadcast";
 import { Event } from "../../models/event"
 import { UserLike } from '../../models/userLike';

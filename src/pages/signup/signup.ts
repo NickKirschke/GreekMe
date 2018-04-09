@@ -5,7 +5,6 @@ import {User} from "../../models/user";
 import {AngularFireAuth} from "angularfire2/auth/auth";
 import {FirebaseServiceProvider} from "../../providers/firebase-service/firebase-service";
 import {Storage} from "@ionic/storage";
-import {GreekMePage} from "../greekme/greekme";
 import {TabsControllerPage } from "../tabs-controller/tabs-controller";
 import { LoadingController } from 'ionic-angular';
 
@@ -23,7 +22,6 @@ export class SignupPage {
     private afAuth: AngularFireAuth,
     public navCtrl: NavController,
     public firebaseService: FirebaseServiceProvider,
-    private storage: Storage,
     public loadingCtrl: LoadingController) {
   }
   async register(user: User) {

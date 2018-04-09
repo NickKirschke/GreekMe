@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Broadcast } from '../../models/broadcast'
 
 /**
  * Generated class for the BroadcastRowComponent component.
@@ -11,18 +12,24 @@ import { Component } from '@angular/core';
   templateUrl: 'broadcast-row.html'
 })
 export class BroadcastRowComponent {
-  
-  avatar_url: string;
-  name: string;
-  text: string;
-  date: string;
-  
-  
+  @Input('broadcast') broadcast : Broadcast;
+  @Output() likeEmitter = new EventEmitter();
+  @Input('uid') uid: string;
 
   constructor() {
     console.log('Hello BroadcastRowComponent Component');
-    this.text = 'Hello World';
     
   }
 
+  ngAfterViewInit() {
+    console.log(this.broadcast.key);
+    if(this.broadcast.likeList) {
+      let res = this.broadcast.likeList;
+      console.log(res);
+    }
+  }
+
+  doLike() {
+    this.likeEmitter.emit(this.broadcast);
+  }
 }

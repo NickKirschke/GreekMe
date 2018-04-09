@@ -6,7 +6,7 @@ profile page
 notifications
 push notifications
 Make the load screen better, Show gm page for a second (cordova plugins)
-
+Login button darker after entering info
 
 /// End game
 refactor DB with everyone under school

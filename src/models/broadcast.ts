@@ -7,7 +7,7 @@ export interface Broadcast {
     uid: any;
     key: any;
     commentList: AngularFireList<any>;
-    likeList: AngularFireList<any>;
+    likeList: string[];
     numOfComments: any;
     numOfLikes: any;
     liked: boolean;
