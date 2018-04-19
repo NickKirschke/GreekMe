@@ -46,13 +46,10 @@ export class GreekMePage {
     this.afAuth.authState.subscribe(data => {
       if (!data || !data.email || !data.uid) {
         this.app.getRootNavs()[0].setRoot(LoginPage);
+      } else {
+        this.dataSetup();
       }
     });
-  }
-  async ionViewDidLoad() {
-    // this.checkIcons();
-    await this.dataSetup();
-    console.log("after check");
   }
 
   logout() {
@@ -63,6 +60,7 @@ export class GreekMePage {
   async dataSetup() {
     const userGrab = await this.userService.currentUserInfo();
     this.user = userGrab as User;
+    console.log(this.user);
     this.broadcastItemRef = await this.firebaseService.getBroadcastList(this.user.organization_ID);
     this.userLikedListRef = await this.firebaseService.getUserLikeList(this.user.uid);
     this.userLikedList = this.userLikedListRef.snapshotChanges().map(action => {
@@ -84,7 +82,7 @@ export class GreekMePage {
     }, (error) => {
       this.image = 'https://firebasestorage.googleapis.com/v0/b/greekme-7475a.appspot.com/o/GM_Default.png?alt=media&token=6bc30d40-17a2-40bb-9af7-edff78112780';
     });
-    console.log("End of data setup");
+    // console.log("End of data setup");
   }
 
 
@@ -118,6 +116,7 @@ export class GreekMePage {
     const a = this.userLikedList.subscribe(items => items.forEach(item => likeList.push(item)));
     // console.log("bacon");
     // console.log(likeList);
+
     return likeList.some(item => item.key === key) ? "heart" : "heart-outline";
   }
 
@@ -134,7 +133,7 @@ export class GreekMePage {
   }
 
   doLike(item, index, $event) {
-    console.log($event);
+    // console.log($event);
     var heart = document.getElementById(index);
     if(item.iconName === 'heart-outline') {
       item.iconName = 'heart';

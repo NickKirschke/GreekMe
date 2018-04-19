@@ -138,6 +138,7 @@ export class FirebaseServiceProvider {
   //5.0
   getUserDetails(uid) {
     this.user = this.afDB.object('/users/'+uid);
+    console.log("getting user details");
     if (this.user){
       // Retrieves user details from the DB and stores locally
       this.user.snapshotChanges().map(action =>{
@@ -146,7 +147,7 @@ export class FirebaseServiceProvider {
         return data;
       }).forEach(field => {
         this.storage.set(field.key, field.val);
-        console.log(field.key + " " + field.vak)
+        console.log(field.key + " " + field.val)
       })
     } else {
       console.log("User is undefined");
@@ -162,7 +163,8 @@ export class FirebaseServiceProvider {
     this.afAuth.authState.take(1).subscribe(auth => {
       // Set the uid and the avatar for the new user
       userDetails.uid = auth.uid;
-      userDetails.avatar_url ='https://firebasestorage.googleapis.com/v0/b/greekme-7475a.appspot.com/o/GM_Default.png?alt=media&token=6bc30d40-17a2-40bb-9af7-edff78112780';
+      // userDetails.avatar_url ='https://firebasestorage.googleapis.com/v0/b/greekme-7475a.appspot.com/o/GM_Default.png?alt=media&token=6bc30d40-17a2-40bb-9af7-edff78112780';
+      userDetails.avatar_url ="https://firebasestorage.googleapis.com/v0/b/greekme-7475a.appspot.com/o/123456%2Fn3KA2xjGAaNbr8xymrHAyc4StJM2.jpeg?alt=media&token=e74020a0-3323-4e83-a1f9-8ea53e91ab91";
       this.afDB.object('/users/'+auth.uid).set(userDetails);
       // Store the variables locally
       this.storage.set("name",userDetails.name);

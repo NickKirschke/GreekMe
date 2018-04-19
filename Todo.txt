@@ -1,16 +1,12 @@
-
-
-On the app the liking feature refreshes the page
-broadcasts are now indexed, utilize to manipulate the icon.
 profile page
 notifications
 push notifications
 Make the load screen better, Show gm page for a second (cordova plugins)
+look at all cordova plugins
 Login button darker after entering info
-
+scaling input on page with lots of text
+Liking shows correct icon
+refactor thread page to passa  parameter stating whether or not it is a broadcast or feed
 /// End game
 refactor DB with everyone under school
 Edit Event tab
-
-
-Need to handle the asynchronous nature of this, really the only problem

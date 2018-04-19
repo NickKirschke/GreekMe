@@ -38,6 +38,8 @@ export class LoginPage {
       // If successful login, retrieve uid then access user info from db.
       this.afAuth.authState.subscribe(data=> {
         if (data) {
+          console.log("logging in");
+          console.log(data.uid);
           this.firebaseService.getUserDetails(data.uid);
           // Then transfer to main page
           this.navCtrl.setRoot(TabsControllerPage);

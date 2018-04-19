@@ -15,21 +15,25 @@ export class BroadcastRowComponent {
   @Input('broadcast') broadcast : Broadcast;
   @Output() likeEmitter = new EventEmitter();
   @Input('uid') uid: string;
+  @Output() commentEmitter = new EventEmitter();
 
   constructor() {
-    console.log('Hello BroadcastRowComponent Component');
+    // console.log('Hello BroadcastRowComponent Component');
     
   }
 
   ngAfterViewInit() {
-    console.log(this.broadcast.key);
+    // console.log(this.broadcast.key);
     if(this.broadcast.likeList) {
       let res = this.broadcast.likeList;
-      console.log(res);
+      // console.log(res);
     }
   }
 
   doLike() {
     this.likeEmitter.emit(this.broadcast);
+  }
+  itemSelected() {
+    this.commentEmitter.emit(this.broadcast);
   }
 }
