@@ -1,3 +1,26 @@
 broadcast-row {
-
+    .chat-boxes {
+        ion-note {
+          font-size: 12px;
+          align-self: flex-start;
+          margin-top: 10px;
+          position: absolute;
+          top:0;
+          right:0;
+          margin-right:14px;
+        }
+        ion-avatar {
+            align-self: flex-start;
+        }
+        .comments {
+          margin-top: 8px;
+          font-size: 12px;
+          align-self: flex-start;
+          .comment-badge {
+            margin-left: 3px;
+            margin-right: 15px;
+            margin-top: -2.5px;
+          }
+        }
+      }
 }

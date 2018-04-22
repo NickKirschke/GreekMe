@@ -1,6 +1,14 @@
+Get user detail is broken
 profile page
+Create a user commentList, store all their broadcasts
+Add a bio view and edit bio button
+Disable the comments and like button via param on the component on thread, refactor adn remove classes from app.scss
+View bio page through broadcast photo (check against user ID to disable all edit buttons including kog)
+Login Issue (something to do with the state?) Also registration issue with incorrect data
+Image needs to not be a squished circle on the homepage. chose the small part https://stackoverflow.com/questions/32477563/css-fit-rounded-circle-image-do-not-stretch-it
 notifications
 push notifications
+role selection truncates
 Make the load screen better, Show gm page for a second (cordova plugins)
 look at all cordova plugins
 Login button darker after entering info

@@ -16,15 +16,7 @@ export class UserServiceProvider {
     return new Promise((resolve) =>
     {
       let temp = {} as User;
-      this.storage.get("avatar_url").then(res => temp.avatar_url = res);
-      this.storage.get("uid").then(res => temp.uid = res);
-      this.storage.get("name").then(res => temp.name = res);
-      this.storage.get("email").then(res => temp.email = res);
-      this.storage.get("organization_school").then(res => temp.organization_school = res);
-      this.storage.get("role").then(res => temp.role = res);
-      this.storage.get("eventAttendingList").then(res => temp.eventsAttending = res);
-      this.storage.get("organization_ID").then(res => {temp.organization_ID = res, resolve(temp)});
-      // console.log(temp);
+      this.storage.get("user").then(res => resolve(JSON.parse(res)));
     });
   }
 }

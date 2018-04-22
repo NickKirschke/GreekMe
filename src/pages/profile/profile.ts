@@ -29,6 +29,7 @@ export class ProfilePage {
     this.App = app;
   }
 
+  
   async dataSetup() {
       const userGrab = await this.userService.currentUserInfo();
       this.user = userGrab as User;

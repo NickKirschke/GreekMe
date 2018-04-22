@@ -6,6 +6,7 @@ import {AngularFireAuth} from "angularfire2/auth/auth";
 import {FirebaseServiceProvider} from "../../providers/firebase-service/firebase-service";
 import {TabsControllerPage } from "../tabs-controller/tabs-controller";
 import { LoadingController } from 'ionic-angular';
+import { UserServiceProvider } from '../../providers/user-service/user-service';
 
 
 @Component({
@@ -19,7 +20,8 @@ export class LoginPage {
     private afAuth: AngularFireAuth,
     public navCtrl: NavController,
     public firebaseService: FirebaseServiceProvider,
-    public loadingCtrl: LoadingController) {
+    public loadingCtrl: LoadingController,
+    private userService: UserServiceProvider) {
   }
   // Method used to transfer user to signup page
   goToSignup(params){
@@ -27,7 +29,7 @@ export class LoginPage {
     this.navCtrl.setRoot(SignupPage,{},{animate: true, direction: 'forward'});
   }
   // Method used to log in
-  async login(user: User) {
+  async login(user) {
     try { // Checks to see if user credentials exist
         var loader = this.loadingCtrl.create({
         content: "Logging in...",
@@ -36,15 +38,9 @@ export class LoginPage {
       loader.present();
       const result =  await this.afAuth.auth.signInWithEmailAndPassword(user.email, user.password);
       // If successful login, retrieve uid then access user info from db.
-      this.afAuth.authState.subscribe(data=> {
-        if (data) {
-          console.log("logging in");
-          console.log(data.uid);
-          this.firebaseService.getUserDetails(data.uid);
-          // Then transfer to main page
-          this.navCtrl.setRoot(TabsControllerPage);
-        }
-      });
+       this.afAuth.authState.subscribe(data => {
+          this.firebaseService.getUserDetails(data.uid).then(res => this.navCtrl.setRoot(TabsControllerPage));
+       });    
     } catch(e) {
       var trimmedMessage = /^.*:\s*(.*)$/.exec(e.message);
       if(trimmedMessage == null) {
