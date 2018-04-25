@@ -5,6 +5,10 @@ import { FirebaseServiceProvider } from "../../providers/firebase-service/fireba
 import { LoginPage } from "../login/login";
 import { User } from '../../models/user';
 import { UserServiceProvider } from '../../providers/user-service/user-service';
+import { Observable } from 'rxjs/Observable';
+import { AngularFireList } from 'angularfire2/database';
+import { Broadcast } from '../../models/broadcast';
+import { Event } from '../../models/event';
 
 @Component({
   selector: 'page-profile',
@@ -13,8 +17,11 @@ import { UserServiceProvider } from '../../providers/user-service/user-service';
 export class ProfilePage {
   App: App;
   user = {} as User;
-  constructor(
-    private afAuth: AngularFireAuth,
+  postItems: Observable<Broadcast[]>;
+  postItemRef: AngularFireList<any>;
+  eventItems: Observable<Event[]>;
+  eventItemRef: AngularFireList<any>;
+  constructor(private afAuth: AngularFireAuth,
     public navCtrl: NavController,
     public firebaseService: FirebaseServiceProvider,
     private userService: UserServiceProvider,
@@ -29,33 +36,12 @@ export class ProfilePage {
     this.App = app;
   }
 
-  
+
   async dataSetup() {
-      const userGrab = await this.userService.currentUserInfo();
-      this.user = userGrab as User;
-      console.log(this.user);
-    // this.broadcastItemRef = await this.firebaseService.getBroadcastList(this.user.organization_ID);
-    // this.userLikedListRef = await this.firebaseService.getUserLikeList(this.user.uid);
-    // this.userLikedList = this.userLikedListRef.snapshotChanges().map(action => {
-    //   return action.map(c => ({
-    //     key: c.payload.key, ...c.payload.val()
-    //   }));
-    // });
-    // this.broadcastItems = this.broadcastItemRef.snapshotChanges().map(action => {
-    //   return action.map(c => ({
-    //     key: c.payload.key, ...c.payload.val(), iconName: this.checkIcons(c.payload.key)
-    //   })).reverse();
-    // });
-    // if (this.user.role == 'President' || this.user.role == ('Vice President') || this.user.role == ('Chair Member')) {
-    //   this.validRole = true;
-    // }
-    // const imageGrab = this.firebaseService.getGreetingImage(this.user.organization_ID);
-    // imageGrab.then((result) => {
-    //   this.image = result;
-    // }, (error) => {
-    //   this.image = 'https://firebasestorage.googleapis.com/v0/b/greekme-7475a.appspot.com/o/GM_Default.png?alt=media&token=6bc30d40-17a2-40bb-9af7-edff78112780';
-    // });
-    console.log("End of data setup");
+    const userGrab = await this.userService.currentUserInfo();
+    this.user = userGrab as User;
+    // Get the user's postList
+    // Get the user's eventList
   }
 
   logout() {

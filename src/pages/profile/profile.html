@@ -10,12 +10,12 @@
     </ion-title>
     <ion-buttons end>
       <button ion-button icon-only (click)="logout()">
-        <ion-icon name="cog"></ion-icon>
+        <ion-icon name="cog" outline></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
-<ion-content padding id="page7">
+<ion-content padding>
   <ion-grid>
     <ion-row>
       <ion-col col-12>
@@ -25,10 +25,33 @@
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col col-12>
-          <h4 class="role">{{user.role}}</h4>
+      <ion-col col-12>  
+        <h6 class="role">{{user.role}}</h6>
+        <div>
+          <p class="bio">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. In iaculis mauris vitae nunc commodo, quis bibendum sapien condimentum. Maecenas accumsan ligula et metus porta mattis. Phasellus ac condimentum turpis. Maecenas nec convallis ligula, ac egestas pur
+          </p>
+        </div>
       </ion-col>
-
     </ion-row>
+    <ion-row>
+        <ion-segment [(ngModel)]="profileContent">
+            <ion-segment-button value="posts">
+              Posts
+            </ion-segment-button>
+            <ion-segment-button value="eventsAttending">
+              Events
+            </ion-segment-button>
+            <ion-segment-button value="photos">
+              Photos
+            </ion-segment-button>
+          </ion-segment>
+    </ion-row>
+    <div [ngSwitch]="profileContent">
+    <ion-list *ngSwitchCase="'posts'">
+        <broadcast-row text-wrap *ngFor="let item of (userPosts |  async); let i = index" class="chat-boxes"
+        [broadcast]="item" (commentEmitter)="itemSelected(item)"></broadcast-row>
+    </ion-list>
+  </div>
   </ion-grid>
 </ion-content>

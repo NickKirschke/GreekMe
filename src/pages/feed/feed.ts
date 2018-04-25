@@ -1,13 +1,13 @@
-import {Component} from '@angular/core';
-import {NavController, App} from 'ionic-angular';
-import {AngularFireList} from "angularfire2/database";
-import {FirebaseServiceProvider} from "../../providers/firebase-service/firebase-service";
-import {AngularFireAuth} from "angularfire2/auth/auth";
+import { Component } from '@angular/core';
+import { NavController, App } from 'ionic-angular';
+import { AngularFireList } from "angularfire2/database";
+import { FirebaseServiceProvider } from "../../providers/firebase-service/firebase-service";
+import { AngularFireAuth } from "angularfire2/auth/auth";
 import { LoginPage } from "../login/login";
-import {User} from "../../models/user";
-import {Broadcast} from "../../models/broadcast";
-import {UserServiceProvider} from "../../providers/user-service/user-service";
-import {AngularFireObject} from "angularfire2/database";
+import { User } from "../../models/user";
+import { Broadcast } from "../../models/broadcast";
+import { UserServiceProvider } from "../../providers/user-service/user-service";
+import { AngularFireObject } from "angularfire2/database";
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import { ComposeFeedPage } from '../compose-feed/compose-feed';
@@ -34,13 +34,13 @@ export class FeedPage {
     public firebaseService: FirebaseServiceProvider,
     private app: App,
     private userService: UserServiceProvider) {
-    this.afAuth.authState.subscribe(data=> {
-      if(data && data.email && data.uid) {
-         const userGrab =  this.userService.currentUserInfo();
-         userGrab.then((result) =>{
-           this.user = result as User;
-           this.feedItemRef = this.firebaseService.getFeedList(this.user.organization_ID);
-           this.feedItems = this.feedItemRef.snapshotChanges().map(action => {
+    this.afAuth.authState.subscribe(data => {
+      if (data && data.email && data.uid) {
+        const userGrab = this.userService.currentUserInfo();
+        userGrab.then((result) => {
+          this.user = result as User;
+          this.feedItemRef = this.firebaseService.getFeedList(this.user.organization_ID);
+          this.feedItems = this.feedItemRef.snapshotChanges().map(action => {
             return action.map(c => ({
               key: c.payload.key, ...c.payload.val(), iconName: "heart-outline"
             })).reverse();
@@ -65,7 +65,7 @@ export class FeedPage {
   }
   doLike(item) {
     //console.log(document.getElementById('0'));
-    if(item.iconName === 'heart-outline') {
+    if (item.iconName === 'heart-outline') {
       item.iconName = 'heart';
       console.log("heart");
     } else {
@@ -102,7 +102,7 @@ export class FeedPage {
         updates['/organization/' + this.user.organization_ID + '/message/' + item.key + '/likeList/' + this.user.uid] = null;
         updates['/users/' + this.user.uid + '/likeList/' + item.key] = null;
         updates['/organization/' + this.user.organization_ID + '/message/' + item.key + '/numOfLikes/'] = currentLikes - 1;
-        
+
         firebase.database().ref().update(updates).then(function () {
           console.log("Like removed");
         }).catch(function (error) {
@@ -110,7 +110,7 @@ export class FeedPage {
         });
       } else {
         // Do like
-        
+
         let updates = {};
         let userLikeObj = {
           name: this.user.name
@@ -135,18 +135,12 @@ export class FeedPage {
         });
       }
     });
-  } 
+  }
   itemSelected(item) {
-    console.log(item);
-    // console.log(item);
+    let bc = JSON.stringify(item);
     this.navCtrl.push(MessageThreadPage, {
-      avatar_url: item.avatar_url,
-      text: item.text,
-      name: item.name,
-      date: item.date,
-      uid: item.uid,
-      key: item.key,
-      orgId: this.user.organization_ID
+      orgId: this.user.organization_ID,
+      broadcast: bc
     });
   }
 }

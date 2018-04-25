@@ -273,16 +273,10 @@ export class GreekMePage {
   }
 
   itemSelected(item) {
-    console.log(item);
-    // console.log(item);
+    let bc = JSON.stringify(item);
     this.navCtrl.push(ThreadPage, {
-      avatar_url: item.avatar_url,
-      text: item.text,
-      name: item.name,
-      date: item.date,
-      uid: item.uid,
-      key: item.key,
-      orgId: this.user.organization_ID
+      orgId: this.user.organization_ID,
+      broadcast: bc
     });
   }
 }

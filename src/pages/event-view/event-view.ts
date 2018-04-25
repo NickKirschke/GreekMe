@@ -21,6 +21,7 @@ import { Observable } from 'rxjs/Observable';
 })
 export class EventViewPage {
   firebaseStorage = firebase.storage();
+  firebase = firebase.database();
   user = {} as User;
   event: Observable<Event>;
   attendingList: Observable<any[]>;
@@ -32,7 +33,7 @@ export class EventViewPage {
   userAttendingList: Observable<any>;
   eventName: String;
   attendingListRef: AngularFireList<any>;
-  
+
   constructor(
     private afAuth: AngularFireAuth,
     public navCtrl: NavController,
@@ -148,36 +149,41 @@ export class EventViewPage {
       // this.firebaseService.getEventInfo2(this.eventId, this.user.organization_ID).snapshotChanges().subscribe(action => {
       //   this.eventName = action.payload.val().name;
       // });
-    
+
       //struggle
       // this.event.subscribe(e => { this.eventName = e.name, console.log(e)});
       // console.log(this.eventName);
-      var updates = {};
-      var nameObj = {
+      let updates = {};
+      let nameObj = {
         name: this.user.name,
         avatar_url: this.user.avatar_url
       };
-      // var eventObj = {
-      //   name: eventName
-      // }
-      updates['/organization/' + this.user.organization_ID + '/event/' + this.eventId + '/attendingList/' + this.user.uid] = nameObj;
-      // updates['/users/' + this.user.uid + '/eventsAttending/' + this.eventId] = eventObj;
-      firebase.database().ref().update(updates).then(function () {
-      }).catch(function (error) {
-        console.log(error);
+      let eventObj = {} as Event;
+      // this.afDB.object<Event>('/organization/' + organization_ID + '/event/' + key)
+      this.firebase.ref('/organization/' + this.user.organization_ID + '/event/' + this.eventId).once('value').then(snapshot => {
+        eventObj = snapshot.val();
+        console.log(eventObj);
+        console.log("event info acquired");
+        updates['/organization/' + this.user.organization_ID + '/event/' + this.eventId + '/attendingList/' + this.user.uid] = nameObj;
+        updates['/users/' + this.user.uid + '/eventsAttending/' + this.eventId] = eventObj;
+        firebase.database().ref().update(updates).then(function () {
+        }).catch(function (error) {
+          console.log(error);
+          this.toast("Error RSVPing.");
+        });
+        this.attendingStatus = true;
+        this.toast("You are going to this event!");
       });
-      this.attendingStatus = true;
-      this.toast("You are going to this event!");
     }
   }
 
   rsvpNo() {
     // console.log(this.eventName);
     if (this.attendingStatus) {
-    this.toast("Removed you from the attending list.");
-    this.attendingListRef.remove(this.user.uid);
-    // this.userAttendingList.remove(this.eventId);
-    this.attendingStatus = false;
+      this.toast("Removed you from the attending list.");
+      this.attendingListRef.remove(this.user.uid);
+      // this.userAttendingList.remove(this.eventId);
+      this.attendingStatus = false;
     }
   }
 
