@@ -19,3 +19,4 @@ refactor thread page to passa  parameter stating whether or not it is a broadcas
 /// End game
 refactor DB with everyone under school
 Edit Event tab
+Update the Datepicker to not allow previous dates on event creator

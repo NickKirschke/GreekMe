@@ -276,7 +276,8 @@ export class GreekMePage {
     let bc = JSON.stringify(item);
     this.navCtrl.push(ThreadPage, {
       orgId: this.user.organization_ID,
-      broadcast: bc
+      broadcast: bc,
+      isBroadcast: true
     });
   }
 }
