@@ -13,7 +13,7 @@ export class UserServiceProvider {
 
   currentUserInfo() {
     // Retrieve user information from local storage and return
-    return new Promise((resolve) =>
+    return new Promise(resolve =>
     {
       let temp = {} as User;
       this.storage.get("user").then(res => resolve(JSON.parse(res)));

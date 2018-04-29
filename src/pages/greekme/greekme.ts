@@ -120,10 +120,6 @@ export class GreekMePage {
     return likeList.some(item => item.key === key) ? "heart" : "heart-outline";
   }
 
-  goToComposeBroadcast() {
-    this.navCtrl.push(ComposeBroadcastPage);
-  }
-
   // ionViewDidEnter() {
   //   this.fixedHeight = this.mapElement.nativeElement.offsetHeight;
   // }
@@ -277,6 +273,12 @@ export class GreekMePage {
     this.navCtrl.push(ThreadPage, {
       orgId: this.user.organization_ID,
       broadcast: bc,
+      isBroadcast: true
+    });
+  }
+
+  goToComposeBroadcast() {
+    this.navCtrl.push(ComposeBroadcastPage, {
       isBroadcast: true
     });
   }

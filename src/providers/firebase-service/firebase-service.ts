@@ -81,19 +81,19 @@ export class FirebaseServiceProvider {
 
   addToBroadcastList(broadcast: Broadcast, organization_ID: String) {
     // console.log(broadcast);
-    this.afDB.list('/organization/' + organization_ID + '/broadcast/').push(broadcast);
+    return this.afDB.list('/organization/' + organization_ID + '/broadcast/').push(broadcast).key;
   }
 
   //Adds a comment to a broadcast commentList
   addCommentToBroadcast(broadcast: Broadcast, organization_ID: String, key: String) {
     // console.log(broadcast);
-    this.afDB.list('/organization/' + organization_ID + '/broadcast/' + key + '/commentList/').push(broadcast);
+    return this.afDB.list('/organization/' + organization_ID + '/broadcast/' + key + '/commentList/').push(broadcast).key;
   }
 
   //Adds a comment to a message commentList
   addCommentToMessage(broadcast: Broadcast, organization_ID: String, key: String) {
     // console.log(broadcast);
-    this.afDB.list('/organization/' + organization_ID + '/message/' + key + '/commentList/').push(broadcast);
+    return this.afDB.list('/organization/' + organization_ID + '/message/' + key + '/commentList/').push(broadcast).key;
   }
 
   // Returns the feed list for the organization 
@@ -104,7 +104,7 @@ export class FirebaseServiceProvider {
   // Adds a feed to the feed list for the organization (Feed uses same structure as broadcast)
   addToFeedList(broadcast: Broadcast, organization_ID: String) {
     // console.log(broadcast);
-    this.afDB.list('/organization/' + organization_ID + '/message/').push(broadcast);
+    return this.afDB.list('/organization/' + organization_ID + '/message/').push(broadcast).key;
   }
 
   // Returns the comments for the broadcast
@@ -119,7 +119,17 @@ export class FirebaseServiceProvider {
 
   // Return a user's Liked list
   getUserLikeList(uid: string) {
-    return this.afDB.list<UserLike>('users/' + uid + '/likeList');
+    return this.afDB.list<UserLike>('users/' + uid + '/likeList/');
+  }
+
+  // Return a user's post list
+  getUserPostList(uid: string) {
+    return this.afDB.list<Broadcast>('users/' + uid + '/postList/');
+  }
+
+  // Return a user's post list
+  getUserEventsAttending(uid: string) {
+    return this.afDB.list('users/' + uid + '/eventsAttending/');
   }
 
   //5.0

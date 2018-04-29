@@ -10,8 +10,6 @@ import { LoginPage } from '../pages/login/login';
 import { SignupPage } from '../pages/signup/signup';
 import { ProfilePage } from '../pages/profile/profile';
 import { ComposeBroadcastPage } from '../pages/compose-broadcast/compose-broadcast';
-import { ComposeFeedPage } from '../pages/compose-feed/compose-feed';
-import { EventDetailsPage } from '../pages/event-details/event-details';
 import { CreateEventPage } from '../pages/create-event/create-event';
 import { EditProfilePage } from '../pages/edit-profile/edit-profile';
 import { ThreadPage } from '../pages/thread/thread';
@@ -29,8 +27,6 @@ import { UserServiceProvider } from "../providers/user-service/user-service";
 import { MomentModule } from 'angular2-moment';
 import { EventViewPage } from '../pages/event-view/event-view';
 import { NgPipesModule } from 'ngx-pipes';
-import { MessageThreadPage } from '../pages/message-thread/message-thread';
-import { ComposeThreadMessagePage } from '../pages/compose-thread-message/compose-thread-message';
 import { BroadcastRowComponent } from '../components/broadcast-row/broadcast-row';
 @NgModule({
   declarations: [
@@ -43,15 +39,11 @@ import { BroadcastRowComponent } from '../components/broadcast-row/broadcast-row
     SignupPage,
     ProfilePage,
     ComposeBroadcastPage,
-    ComposeFeedPage,
-    EventDetailsPage,
     CreateEventPage,
     EditProfilePage,
     ThreadPage,
     EventViewPage,
     ComposeThreadPage,
-    MessageThreadPage,
-    ComposeThreadMessagePage,
     BroadcastRowComponent
   ],
   imports: [
@@ -76,15 +68,11 @@ import { BroadcastRowComponent } from '../components/broadcast-row/broadcast-row
     SignupPage,
     ProfilePage,
     ComposeBroadcastPage,
-    ComposeFeedPage,
-    EventDetailsPage,
     CreateEventPage,
     EditProfilePage,
     ThreadPage,
     EventViewPage,
     ComposeThreadPage,
-    MessageThreadPage,
-    ComposeThreadMessagePage
   ],
   providers: [
     StatusBar,

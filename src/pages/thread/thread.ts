@@ -25,18 +25,24 @@ export class ThreadPage {
   broadcastItems: Observable<any>;
   broadcast = {} as Broadcast;
   orgId = "";
-
+  isBroadcast: boolean;
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
     public firebaseService: FirebaseServiceProvider) {
     this.broadcast = JSON.parse(navParams.get("broadcast"));
     this.orgId = navParams.get("orgId");
-    this.broadcastItems = this.firebaseService.getCommentListBroadcast(this.orgId, this.broadcast.key).valueChanges();
+    this.isBroadcast = navParams.get("isBroadcast");
+    if (this.isBroadcast) {
+      this.broadcastItems = this.firebaseService.getCommentListBroadcast(this.orgId, this.broadcast.key).valueChanges();
+    } else {
+      this.broadcastItems = this.firebaseService.getCommentListMessage(this.orgId, this.broadcast.key).valueChanges();
+    }
   }
 
   goToComposeThread() {
     this.navCtrl.push(ComposeThreadPage, {
-      key: this.broadcast.key
+      key: this.broadcast.key,
+      isBroadcast: this.isBroadcast
     });
   }
 

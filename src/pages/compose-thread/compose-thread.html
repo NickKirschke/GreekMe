@@ -12,7 +12,7 @@
   <form id="composeThread-form3" (ngSubmit)="composeThread(tempBroadcast)">
     <ion-item text-wrap id="composeThread-input9">
       <ion-label></ion-label>
-      <ion-input type="text" placeholder="Respond with?" name="commentText" [(ngModel)]="tempBroadcast.text"></ion-input>
+      <ion-input type="text" placeholder="Respond with?" name="commentText" [(ngModel)]="tempBroadcast.text" autocomplete="on" autocorrect="on"></ion-input>
     </ion-item>
     <button id="composethread-button5" ion-button style="color:white; background-color:goldenrod" block type="submit">
       Post

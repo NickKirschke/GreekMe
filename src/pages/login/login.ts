@@ -25,7 +25,9 @@ export class LoginPage {
     private userService: UserServiceProvider,
     private app: App) {
       this.afAuth.authState.subscribe(data => {
-      if (data || data.email || data.uid) {
+      if (!data || !data.email || !data.uid) {
+
+      } else {
         this.app.getRootNavs()[0].setRoot(TabsControllerPage);
       } 
     });

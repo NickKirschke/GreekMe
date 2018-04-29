@@ -1,7 +1,3 @@
-Make the Broadcast and message process parameterized
-Make the thread and messagethread parameterized
-Create a user commentList, store all their broadcasts
-profile page
 Add a bio view and edit bio button
 Disable the comments and like button via param on the broadcast-row component on thread, refactor adn remove classes from app.scss
 View bio page through broadcast photo (check against user ID to disable all edit buttons including kog)
@@ -9,14 +5,21 @@ Image needs to not be a squished circle on the homepage. chose the small part ht
 notifications
 make a function out of the user creation with avatar_url as the default
 push notifications
+JSLINT CLEANUP
+Center text on broadcast message hint
 role selection truncates
 Make the load screen better, Show gm page for a second (cordova plugins)
 look at all cordova plugins
 Login button darker after entering info
 scaling input on page with lots of text
 Liking shows correct icon
-refactor thread page to passa  parameter stating whether or not it is a broadcast or feed
+Comments do not have likes or comments (problem with profile posts)
+Login issue with !data
+Store default images locally, reference on login and register page
 /// End game
 refactor DB with everyone under school
 Edit Event tab
+
+Validate no user can enter null data
+
 Update the Datepicker to not allow previous dates on event creator

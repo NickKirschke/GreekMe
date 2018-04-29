@@ -10,9 +10,9 @@ import { UserServiceProvider } from "../../providers/user-service/user-service";
 import { AngularFireObject } from "angularfire2/database";
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
-import { ComposeFeedPage } from '../compose-feed/compose-feed';
 import { Observable } from 'rxjs/Observable';
-import { MessageThreadPage } from '../message-thread/message-thread';
+import { ThreadPage } from '../thread/thread';
+import { ComposeBroadcastPage } from '../compose-broadcast/compose-broadcast';
 
 
 @Component({
@@ -60,9 +60,7 @@ export class FeedPage {
   logout() {
     this.afAuth.auth.signOut();
   }
-  goToComposeFeed() {
-    this.navCtrl.push(ComposeFeedPage);
-  }
+
   doLike(item) {
     //console.log(document.getElementById('0'));
     if (item.iconName === 'heart-outline') {
@@ -127,20 +125,26 @@ export class FeedPage {
         updates['/users/' + this.user.uid + '/likeList/' + item.key] = messageLikeObj;
         updates['/organization/' + this.user.organization_ID + '/message/' + item.key + '/numOfLikes/'] = currentLikes + 1;
         firebase.database().ref().update(updates).then(function () {
-          console.log("Like added ");
-          // console.log(document.getElementById("0"));
-          //console.log(num)
+          console.log("Like added!");
         }).catch(function (error) {
           console.log(error);
         });
       }
     });
   }
+
   itemSelected(item) {
     let bc = JSON.stringify(item);
-    this.navCtrl.push(MessageThreadPage, {
+    this.navCtrl.push(ThreadPage, {
       orgId: this.user.organization_ID,
-      broadcast: bc
+      broadcast: bc,
+      isBroadcast: false
+    });
+  }
+
+  goToComposeFeed() {
+    this.navCtrl.push(ComposeBroadcastPage, {
+      isBroadcast: false
     });
   }
 }

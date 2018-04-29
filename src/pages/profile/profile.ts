@@ -9,6 +9,8 @@ import { Observable } from 'rxjs/Observable';
 import { AngularFireList } from 'angularfire2/database';
 import { Broadcast } from '../../models/broadcast';
 import { Event } from '../../models/event';
+import { ThreadPage } from '../thread/thread';
+import { EventViewPage } from '../event-view/event-view';
 
 @Component({
   selector: 'page-profile',
@@ -20,7 +22,8 @@ export class ProfilePage {
   postItems: Observable<Broadcast[]>;
   postItemRef: AngularFireList<any>;
   eventItems: Observable<Event[]>;
-  eventItemRef: AngularFireList<any>;
+  eventItemsRef: AngularFireList<any>;
+  profileContent: string = 'posts';
   constructor(private afAuth: AngularFireAuth,
     public navCtrl: NavController,
     public firebaseService: FirebaseServiceProvider,
@@ -40,8 +43,36 @@ export class ProfilePage {
   async dataSetup() {
     const userGrab = await this.userService.currentUserInfo();
     this.user = userGrab as User;
-    // Get the user's postList
-    // Get the user's eventList
+    this.postItemRef = await this.firebaseService.getUserPostList(this.user.uid);
+    this.eventItemsRef = await this.firebaseService.getUserEventsAttending(this.user.uid);
+    this.eventItems = this.eventItemsRef.snapshotChanges().map(action => {
+      return action.map(c => ({
+        key: c.payload.key, ...c.payload.val()
+      }));
+    });
+    this.postItems = this.postItemRef.snapshotChanges().map(action => {
+      return action.map(c => ({
+        key: c.payload.key, ...c.payload.val(), iconName: "heart-outline"
+      })).reverse();
+    });
+  }
+
+
+  // Currently unable to navigate to user posts due to the isBroadcast issue
+  // itemSelected(item) {
+  //   let bc = JSON.stringify(item);
+  //   this.navCtrl.push(ThreadPage, {
+  //     orgId: this.user.organization_ID,
+  //     broadcast: bc,
+  //     isBroadcast: true
+  //   });
+  // }
+
+  goToEvent(key: String) {
+    let paramObj = {
+      eventId: key
+    }
+    this.navCtrl.push(EventViewPage, paramObj);
   }
 
   logout() {

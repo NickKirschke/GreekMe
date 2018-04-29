@@ -12,7 +12,6 @@ import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import { Event } from "../../models/event";
 import { ToastController } from 'ionic-angular';
-import { EventDetailsPage } from '../event-details/event-details';
 import { Observable } from 'rxjs/Observable';
 
 @Component({
@@ -194,9 +193,5 @@ export class EventViewPage {
       position: 'top'
     });
     toast.present();
-  }
-
-  editEvent() {
-    this.navCtrl.push(EventDetailsPage);
   }
 }
