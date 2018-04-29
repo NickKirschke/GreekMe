@@ -28,6 +28,7 @@ import { MomentModule } from 'angular2-moment';
 import { EventViewPage } from '../pages/event-view/event-view';
 import { NgPipesModule } from 'ngx-pipes';
 import { BroadcastRowComponent } from '../components/broadcast-row/broadcast-row';
+import { PopOverComponent } from '../components/pop-over/pop-over';
 @NgModule({
   declarations: [
     MyApp,
@@ -44,7 +45,8 @@ import { BroadcastRowComponent } from '../components/broadcast-row/broadcast-row
     ThreadPage,
     EventViewPage,
     ComposeThreadPage,
-    BroadcastRowComponent
+    BroadcastRowComponent,
+    PopOverComponent
   ],
   imports: [
     BrowserModule,
@@ -73,6 +75,9 @@ import { BroadcastRowComponent } from '../components/broadcast-row/broadcast-row
     ThreadPage,
     EventViewPage,
     ComposeThreadPage,
+    BroadcastRowComponent,
+    PopOverComponent
+    
   ],
   providers: [
     StatusBar,

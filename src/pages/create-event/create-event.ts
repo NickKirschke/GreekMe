@@ -26,7 +26,6 @@ export class CreateEventPage {
   eventItems: Observable<any>;
   attendingItems: Observable<any[]>;
   event = {} as Event;
-  
   constructor(
     private afAuth: AngularFireAuth,
     public navCtrl: NavController,
@@ -47,7 +46,6 @@ export class CreateEventPage {
       }
     });
     this.event.date = moment().format();
-    console.log(this.event.date);
   }
   logout() {
     this.afAuth.auth.signOut();

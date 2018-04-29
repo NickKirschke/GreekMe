@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, App } from 'ionic-angular';
+import { NavController, App, PopoverController } from 'ionic-angular';
 import { AngularFireAuth } from "angularfire2/auth/auth";
 import { FirebaseServiceProvider } from "../../providers/firebase-service/firebase-service";
 import { LoginPage } from "../login/login";
@@ -11,7 +11,8 @@ import { Broadcast } from '../../models/broadcast';
 import { Event } from '../../models/event';
 import { ThreadPage } from '../thread/thread';
 import { EventViewPage } from '../event-view/event-view';
-
+import { PopOverComponent } from '../../components/pop-over/pop-over';
+import { populateNodeData } from 'ionic-angular/components/virtual-scroll/virtual-util';
 @Component({
   selector: 'page-profile',
   templateUrl: 'profile.html'
@@ -28,7 +29,8 @@ export class ProfilePage {
     public navCtrl: NavController,
     public firebaseService: FirebaseServiceProvider,
     private userService: UserServiceProvider,
-    private app: App) {
+    private app: App,
+    public popoverCtrl: PopoverController) {
     this.afAuth.authState.subscribe(data => {
       if (!data || !data.email || !data.uid) {
         this.app.getRootNavs()[0].setRoot(LoginPage);
@@ -73,6 +75,18 @@ export class ProfilePage {
       eventId: key
     }
     this.navCtrl.push(EventViewPage, paramObj);
+  }
+
+  presentPopover(popOverEvent) {
+    let popover = this.popoverCtrl.create(PopOverComponent, {
+      items: [{name: "Edit Profile"},{name: "Logout"}]
+    });
+    popover.present( { ev: popOverEvent});
+    popover.onWillDismiss(data => {
+      if(data !== null && data.name === "Logout") {
+        this.logout();
+      }
+    });
   }
 
   logout() {

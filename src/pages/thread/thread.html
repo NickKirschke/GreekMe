@@ -28,13 +28,9 @@
         {{broadcast.text}}
       </ion-card-content>
     </ion-card>
-    <ion-item text-wrap *ngFor="let item of broadcastItems |  async | orderBy: '-date'"  class="chat-boxes">   
-    <ion-avatar item-start>
-      <img src="{{item.avatar_url}}">
-    </ion-avatar>
-    <h2>{{item.name}}</h2>
-    <p>{{item.text}}</p>
-    <ion-note item-end>{{item.date | amTimeAgo}}</ion-note>
-  </ion-item>
+    <ion-list>
+        <broadcast-row text-wrap *ngFor="let item of (broadcastItems |  async); let i = index" class="chat-boxes" [broadcast]="item"
+         (likeEmitter)="doLike(item, i, $event)" [showComments]="false" [showLikes]="false"></broadcast-row>
+      </ion-list>
     
 </ion-content>

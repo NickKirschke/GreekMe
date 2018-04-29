@@ -16,6 +16,8 @@ export class BroadcastRowComponent {
   @Output() likeEmitter = new EventEmitter();
   @Input('uid') uid: string;
   @Output() commentEmitter = new EventEmitter();
+  @Input() showComments : boolean = true;
+  @Input() showLikes : boolean = true;
 
   constructor() {
     // console.log('Hello BroadcastRowComponent Component');

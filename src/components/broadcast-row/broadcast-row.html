@@ -6,9 +6,9 @@
     <p class="width:auto" style="color:black">{{this.broadcast.text}}</p>
     <ion-note style="position: absolute;top:0;">{{this.broadcast.date | amTimeAgo}}</ion-note>
     <ion-row class="comments">
-      <label (click)="itemSelected(item)">Comments</label>
-      <ion-badge class="comment-badge">{{this.broadcast.numOfComments}}</ion-badge>
-      <ion-icon [name]="this.broadcast.iconName" (click)="doLike()"></ion-icon>
-      <ion-badge class="comment-badge">{{this.broadcast.numOfLikes}} </ion-badge>
+      <label *ngIf="showComments" (click)="itemSelected(item)">Comments</label>
+      <ion-badge *ngIf="showComments" class="comment-badge">{{this.broadcast.numOfComments}}</ion-badge>
+      <ion-icon *ngIf="showLikes" [name]="this.broadcast.iconName" (click)="doLike()"></ion-icon>
+      <ion-badge *ngIf="showLikes" class="comment-badge">{{this.broadcast.numOfLikes}} </ion-badge>
     </ion-row>
   </ion-item>

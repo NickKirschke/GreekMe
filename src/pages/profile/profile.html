@@ -9,7 +9,7 @@
       {{user.name}}
     </ion-title>
     <ion-buttons end>
-      <button ion-button icon-only (click)="logout()">
+      <button ion-button icon-only (click)="presentPopover($event)">
         <ion-icon name="cog" outline></ion-icon>
       </button>
     </ion-buttons>
