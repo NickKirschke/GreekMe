@@ -3,6 +3,7 @@ Disable the comments and like button via param on the broadcast-row component on
 View bio page through broadcast photo (check against user ID to disable all edit buttons including kog)
 Image needs to not be a squished circle on the homepage. chose the small part https://stackoverflow.com/questions/32477563/css-fit-rounded-circle-image-do-not-stretch-it
 notifications
+Messages for if you dont have any posts or events
 make a function out of the user creation with avatar_url as the default
 push notifications
 JSLINT CLEANUP
