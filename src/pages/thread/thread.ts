@@ -8,6 +8,7 @@ import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import { ComposeThreadPage } from '../compose-thread/compose-thread';
 import { Observable } from 'rxjs/Observable';
+import { ProfilePage } from '../profile/profile';
 /**
  * Generated class for the ThreadPage page.
  *
@@ -43,6 +44,12 @@ export class ThreadPage {
     this.navCtrl.push(ComposeThreadPage, {
       key: this.broadcast.key,
       isBroadcast: this.isBroadcast
+    });
+  }
+
+  viewProfile($event) {
+    this.navCtrl.push(ProfilePage, {
+      uid: $event
     });
   }
 

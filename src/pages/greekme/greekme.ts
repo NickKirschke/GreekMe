@@ -18,6 +18,7 @@ import { ThreadPage } from '../thread/thread';
 import { Observable } from 'rxjs/Observable';
 import { PACKAGE_ROOT_URL } from '@angular/core/src/application_tokens';
 import { getAllLifecycleHooks } from '@angular/compiler/src/lifecycle_reflector';
+import { ProfilePage } from '../profile/profile';
 
 @Component({
   selector: 'page-greekme',
@@ -43,13 +44,7 @@ export class GreekMePage {
     private app: App,
     private userService: UserServiceProvider,
     private storage: Storage) {
-    this.afAuth.authState.subscribe(data => {
-      if (!data || !data.email || !data.uid) {
-        this.app.getRootNavs()[0].setRoot(LoginPage);
-      } else {
         this.dataSetup();
-      }
-    });
   }
 
   logout() {
@@ -58,10 +53,12 @@ export class GreekMePage {
 
 
   async dataSetup() {
+    try {
     const userGrab = await this.userService.currentUserInfo();
+    console.log("waiting");
     this.user = userGrab as User;
-    this.broadcastItemRef = await this.firebaseService.getBroadcastList(this.user.organization_ID);
-    this.userLikedListRef = await this.firebaseService.getUserLikeList(this.user.uid);
+    this.broadcastItemRef = this.firebaseService.getBroadcastList(this.user.organization_ID);
+    this.userLikedListRef = this.firebaseService.getUserLikeList(this.user.uid);
     this.userLikedList = this.userLikedListRef.snapshotChanges().map(action => {
       return action.map(c => ({
         key: c.payload.key, ...c.payload.val()
@@ -81,6 +78,9 @@ export class GreekMePage {
     }, (error) => {
       this.image = 'https://firebasestorage.googleapis.com/v0/b/greekme-7475a.appspot.com/o/GM_Default.png?alt=media&token=6bc30d40-17a2-40bb-9af7-edff78112780';
     });
+  } catch(e) {
+    console.log(e);
+  }
     // console.log("End of data setup");
   }
 
@@ -279,6 +279,12 @@ export class GreekMePage {
   goToComposeBroadcast() {
     this.navCtrl.push(ComposeBroadcastPage, {
       isBroadcast: true
+    });
+  }
+
+  viewProfile($event) {
+    this.navCtrl.push(ProfilePage, {
+      uid: $event
     });
   }
 }

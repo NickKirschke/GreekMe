@@ -1,14 +1,18 @@
 <ion-item text-wrap class="chat-boxes">
-    <ion-avatar item-start>
-      <img [src]="this.broadcast.avatar_url">
-    </ion-avatar>
-    <h2>{{this.broadcast.name}}</h2>
-    <p class="width:auto" style="color:black">{{this.broadcast.text}}</p>
-    <ion-note style="position: absolute;top:0;">{{this.broadcast.date | amTimeAgo}}</ion-note>
-    <ion-row class="comments">
+  <ion-avatar (click)="goToProfile()" item-start>
+    <img [src]="this.broadcast.avatar_url">
+  </ion-avatar>
+  <h2>{{this.broadcast.name}}</h2>
+  <p class="width:auto" style="color:black">{{this.broadcast.text}}</p>
+  <ion-note style="position: absolute;top:0;">{{this.broadcast.date | amTimeAgo}}</ion-note>
+  <ion-row class="comments">
+    <ion-col col-4>
       <label *ngIf="showComments" (click)="itemSelected(item)">Comments</label>
-      <ion-badge *ngIf="showComments" class="comment-badge">{{this.broadcast.numOfComments}}</ion-badge>
-      <ion-icon *ngIf="showLikes" [name]="this.broadcast.iconName" (click)="doLike()"></ion-icon>
-      <ion-badge *ngIf="showLikes" class="comment-badge">{{this.broadcast.numOfLikes}} </ion-badge>
-    </ion-row>
-  </ion-item>
+      <ion-badge *ngIf="this.broadcast.numOfComments > 0" class="comment-badge">{{this.broadcast.numOfComments}}</ion-badge>
+    </ion-col>
+    <ion-col col-4>
+      <ion-icon *ngIf="showLikes" [name]="this.broadcast.iconName" (click)="doLike()" class="like-icon"></ion-icon>
+      <ion-badge *ngIf="this.broadcast.numOfLikes > 0" class="like-badge">{{this.broadcast.numOfLikes}} </ion-badge>
+    </ion-col>
+  </ion-row>
+</ion-item>

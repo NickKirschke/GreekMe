@@ -1,4 +1,8 @@
-
+$colors : (
+  primary: #d3d3d3
+);
+$tabs-ios-tab-text-color-active	: colors($colors, primary);
+$tabs-ios-tab-icon-color-active: colors($colors, primary);
 .center-form{
 
   width:290px;
@@ -21,12 +25,16 @@
     background-color: rgba(255,255,255,0.5);
     border-color: rgba(255,255,255,0);
     border-radius: 0px 0px 4px 4px;
-    }
-   .button-positive{
-    opacity:0.5;
-    background-color:goldenrod;
-    
   }
+   .button-enabled{
+    opacity:0.8;
+    background-color:goldenrod;
+  }
+  .button-disabled {
+    opacity: 0.5;
+    background-color:goldenrod;
+  }
+
 }
 .error-box{
   padding:10px;

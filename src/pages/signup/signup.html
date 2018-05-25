@@ -9,34 +9,28 @@
   </div>
   
     <ion-list id="signup-list2" class="center-form">
-      <form class="input-form"(ngSubmit)="register(user)">
+      <form class="input-form" (ngSubmit)="register()" [formGroup]="signupForm">
       <ion-item id="signup-input3" class="ion-item-top">
         <ion-label>
           Name
         </ion-label>
-        <ion-input type="text" placeholder="" name="user name" [(ngModel)]="user.name"></ion-input>
+        <ion-input type="text" name="user-name" formControlName="name" required></ion-input>
       </ion-item>
       <ion-item id="signup-input4" class="ion-item-middle">
         <ion-label>
           Email
         </ion-label>
-        <ion-input type="email" placeholder="" name="user email" [(ngModel)]="user.email"></ion-input>
+        <ion-input type="email" name="user-email" formControlName="email" required></ion-input>
       </ion-item>
       <ion-item id="signup-input7" class="ion-item-middle">
         <ion-label>
           Organization ID
         </ion-label>
-        <ion-input type="text" placeholder="" name="user org ID" [(ngModel)]="user.organization_ID"></ion-input>
-      </ion-item>
-      <ion-item id="signup-input6" class="ion-item-middle">
-        <ion-label>
-          Organization School
-        </ion-label>
-        <ion-input type="text" placeholder="" name="user org school" [(ngModel)]="user.organization_school"></ion-input>
+        <ion-input type="text" name="user-org-ID" formControlName="organization_ID" required></ion-input>
       </ion-item>
       <ion-item class="ion-item-middle">
         <ion-label>Role</ion-label>
-        <ion-select name="user role" class="select-role"[(ngModel)]="user.role">
+        <ion-select name="user role" class="select-role"formControlName="role" required>
           <ion-option value="President">President</ion-option>
           <ion-option value="Vice President">Vice President</ion-option>
           <ion-option value="Chair Member">Chair Member</ion-option>
@@ -47,11 +41,11 @@
         <ion-label>
           Password
         </ion-label>
-        <ion-input type="password" placeholder="" name="user password" [(ngModel)]="user.password"></ion-input>
+        <ion-input type="password" name="user-password" formControlName="password" required></ion-input>
       </ion-item>
 
       <div class="spacer" style="width:300px;height:47px;" id="signup-spacer2"></div>
-      <button id="signup-button3" ion-button class="button-positive" block>
+      <button id="signup-button3" ion-button class="button-positive"  block [disabled]="!signupForm.valid" [ngClass]="{'button-disabled': !signupForm.valid, 'button-enabled': signupForm.valid}">
       Sign up
       </button>
     </form>

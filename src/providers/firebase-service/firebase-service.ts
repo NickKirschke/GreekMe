@@ -23,6 +23,7 @@ export class FirebaseServiceProvider {
   user: Observable<any>
   userData: AngularFireObject<User>
   firebaseStorage = firebase.storage();
+  firebaseDb = firebase.database();
   constructor(public afDB: AngularFireDatabase,
     private afAuth: AngularFireAuth,
     private storage: Storage) {
@@ -132,40 +133,37 @@ export class FirebaseServiceProvider {
     return this.afDB.list('users/' + uid + '/eventsAttending/');
   }
 
-  //5.0
-  getUserDetails(uid: string) {
+  getUserDetailsProfilePage(uid: string) {
     return new Promise((resolve) => {
-      const db = firebase.database();
-      db.ref('/users/' + uid).once('value').then(snapshot => {
-        let user = JSON.stringify(snapshot.val());
-        // Store user details locally
-        this.storage.set("user", user);
-        resolve(true);
+      this.firebaseDb.ref('/users/' + uid).once('value').then(snapshot => {
+        resolve(snapshot.val());
       });
     });
   }
 
-  testGetUserData(uid: string) {
-    return this.afDB.object('users/' + uid);
+
+  //5.0
+  getUserDetails(uid: string) {
+    return new Promise((resolve) => {
+      this.firebaseDb.ref('/users/' + uid).once('value').then(snapshot => {
+        let user = JSON.stringify(snapshot.val());
+        // Store user details locally
+        this.storage.set("user", user).then(() => {
+          resolve(true);
+        });
+      });
+    });
   }
 
   // Add new user details to firebase storage
   addUserDetails(userDetails: User) {
-    this.afAuth.authState.take(1).subscribe(auth => {
-      // Set the uid and the avatar for the new user
-      userDetails.uid = auth.uid;
-      userDetails.avatar_url = 'https://firebasestorage.googleapis.com/v0/b/greekme-7475a.appspot.com/o/GM_Default.png?alt=media&token=6bc30d40-17a2-40bb-9af7-edff78112780';
-      // userDetails.avatar_url ="https://firebasestorage.googleapis.com/v0/b/greekme-7475a.appspot.com/o/123456%2Fn3KA2xjGAaNbr8xymrHAyc4StJM2.jpeg?alt=media&token=e74020a0-3323-4e83-a1f9-8ea53e91ab91";
-      this.afDB.object('/users/' + auth.uid).set(userDetails);
-      // Store the variables locally
-      this.storage.set("name", userDetails.name);
-      this.storage.set("email", userDetails.email);
-      this.storage.set("organization_school", userDetails.organization_school);
-      this.storage.set("organization_ID", userDetails.organization_ID);
-      this.storage.set("avatar_url", userDetails.avatar_url);
-      this.storage.set("uid", auth.uid);
-      this.storage.set("role", userDetails.role);
-    });
+    return new Promise((resolve) => {
+        userDetails.bio = "";
+        userDetails.avatar_url = 'https://firebasestorage.googleapis.com/v0/b/greekme-7475a.appspot.com/o/GM_Default.png?alt=media&token=6bc30d40-17a2-40bb-9af7-edff78112780';
+        // userDetails.avatar_url ="https://firebasestorage.googleapis.com/v0/b/greekme-7475a.appspot.com/o/123456%2Fn3KA2xjGAaNbr8xymrHAyc4StJM2.jpeg?alt=media&token=e74020a0-3323-4e83-a1f9-8ea53e91ab91";
+        this.afDB.object('/users/' + userDetails.uid).set(userDetails);
+        this.storage.set("user", JSON.stringify(userDetails)).then(() => resolve(true));
+      });
   }
 }
 

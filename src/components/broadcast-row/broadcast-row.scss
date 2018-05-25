@@ -9,18 +9,56 @@ broadcast-row {
           right:0;
           margin-right:14px;
         }
+        .avatar {
+          width: 60px;
+          height: 60px;
+          -webkit-border-radius: 60px;
+          -webkit-background-clip: padding-box;
+          -moz-border-radius: 60px;
+          -moz-background-clip: padding;
+          border-radius: 60px;
+          background-clip: padding-box;
+          margin: 7px 0 0 5px;
+          float: left;
+          background-size: cover;
+          background-position: center center;
+        }
         ion-avatar {
             align-self: flex-start;
         }
         .comments {
+          display: inline-block;
           margin-top: 8px;
           font-size: 12px;
           align-self: flex-start;
+          label {
+            margin-right: 8px;
+            margin-left: -3px;
+          }
           .comment-badge {
-            margin-left: 3px;
-            margin-right: 15px;
+            background-color: lightgray;
+            margin-left: -6px;
+            margin-right: -21px;
             margin-top: -2.5px;
           }
+          .like-badge {
+            background-color: lightgray;
+            margin-left: 2px;
+            margin-right: -6px;
+            margin-top: -2.5px;
+          }
+          .like-icon {
+            margin-left: 15px;
+          }
+
+          .comment-group {
+            width: 25%;
+          }
+          
+          .like-group {
+            width: 25%;
+          }
+          
         }
       }
 }

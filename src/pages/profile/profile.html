@@ -1,7 +1,7 @@
 <ion-header>
   <ion-navbar>
     <ion-buttons start>
-      <button ion-button icon-only>
+      <button *ngIf="isUser" ion-button icon-only>
         <ion-icon name="notifications-outline"></ion-icon>
       </button>
     </ion-buttons>
@@ -9,7 +9,7 @@
       {{user.name}}
     </ion-title>
     <ion-buttons end>
-      <button ion-button icon-only (click)="presentPopover($event)">
+      <button *ngIf="isUser" ion-button icon-only (click)="presentPopover($event)">
         <ion-icon name="cog" outline></ion-icon>
       </button>
     </ion-buttons>
@@ -29,9 +29,7 @@
         <h6 class="role">{{user.role}}</h6>
         <div>
           <p class="bio">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. In iaculis mauris vitae nunc commodo, quis bibendum sapien condimentum.
-            Maecenas accumsan ligula et metus porta mattis. Phasellus ac condimentum turpis. Maecenas nec convallis ligula,
-            ac egestas pur
+            {{user.bio}}
           </p>
         </div>
       </ion-col>
@@ -65,7 +63,7 @@
         </button>
       </ion-list>
     </div>
-      <h4 *ngSwitchCase="'photos'" style="text-align: center; margin-top: 10px;">You have not posted any photos</h4>
+      <h4 *ngSwitchCase="'photos'" style="text-align: center; margin-top: 10px;">There are no posted photos</h4>
     </div>
   </ion-grid>
 </ion-content>

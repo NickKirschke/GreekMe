@@ -47,6 +47,7 @@ export class EventsPage {
       }
     });
   }
+  
   logout() {
     this.afAuth.auth.signOut();
   }
@@ -76,7 +77,7 @@ export class EventsPage {
         for (let i of items) {
           var tempDate = moment(i.date);
           if (tempDate.diff(moment()) < -86400000) {
-            this.eventItemsRef.remove(i.$key);
+            this.eventItemsRef.remove(i.key);
           }
         }
         resolve(false);

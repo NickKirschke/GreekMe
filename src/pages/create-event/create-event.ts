@@ -61,11 +61,9 @@ export class CreateEventPage {
        name: this.user.name,
        avatar_url: this.user.avatar_url
      };
-     var eventObj = {
-       name: this.event.name
-     }
+     
     updates['/organization/'+this.user.organization_ID+'/event/'+newEventKey+'/attendingList/'+this.user.uid] =  nameObj;
-    updates['/users/'+this.user.uid+'/eventsAttending/'+newEventKey] = eventObj;
+    updates['/users/'+this.user.uid+'/eventsAttending/'+newEventKey] = this.event;
     firebase.database().ref().update(updates).then(function() {
       console.log("Event Added!");
     }).catch( function(error) {

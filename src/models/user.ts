@@ -10,5 +10,6 @@ export interface User {
   role: any;
   eventsAttending: AngularFireList<any[]>;
   likeList: AngularFireList<any>;
+  bio: any;
 
 }

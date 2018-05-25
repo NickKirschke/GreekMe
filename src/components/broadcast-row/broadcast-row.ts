@@ -18,6 +18,7 @@ export class BroadcastRowComponent {
   @Output() commentEmitter = new EventEmitter();
   @Input() showComments : boolean = true;
   @Input() showLikes : boolean = true;
+  @Output() profileUidEmitter = new EventEmitter();
 
   constructor() {
     // console.log('Hello BroadcastRowComponent Component');
@@ -30,6 +31,10 @@ export class BroadcastRowComponent {
       let res = this.broadcast.likeList;
       // console.log(res);
     }
+  }
+
+  goToProfile() {
+    this.profileUidEmitter.emit(this.broadcast.uid);
   }
 
   doLike() {

@@ -13,6 +13,7 @@ import 'firebase/storage';
 import { Observable } from 'rxjs/Observable';
 import { ThreadPage } from '../thread/thread';
 import { ComposeBroadcastPage } from '../compose-broadcast/compose-broadcast';
+import { ProfilePage } from '../profile/profile';
 
 
 @Component({
@@ -34,8 +35,6 @@ export class FeedPage {
     public firebaseService: FirebaseServiceProvider,
     private app: App,
     private userService: UserServiceProvider) {
-    this.afAuth.authState.subscribe(data => {
-      if (data && data.email && data.uid) {
         const userGrab = this.userService.currentUserInfo();
         userGrab.then((result) => {
           this.user = result as User;
@@ -50,11 +49,6 @@ export class FeedPage {
               key: c.payload.key, ...c.payload.val()
             }));
           });
-        });
-
-      } else {
-        this.app.getRootNavs()[0].setRoot(LoginPage);
-      }
     });
   }
   logout() {
@@ -145,6 +139,12 @@ export class FeedPage {
   goToComposeFeed() {
     this.navCtrl.push(ComposeBroadcastPage, {
       isBroadcast: false
+    });
+  }
+
+  viewProfile($event) {
+    this.navCtrl.push(ProfilePage, {
+      uid: $event
     });
   }
 }
