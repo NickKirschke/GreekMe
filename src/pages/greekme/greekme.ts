@@ -65,7 +65,7 @@ export class GreekMePage {
     });
     this.broadcastItems = this.broadcastItemRef.snapshotChanges().map(action => {
       return action.map(c => ({
-        key: c.payload.key, ...c.payload.val(), iconName: this.checkIcons(c.payload.key)
+        key: c.payload.key, ...c.payload.val(), iconName: "heart-outline"
       })).reverse();
     });
     if (this.user.role == 'President' || this.user.role == ('Vice President') || this.user.role == ('Chair Member')) {

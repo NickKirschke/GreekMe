@@ -36,6 +36,7 @@ export class LoginPage {
       this.app.getRootNavs()[0].setRoot(TabsControllerPage);
     } else {
       // No user is signed in.
+      console.log("no one singed in.");
     }
   }
 
