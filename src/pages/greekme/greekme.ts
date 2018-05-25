@@ -55,7 +55,6 @@ export class GreekMePage {
   async dataSetup() {
     try {
     const userGrab = await this.userService.currentUserInfo();
-    console.log("waiting");
     this.user = userGrab as User;
     this.broadcastItemRef = this.firebaseService.getBroadcastList(this.user.organization_ID);
     this.userLikedListRef = this.firebaseService.getUserLikeList(this.user.uid);
