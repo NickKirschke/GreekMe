@@ -25,13 +25,13 @@ export class SignupPage {
     public firebaseService: FirebaseServiceProvider,
     public loadingCtrl: LoadingController,
     private formBuilder: FormBuilder) {
-      this.signupForm = this.formBuilder.group({
-        name: [''],
-        email: [''],
-        organization_ID: [''],
-        role: [''],
-        password: ['']
-      });
+    this.signupForm = this.formBuilder.group({
+      name: [''],
+      email: [''],
+      organization_ID: [''],
+      role: [''],
+      password: ['']
+    });
   }
   async register() {
     var user = {
@@ -51,25 +51,29 @@ export class SignupPage {
           this.afAuth.auth.createUserWithEmailAndPassword(user.email, this.signupForm.value.password).then((res) => {
             this.user.uid = res.uid;
             this.user.password = '';
-            this.firebaseService.addUserDetails(user).then(()=> {
+            this.firebaseService.addUserDetails(user).then(() => {
               this.navCtrl.setRoot(TabsControllerPage);
             });
+          }).catch((e: Error) => {
+            this.errorMessageDigest(e);
           });
         } else {
           throw new Error("Invalid organization code");
         }
       }).catch((e: Error) => {
-        console.log("signup error");
-        var trimmedMessage = /^.*:\s*(.*)$/.exec(e.message);
-        if (trimmedMessage == null) {
-          this.error = e.message;
-        } else {
-          this.error = trimmedMessage[1];
-        }
+        this.errorMessageDigest(e);
       });
-
     } finally {
       loader.dismiss();
+    }
+  }
+
+  errorMessageDigest(e: Error) {
+    var trimmedMessage = /^.*:\s*(.*)$/.exec(e.message);
+    if (trimmedMessage == null) {
+      this.error = e.message;
+    } else {
+      this.error = trimmedMessage[1];
     }
   }
 
