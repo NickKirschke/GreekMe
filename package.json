@@ -35,7 +35,7 @@
     "firebase": "5.0.4",
     "ionic-angular": "3.9.2",
     "ionic-plugin-keyboard": "~2.2.1",
-    "ionicons": "4.1.2",
+    "ionicons": "3.0.0",
     "moment": "^2.22.1",
     "ngx-pipes": "^2.1.7",
     "promise-polyfill": "^7.1.2",

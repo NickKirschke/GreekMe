@@ -59,6 +59,7 @@ export class SignupPage {
           throw new Error("Invalid organization code");
         }
       }).catch((e: Error) => {
+        console.log("signup error");
         var trimmedMessage = /^.*:\s*(.*)$/.exec(e.message);
         if (trimmedMessage == null) {
           this.error = e.message;

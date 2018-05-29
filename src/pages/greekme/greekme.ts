@@ -19,6 +19,7 @@ import { Observable } from 'rxjs/Observable';
 import { PACKAGE_ROOT_URL } from '@angular/core/src/application_tokens';
 import { getAllLifecycleHooks } from '@angular/compiler/src/lifecycle_reflector';
 import { ProfilePage } from '../profile/profile';
+import { Icon } from 'ionic-angular';
 
 @Component({
   selector: 'page-greekme',
@@ -65,7 +66,7 @@ export class GreekMePage {
     });
     this.broadcastItems = this.broadcastItemRef.snapshotChanges().map(action => {
       return action.map(c => ({
-        key: c.payload.key, ...c.payload.val(), iconName: "heart-outline"
+        key: c.payload.key, ...c.payload.val(), iconName: this.checkIcons(c.payload.key)
       })).reverse();
     });
     if (this.user.role == 'President' || this.user.role == ('Vice President') || this.user.role == ('Chair Member')) {

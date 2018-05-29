@@ -158,7 +158,7 @@ export class FirebaseServiceProvider {
   // Add new user details to firebase storage
   addUserDetails(userDetails: User) {
     return new Promise((resolve) => {
-        userDetails.bio = "";
+        userDetails.bio = "A sample bio: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed placerat nulla sit amet tempor viverra. Cras egestas facilisis metus in consequat. Vivamus scelerisque eros non imperdiet scelerisque. Aliquam at ante ante. Phasellus commodo, mauris sit amet hendrerit molestie, massa ligula iaculis lorem, sed posuere risus nibh varius ligula. Mauris ut turpis blandit leo imperdiet egestas. Curabitur tincidunt neque non orci varius, sed egestas risus faucibus. ";
         userDetails.avatar_url = 'https://firebasestorage.googleapis.com/v0/b/greekme-7475a.appspot.com/o/GM_Default.png?alt=media&token=6bc30d40-17a2-40bb-9af7-edff78112780';
         // userDetails.avatar_url ="https://firebasestorage.googleapis.com/v0/b/greekme-7475a.appspot.com/o/123456%2Fn3KA2xjGAaNbr8xymrHAyc4StJM2.jpeg?alt=media&token=e74020a0-3323-4e83-a1f9-8ea53e91ab91";
         this.afDB.object('/users/' + userDetails.uid).set(userDetails);

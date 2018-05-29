@@ -58,7 +58,9 @@ export class LoginPage {
       await this.afAuth.auth.signInWithEmailAndPassword(this.loginForm.value.email, this.loginForm.value.password);
       // If successful login, retrieve uid then access user info from db..
       this.afAuth.authState.subscribe(data => {
-        this.firebaseService.getUserDetails(data.uid).then(() => this.navCtrl.setRoot(TabsControllerPage));
+        if(data) {
+          this.firebaseService.getUserDetails(data.uid).then(() => this.navCtrl.setRoot(TabsControllerPage));
+        }
       });
     } catch (e) {
       var trimmedMessage = /^.*:\s*(.*)$/.exec(e.message);
