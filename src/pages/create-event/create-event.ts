@@ -23,8 +23,8 @@ import { Observable } from 'rxjs/Observable';
 export class CreateEventPage {
   firebaseStorage = firebase.storage();
   user = {} as User;
-  eventItems: Observable<any>;
-  attendingItems: Observable<any[]>;
+  eventItems$: Observable<any>;
+  attendingItems$: Observable<any[]>;
   event = {} as Event;
   constructor(
     private afAuth: AngularFireAuth,
@@ -37,8 +37,8 @@ export class CreateEventPage {
          const userGrab =  this.userService.currentUserInfo();
          userGrab.then((result) =>{
            this.user = result as User;           
-           this.eventItems = this.firebaseService.getOrgEventList(this.user.organization_ID).valueChanges();
-           this.attendingItems = this.firebaseService.getUserEventList(this.user.uid).valueChanges();  
+           this.eventItems$ = this.firebaseService.getOrgEventList(this.user.organization_ID).valueChanges();
+           this.attendingItems$ = this.firebaseService.getUserEventList(this.user.uid).valueChanges();  
           //  this.event.attendingList = this.firebaseService.getEventAttendingList(this.)         
         });        
       } else {

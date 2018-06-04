@@ -22,7 +22,6 @@ export class ComposeThreadPage {
   firebaseStorage = firebase.storage();
   user = {} as User;
   tempBroadcast = {} as Broadcast;
-  broadcastItems: Observable<any>;
   error = '';
   broadcastKey = "";
   typeOfRef = "";

@@ -24,7 +24,7 @@ export class FirebaseServiceProvider {
   userData: AngularFireObject<User>
   firebaseStorage = firebase.storage();
   firebaseDb = firebase.database();
-  constructor(public afDB: AngularFireDatabase,
+  constructor(private afDB: AngularFireDatabase,
     private afAuth: AngularFireAuth,
     private storage: Storage) {
 
@@ -72,7 +72,7 @@ export class FirebaseServiceProvider {
 
   // Adds an event to a user's list of events that they are "going" to
   getUserEventList(uid: String) {
-    return this.afDB.list('/users/' + uid + '/eventAttending/');
+    return this.afDB.list('/users/' + uid + '/eventsAttending/');
   }
 
   // Returns the broadcast list for the greekme page

@@ -23,7 +23,7 @@ import { ProfilePage } from '../profile/profile';
 export class ThreadPage {
   firebaseStorage = firebase.storage();
   user = {} as User;
-  broadcastItems: Observable<any>;
+  broadcastItems$: Observable<any>;
   broadcast = {} as Broadcast;
   orgId = "";
   isBroadcast: boolean;
@@ -34,9 +34,9 @@ export class ThreadPage {
     this.orgId = navParams.get("orgId");
     this.isBroadcast = navParams.get("isBroadcast");
     if (this.isBroadcast) {
-      this.broadcastItems = this.firebaseService.getCommentListBroadcast(this.orgId, this.broadcast.key).valueChanges();
+      this.broadcastItems$ = this.firebaseService.getCommentListBroadcast(this.orgId, this.broadcast.key).valueChanges();
     } else {
-      this.broadcastItems = this.firebaseService.getCommentListMessage(this.orgId, this.broadcast.key).valueChanges();
+      this.broadcastItems$ = this.firebaseService.getCommentListMessage(this.orgId, this.broadcast.key).valueChanges();
     }
   }
 

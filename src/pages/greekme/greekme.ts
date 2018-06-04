@@ -32,11 +32,11 @@ export class GreekMePage {
   userData: AngularFireObject<User>
   user = {} as User;
   validRole = false;
-  broadcastItems: Observable<Broadcast[]>;
+  broadcastItems$: Observable<Broadcast[]>;
   broadcastItemRef: AngularFireList<any>;
   image: any;
   userLikedListRef: AngularFireList<any>;
-  userLikedList: Observable<UserLike[]>;
+  userLikedList$: Observable<UserLike[]>;
 
   constructor(
     private afAuth: AngularFireAuth,
@@ -59,12 +59,12 @@ export class GreekMePage {
     this.user = userGrab as User;
     this.broadcastItemRef = this.firebaseService.getBroadcastList(this.user.organization_ID);
     this.userLikedListRef = this.firebaseService.getUserLikeList(this.user.uid);
-    this.userLikedList = this.userLikedListRef.snapshotChanges().map(action => {
+    this.userLikedList$ = this.userLikedListRef.snapshotChanges().map(action => {
       return action.map(c => ({
         key: c.payload.key, ...c.payload.val()
       }));
     });
-    this.broadcastItems = this.broadcastItemRef.snapshotChanges().map(action => {
+    this.broadcastItems$ = this.broadcastItemRef.snapshotChanges().map(action => {
       return action.map(c => ({
         key: c.payload.key, ...c.payload.val(), iconName: this.checkIcons(c.payload.key)
       })).reverse();
@@ -112,7 +112,7 @@ export class GreekMePage {
     // const likes = this.getLikeList();
     // console.log(likes);
     let likeList: UserLike[] = [];
-    const a = this.userLikedList.subscribe(items => items.forEach(item => likeList.push(item)));
+    const a = this.userLikedList$.subscribe(items => items.forEach(item => likeList.push(item)));
     // console.log("bacon");
     // console.log(likeList);
 
@@ -171,7 +171,7 @@ export class GreekMePage {
     //     }
     //   }).catch(error => console.log(error))
     // });
-    const promise = Promise.resolve(this.userLikedList).then(function (results) {
+    const promise = Promise.resolve(this.userLikedList$).then(function (results) {
       return results.forEach(likes => likes.some(like => like.key === item.key)).then(function (res) {
         // console.log(res);
       })
@@ -263,7 +263,7 @@ export class GreekMePage {
 
   async isLiked(key: String) {
     var liked = false;
-    const a = this.userLikedList.forEach(likes => likes.find(like => like.key === key));
+    const a = this.userLikedList$.forEach(likes => likes.find(like => like.key === key));
     a.then(res => {return res});
   }
 

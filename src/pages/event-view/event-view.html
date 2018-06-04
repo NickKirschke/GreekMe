@@ -26,13 +26,13 @@
   <!-- <h2>{{(event | async)?.name}}</h2> -->
   <div [ngSwitch]="eventInfo">
     <ion-list *ngSwitchCase="'details'">
-      <h2>{{(event | async)?.name}}</h2>
-      <p>On {{(event | async )?.date | amDateFormat: 'LL'}}</p>
-      <p>At {{(event | async)?.location}}</p>
-      <p>Made by: {{(event | async)?.creator}}
+      <h2>{{(event$ | async)?.name}}</h2>
+      <p>On {{(event$ | async )?.date | amDateFormat: 'LL'}}</p>
+      <p>At {{(event$ | async)?.location}}</p>
+      <p>Made by: {{(event$ | async)?.creator}}
         <hr/>
         <h6> Details:</h6>
-        <p> {{ (event | async)?.info}}</p>
+        <p> {{ (event$ | async)?.info}}</p>
         <div>
           <label>RSVP:</label>
           <button ion-button small id="yesButton" [outline]="!attendingStatus" (click)="rsvpYes()" style="margin-bottom:14px;">Going!</button>
@@ -43,7 +43,7 @@
     </ion-list>
 
     <ion-list no-lines *ngSwitchCase="'attendingList'">
-      <ion-item *ngFor="let item of attendingList |  async">
+      <ion-item *ngFor="let item of attendingList$ |  async">
         <ion-avatar item-start>
           <img src="{{item.avatar_url}}">
         </ion-avatar>

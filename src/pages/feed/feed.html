@@ -17,7 +17,7 @@
 </ion-header>
 <ion-content >
       <ion-list>
-        <broadcast-row text-wrap *ngFor="let item of (feedItems |  async); let i = index" class="chat-boxes" [broadcast]="item"
+        <broadcast-row text-wrap *ngFor="let item of (feedItems$ |  async); let i = index" class="chat-boxes" [broadcast]="item"
          (likeEmitter)="doLike(item, i, $event)" (commentEmitter)="itemSelected(item)" (profileUidEmitter)="viewProfile($event)"></broadcast-row>
       </ion-list>
   </ion-content>

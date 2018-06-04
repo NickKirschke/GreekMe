@@ -22,10 +22,8 @@ import { FeedPage } from '../feed/feed';
 export class ComposeBroadcastPage {
   isBroadcast: boolean;
   firebaseStorage = firebase.storage();
-  userData: AngularFireObject<User>
   user = {} as User;
   tempBroadcast = {} as Broadcast;
-  broadcastItems: Observable<any>;
   error = '';
   constructor(
     private afAuth: AngularFireAuth,

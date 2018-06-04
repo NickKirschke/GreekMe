@@ -21,7 +21,7 @@ import { Observable } from 'rxjs/Observable';
 export class EventsPage {
   firebaseStorage = firebase.storage();
   user = {} as User;
-  eventItems: Observable<any>;
+  eventItems$: Observable<any>;
   eventItemsRef: AngularFireList<any>;
   constructor(
     private afAuth: AngularFireAuth,
@@ -35,7 +35,7 @@ export class EventsPage {
         userGrab.then((result) => {
           this.user = result as User;
           this.eventItemsRef = this.firebaseService.getOrgEventList(this.user.organization_ID);
-          this.eventItems = this.eventItemsRef.snapshotChanges().map(action => {
+          this.eventItems$ = this.eventItemsRef.snapshotChanges().map(action => {
             return action.map(c => ({
               key: c.payload.key, ...c.payload.val()
             }));
@@ -73,7 +73,7 @@ export class EventsPage {
 
     //5.0
     const promise = new Promise((resolve, reject) => {
-      this.eventItems.subscribe(items => {
+      this.eventItems$.subscribe(items => {
         for (let i of items) {
           var tempDate = moment(i.date);
           if (tempDate.diff(moment()) < -86400000) {

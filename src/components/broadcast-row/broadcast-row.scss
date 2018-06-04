@@ -25,6 +25,9 @@ broadcast-row {
         }
         ion-avatar {
             align-self: flex-start;
+            img {
+              object-fit: cover;
+            }
         }
         .comments {
           display: inline-block;
@@ -33,7 +36,7 @@ broadcast-row {
           align-self: flex-start;
           label {
             margin-right: 8px;
-            margin-left: -3px;
+            margin-left: -4px;
           }
           .comment-badge {
             background-color: lightgray;

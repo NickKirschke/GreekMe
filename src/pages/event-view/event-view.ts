@@ -19,17 +19,18 @@ import { Observable } from 'rxjs/Observable';
   templateUrl: 'event-view.html',
 })
 export class EventViewPage {
+  userAttendingListRef: AngularFireList<any>;
   firebaseStorage = firebase.storage();
   firebase = firebase.database();
   user = {} as User;
-  event: Observable<Event>;
-  attendingList: Observable<any[]>;
+  event$: Observable<Event>;
+  attendingList$: Observable<any[]>;
   eventInfo: string = 'details';
   attendingStatus: boolean = false;
   isCreator: boolean = false;
   eventId;
-  event2: Observable<Event>;
-  userAttendingList: Observable<any>;
+  event2$: Observable<Event>;
+  userAttendingList$: Observable<any>;
   eventName: String;
   attendingListRef: AngularFireList<any>;
 
@@ -48,16 +49,17 @@ export class EventViewPage {
         const userGrab = this.userService.currentUserInfo();
         userGrab.then((result) => {
           this.user = result as User;
-          this.event = this.firebaseService.getEventInfo(this.eventId, this.user.organization_ID).valueChanges();
+          this.event$ = this.firebaseService.getEventInfo(this.eventId, this.user.organization_ID).valueChanges();
           this.attendingListRef = this.firebaseService.getEventAttendingList(this.eventId, this.user.organization_ID)
-          this.attendingList = this.attendingListRef.snapshotChanges().map(action => {
+          this.attendingList$ = this.attendingListRef.snapshotChanges().map(action => {
             return action.map(c => ({
               key: c.payload.key, ...c.payload.val()
             }));
           });
           // this.checkCreator();
           this.checkAttending();
-          this.userAttendingList = this.firebaseService.getUserEventList(this.user.uid).snapshotChanges().map(action => {
+          this.userAttendingListRef = this.firebaseService.getUserEventList(this.user.uid);
+          this.userAttendingList$ = this.userAttendingListRef.snapshotChanges().map(action => {
             return action.map(c => ({
               key: c.payload.key, ...c.payload.val()
             }));
@@ -99,7 +101,7 @@ export class EventViewPage {
     // } catch (e) {
     //   console.log("Error checking creator");
     // }
-    var id = this.event.subscribe(console.log);
+    var id = this.event$.subscribe(console.log);
     // console.log(id);
     // if(id.take === this.user.uid) {
     //   this.isCreator = true;
@@ -110,7 +112,7 @@ export class EventViewPage {
     try {
       var isAttending = false;
       var listOfNames;
-      this.attendingList.subscribe(items => {
+      this.attendingList$.subscribe(items => {
         for (let i of items) {
           if (i.key === this.user.uid) {
             console.log("Attending set to true");
@@ -181,7 +183,7 @@ export class EventViewPage {
     if (this.attendingStatus) {
       this.toast("Removed you from the attending list.");
       this.attendingListRef.remove(this.user.uid);
-      // this.userAttendingList.remove(this.eventId);
+      this.userAttendingListRef.remove(this.eventId);
       this.attendingStatus = false;
     }
   }

@@ -24,13 +24,13 @@ export class ProfilePage {
   isUser: boolean;
   App: App;
   user = {} as User;
-  postItems: Observable<Broadcast[]>;
+  postItems$: Observable<Broadcast[]>;
   postItemRef: AngularFireList<any>;
-  eventItems: Observable<any>;
+  eventItems$: Observable<any>;
   eventItemsRef: AngularFireList<any>;
   profileContent: string = 'posts';
-  constructor(private afAuth: AngularFireAuth, public navCtrl: NavController, public firebaseService: FirebaseServiceProvider, private userService: UserServiceProvider, private app: App,
-    public popoverCtrl: PopoverController, public navParams: NavParams, private storage: Storage) {
+  constructor(private afAuth: AngularFireAuth, public navCtrl: NavController, private firebaseService: FirebaseServiceProvider, private userService: UserServiceProvider, private app: App,
+    private popoverCtrl: PopoverController, public navParams: NavParams, private storage: Storage) {
     // this.afAuth.authState.subscribe(data => {
     //   if (!data) {
     //     this.app.getRootNavs()[0].setRoot(LoginPage);
@@ -54,13 +54,13 @@ export class ProfilePage {
     }
     this.postItemRef = this.firebaseService.getUserPostList(this.user.uid);
     this.eventItemsRef = this.firebaseService.getUserEventsAttending(this.user.uid);
-    this.eventItems = this.eventItemsRef.snapshotChanges().map(action => {
+    this.eventItems$ = this.eventItemsRef.snapshotChanges().map(action => {
       return action.map(c => ({
         key: c.payload.key, ...c.payload.val()
       }));
     });
 
-    this.postItems = this.postItemRef.snapshotChanges().map(action => {
+    this.postItems$ = this.postItemRef.snapshotChanges().map(action => {
       return action.map(c => ({
         key: c.payload.key, ...c.payload.val(), iconName: "heart-outline"
       })).reverse();
@@ -112,7 +112,7 @@ export class ProfilePage {
 
   removeOldEvents() {
     const promise = new Promise((resolve, reject) => {
-      this.eventItems.subscribe(items => {
+      this.eventItems$.subscribe(items => {
         for (let i of items) {
           var tempDate = moment(i.date);
           if (tempDate.diff(moment()) < -86400000) {

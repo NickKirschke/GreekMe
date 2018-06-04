@@ -29,7 +29,7 @@
       </ion-card-content>
     </ion-card>
     <ion-list>
-        <broadcast-row text-wrap *ngFor="let item of (broadcastItems |  async); let i = index" class="chat-boxes" [broadcast]="item"
+        <broadcast-row text-wrap *ngFor="let item of (broadcastItems$ |  async); let i = index" class="chat-boxes" [broadcast]="item"
          (likeEmitter)="doLike(item, i, $event)" [showComments]="false" [showLikes]="false" (profileUidEmitter)="viewProfile($event)"></broadcast-row>
       </ion-list>
     

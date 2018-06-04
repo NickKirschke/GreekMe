@@ -26,9 +26,9 @@ export class FeedPage {
   user = {} as User;
   // this tells the tabs component which Pages
   // should be each tab's root Page
-  feedItems: Observable<Broadcast[]>;
+  feedItems$: Observable<Broadcast[]>;
   feedItemRef: AngularFireList<any>;
-  userLikedList: Observable<any>;
+  userLikedList$: Observable<any>;
   constructor(
     private afAuth: AngularFireAuth,
     public navCtrl: NavController,
@@ -39,12 +39,12 @@ export class FeedPage {
         userGrab.then((result) => {
           this.user = result as User;
           this.feedItemRef = this.firebaseService.getFeedList(this.user.organization_ID);
-          this.feedItems = this.feedItemRef.snapshotChanges().map(action => {
+          this.feedItems$ = this.feedItemRef.snapshotChanges().map(action => {
             return action.map(c => ({
               key: c.payload.key, ...c.payload.val(), iconName: "heart-outline"
             })).reverse();
           });
-          this.userLikedList = this.firebaseService.getUserLikeList(this.user.uid).snapshotChanges().map(action => {
+          this.userLikedList$ = this.firebaseService.getUserLikeList(this.user.uid).snapshotChanges().map(action => {
             return action.map(c => ({
               key: c.payload.key, ...c.payload.val()
             }));
@@ -66,7 +66,7 @@ export class FeedPage {
       console.log("outline");
     }
 
-    const promise = Promise.resolve(this.userLikedList).then(function (results) {
+    const promise = Promise.resolve(this.userLikedList$).then(function (results) {
       return results.forEach(likes => likes.some(like => like.key === item.key)).then(function (res) {
         // console.log(res);
       })
