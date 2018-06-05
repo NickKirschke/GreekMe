@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, ModalController } from 'ionic-angular';
 import { AngularFireList } from "angularfire2/database";
 import { FirebaseServiceProvider } from "../../providers/firebase-service/firebase-service";
 import { AngularFireAuth } from "angularfire2/auth/auth";
@@ -32,7 +32,8 @@ export class FeedPage {
     private afAuth: AngularFireAuth,
     public navCtrl: NavController,
     public firebaseService: FirebaseServiceProvider,
-    private userService: UserServiceProvider) {
+    private userService: UserServiceProvider,
+    private modal: ModalController) {
         const userGrab = this.userService.currentUserInfo();
         userGrab.then((result) => {
           this.user = result as User;
@@ -135,9 +136,8 @@ export class FeedPage {
   }
 
   goToComposeFeed() {
-    this.navCtrl.push(ComposeBroadcastPage, {
-      isBroadcast: false
-    });
+    const myModal = this.modal.create(ComposeBroadcastPage,{isBroadcast: false});
+    myModal.present();
   }
 
   viewProfile($event) {

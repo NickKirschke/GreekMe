@@ -1,3 +1,8 @@
 page-event-view {
-
+    ion-avatar {
+        align-self: flex-start;
+        img {
+          object-fit: cover;
+        }
+    }
 }

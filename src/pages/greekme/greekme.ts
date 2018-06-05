@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { NavController} from 'ionic-angular';
+import { NavController, ModalController } from 'ionic-angular';
 import { AngularFireList } from "angularfire2/database";
 import { FirebaseServiceProvider } from "../../providers/firebase-service/firebase-service";
 import { AngularFireAuth } from "angularfire2/auth/auth";
@@ -36,7 +36,7 @@ export class GreekMePage {
     private afAuth: AngularFireAuth,
     public navCtrl: NavController,
     public firebaseService: FirebaseServiceProvider,
-    private userService: UserServiceProvider) {
+    private userService: UserServiceProvider, private modal: ModalController) {
         this.dataSetup();
   }
 
@@ -266,9 +266,8 @@ export class GreekMePage {
   }
 
   goToComposeBroadcast() {
-    this.navCtrl.push(ComposeBroadcastPage, {
-      isBroadcast: true
-    });
+    const myModal = this.modal.create(ComposeBroadcastPage,{isBroadcast: true});
+    myModal.present();
   }
 
   viewProfile($event) {

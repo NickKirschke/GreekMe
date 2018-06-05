@@ -28,25 +28,19 @@ export class ProfilePage {
   profileContent: string = 'posts';
   constructor(private afAuth: AngularFireAuth, public navCtrl: NavController, private firebaseService: FirebaseServiceProvider, private userService: UserServiceProvider, private app: App,
     private popoverCtrl: PopoverController, public navParams: NavParams, private storage: Storage) {
-    // this.afAuth.authState.subscribe(data => {
-    //   if (!data) {
-    //     this.app.getRootNavs()[0].setRoot(LoginPage);
-    //   } else {
-    this.dataSetup();
-    //   }
-    // });
+      this.dataSetup();
   }
 
   async dataSetup() {
-    let profileUser = this.navParams.get("uid");
-    if (profileUser == null) {
+    let guestUser = this.navParams.get("uid");
+    if (guestUser) {
+      this.isUser = false;
+      const guestProfileUserGrab = await this.firebaseService.getUserDetailsProfilePage(guestUser);
+      this.user = guestProfileUserGrab as User;
+    } else {
       this.isUser = true;
       const userGrab = await this.userService.currentUserInfo();
       this.user = userGrab as User;
-    } else {
-      this.isUser = false;
-      const guestProfileUserGrab = await this.firebaseService.getUserDetailsProfilePage(profileUser);
-      this.user = guestProfileUserGrab as User;
     }
     this.postItemRef = this.firebaseService.getUserPostList(this.user.uid);
     this.eventItemsRef = this.firebaseService.getUserEventsAttending(this.user.uid);
@@ -55,30 +49,13 @@ export class ProfilePage {
         key: c.payload.key, ...c.payload.val()
       }));
     });
-
     this.postItems$ = this.postItemRef.snapshotChanges().map(action => {
       return action.map(c => ({
         key: c.payload.key, ...c.payload.val(), iconName: "heart-outline"
       })).reverse();
     });
     await this.removeOldEvents();
-    // this.checkIsUser();
   }
-
-  checkIsUser() {
-
-  }
-
-
-  // Currently unable to navigate to user posts due to the isBroadcast issue
-  // itemSelected(item) {
-  //   let bc = JSON.stringify(item);
-  //   this.navCtrl.push(ThreadPage, {
-  //     orgId: this.user.organization_ID,
-  //     broadcast: bc,
-  //     isBroadcast: true
-  //   });
-  // }
 
   editProfile() {
     this.navCtrl.push(EditProfilePage,
@@ -98,10 +75,12 @@ export class ProfilePage {
     });
     popover.present({ ev: popOverEvent });
     popover.onWillDismiss(data => {
-      if (data !== null && data.name === "Log Out") {
-        this.logout();
-      } else if (data !== null && data.name === "Edit Profile") {
-        this.editProfile();
+      if (data) {
+        if (data.name === "Log Out") {
+          this.logout();
+        } else if (data.name === "Edit Profile") {
+          this.editProfile();
+        }
       }
     });
   }
@@ -119,8 +98,6 @@ export class ProfilePage {
       });
     });
   }
-
-
 
   logout() {
     this.afAuth.auth.signOut().then(() => {

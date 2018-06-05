@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, ModalController } from 'ionic-angular';
 import { Broadcast } from '../../models/broadcast';
 import { FirebaseServiceProvider } from "../../providers/firebase-service/firebase-service";
 import { User } from "../../models/user";
@@ -27,8 +27,10 @@ export class ThreadPage {
   orgId = "";
   isBroadcast: boolean;
   constructor(public navCtrl: NavController,
-    public navParams: NavParams,
-    public firebaseService: FirebaseServiceProvider) {
+    private navParams: NavParams,
+    private firebaseService: FirebaseServiceProvider,
+    private modal: ModalController) {
+
     this.broadcast = JSON.parse(navParams.get("broadcast"));
     this.orgId = navParams.get("orgId");
     this.isBroadcast = navParams.get("isBroadcast");
@@ -40,10 +42,11 @@ export class ThreadPage {
   }
 
   goToComposeThread() {
-    this.navCtrl.push(ComposeThreadPage, {
+    const myModal = this.modal.create(ComposeThreadPage,{
       key: this.broadcast.key,
       isBroadcast: this.isBroadcast
     });
+    myModal.present();
   }
 
   viewProfile($event) {

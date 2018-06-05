@@ -1,4 +1,6 @@
 Set up data so that it suscribes and unsuscribes in the ionViewWillEnter and ionViewDidEnter and ionViewWillLeave and ionViewDidLeave
+Currently on the profile page there are no comments or like numbers
+
 
 Signup should send email verification
 Turn edit profile into a modal

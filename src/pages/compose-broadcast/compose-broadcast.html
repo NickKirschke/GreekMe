@@ -1,8 +1,14 @@
 <ion-header>
   <ion-navbar>
+    <ion-buttons start>
+      <button ion-button (click)="closeModal()">Close</button>
+    </ion-buttons>
     <ion-title>
       {{isBroadcast ? "Compose a broadcast" : "Compose a message"}}
     </ion-title>
+    <ion-buttons end>
+        <button ion-button (click)="composeBroadcast(tempBroadcast)">Post</button>
+      </ion-buttons>
   </ion-navbar>
 </ion-header>
 <ion-content padding id="page8">
@@ -14,9 +20,6 @@
       <ion-label></ion-label>
       <ion-textarea type="text" placeholder="Update everyone about?" name="broadcastText" [(ngModel)]="tempBroadcast.text" autocomplete="on" autocorrect="on"></ion-textarea>
     </ion-item>
-    <button id="composeBroadcast-button5" ion-button style="color:white; background-color:goldenrod" block type="submit">
-      Post
-    </button>
   </form>
   
 </ion-content>

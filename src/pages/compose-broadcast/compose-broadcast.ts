@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, App, NavParams } from 'ionic-angular';
+import { App, NavParams, ViewController } from 'ionic-angular';
 import { FirebaseServiceProvider } from "../../providers/firebase-service/firebase-service";
 import { AngularFireAuth } from "angularfire2/auth/auth";
 import { LoginPage } from "../login/login";
@@ -22,11 +22,11 @@ export class ComposeBroadcastPage {
   error = '';
   constructor(
     private afAuth: AngularFireAuth,
-    public navCtrl: NavController,
     public firebaseService: FirebaseServiceProvider,
     private app: App,
     private userService: UserServiceProvider,
-    private navParams: NavParams) {
+    private navParams: NavParams,
+    private view: ViewController) {
 
     this.afAuth.authState.subscribe(data => {
       if (!data || !data.email || !data.uid) {
@@ -72,7 +72,11 @@ export class ComposeBroadcastPage {
         tempBroadcast.key = this.firebaseService.addToFeedList(tempBroadcast, this.user.organization_ID);
       }
       this.updatePostList(tempBroadcast);
-      this.navCtrl.pop();
+      this.view.dismiss();
     }
+  }
+
+  closeModal() {
+    this.view.dismiss();
   }
 }

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, App, NavParams } from 'ionic-angular';
+import { App, NavParams, ViewController } from 'ionic-angular';
 import { FirebaseServiceProvider } from "../../providers/firebase-service/firebase-service";
 import { AngularFireAuth } from "angularfire2/auth/auth";
 import { LoginPage } from "../login/login";
@@ -24,11 +24,11 @@ export class ComposeThreadPage {
   typeOfRef = "";
   constructor(
     private afAuth: AngularFireAuth,
-    public navCtrl: NavController,
-    public firebaseService: FirebaseServiceProvider,
+    private firebaseService: FirebaseServiceProvider,
     private app: App,
     private userService: UserServiceProvider,
-    public navParams: NavParams) {
+    private navParams: NavParams,
+    private view: ViewController) {
     this.afAuth.authState.subscribe(data => {
       if (!data || !data.email || !data.uid) {
         this.app.getRootNavs()[0].setRoot(LoginPage);
@@ -85,8 +85,10 @@ export class ComposeThreadPage {
         tempBroadcast.key = this.firebaseService.addCommentToMessage(tempBroadcast, this.user.organization_ID, this.broadcastKey);
       }
       this.updateUserPostListAndCommentNumber(tempBroadcast);
-      this.navCtrl.pop();
     }
+  }
+  closeModal() {
+    this.view.dismiss();
   }
 }
 

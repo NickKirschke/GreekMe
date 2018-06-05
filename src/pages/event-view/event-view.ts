@@ -40,35 +40,30 @@ export class EventViewPage {
     private userService: UserServiceProvider,
     public navParams: NavParams,
     public toastCtrl: ToastController) {
+    this.dataSetup();
+  }
 
-    this.afAuth.authState.subscribe(data => {
-      this.eventId = navParams.get("eventId");
-      if (data && data.email && data.uid) {
-        const userGrab = this.userService.currentUserInfo();
-        userGrab.then((result) => {
-          this.user = result as User;
-          this.event$ = this.firebaseService.getEventInfo(this.eventId, this.user.organization_ID).valueChanges();
-          this.attendingListRef = this.firebaseService.getEventAttendingList(this.eventId, this.user.organization_ID)
-          this.attendingList$ = this.attendingListRef.snapshotChanges().map(action => {
-            return action.map(c => ({
-              key: c.payload.key, ...c.payload.val()
-            }));
-          });
-          // this.checkCreator();
-          this.checkAttending();
-          this.userAttendingListRef = this.firebaseService.getUserEventList(this.user.uid);
-          this.userAttendingList$ = this.userAttendingListRef.snapshotChanges().map(action => {
-            return action.map(c => ({
-              key: c.payload.key, ...c.payload.val()
-            }));
-          })
-
-        });
-      } else {
-        this.app.getRootNavs()[0].setRoot(LoginPage);
-      }
+  async dataSetup() {
+    this.eventId = this.navParams.get("eventId");
+    const userGrab = await this.userService.currentUserInfo();
+    this.user = userGrab as User;
+    this.event$ = this.firebaseService.getEventInfo(this.eventId, this.user.organization_ID).valueChanges();
+    this.attendingListRef = this.firebaseService.getEventAttendingList(this.eventId, this.user.organization_ID)
+    this.attendingList$ = this.attendingListRef.snapshotChanges().map(action => {
+      return action.map(c => ({
+        key: c.payload.key, ...c.payload.val()
+      }));
+    });
+    // this.checkCreator();
+    this.checkAttending();
+    this.userAttendingListRef = this.firebaseService.getUserEventList(this.user.uid);
+    this.userAttendingList$ = this.userAttendingListRef.snapshotChanges().map(action => {
+      return action.map(c => ({
+        key: c.payload.key, ...c.payload.val()
+      }));
     });
   }
+
   logout() {
     this.afAuth.auth.signOut();
   }
@@ -106,79 +101,48 @@ export class EventViewPage {
     // }
   }
 
+  ionViewWillLeave() {
+
+  }
+
   checkAttending() {
-    // try {
-    //   var isAttending = false;
-    //   var listOfNames;
-    //   this.attendingList$.subscribe(items => {
-    //     for (let i of items) {
-    //       if (i.key === this.user.uid) {
-    //         console.log("Attending set to true");
-    //         this.attendingStatus = true;
-    //       }
-    //     }
-    //   });
-    // } catch (e) {
-    //   this.toast("Error when checking attendance");
-    // }
-
-    //5.0
-    // try {
-    //   var isAttending = false;
-    //   var theList;
-    //   this.attendingList.subscribe(items => {
-    //     theList = items;
-    //     console.log(theList);
-    //     //items.subscribe(item => console.log(item));
-    //     const filtered = items.next(item =>{
-    //       console.log(item);
-
-    //       console.log(item.key);
-    //       return false;        
-    //     })
-    //   });
-    //   this.attendingStatus = isAttending;
-    //   } catch (e) {
-    //     this.toast("Error when checking attendance");
-    //   }
+    try {
+      this.attendingList$.subscribe(items => {
+        for (let i of items) {
+          if (i.key === this.user.uid) {
+            this.attendingStatus = true;
+          }
+        }
+      });
+    } catch (e) {
+      this.toast("Error when checking attendance");
+    }
   }
 
   rsvpYes() {
-    if (!this.attendingStatus) {
-      // this.firebaseService.getEventInfo2(this.eventId, this.user.organization_ID).snapshotChanges().subscribe(action => {
-      //   this.eventName = action.payload.val().name;
-      // });
-
-      //struggle
-      // this.event.subscribe(e => { this.eventName = e.name, console.log(e)});
-      // console.log(this.eventName);
+    if (!this.attendingStatus) { // Check to see if the person is able to rsvp yes
       let updates = {};
       let nameObj = {
         name: this.user.name,
         avatar_url: this.user.avatar_url
       };
       let eventObj = {} as Event;
-      // this.afDB.object<Event>('/organization/' + organization_ID + '/event/' + key)
       this.firebase.ref('/organization/' + this.user.organization_ID + '/event/' + this.eventId).once('value').then(snapshot => {
         eventObj = snapshot.val();
-        console.log(eventObj);
-        console.log("event info acquired");
         updates['/organization/' + this.user.organization_ID + '/event/' + this.eventId + '/attendingList/' + this.user.uid] = nameObj;
         updates['/users/' + this.user.uid + '/eventsAttending/' + this.eventId] = eventObj;
-        firebase.database().ref().update(updates).then(function () {
+        firebase.database().ref().update(updates).then(() => {
+          this.attendingStatus = true;
+          this.toast("You are going to this event!");
         }).catch(function (error) {
-          console.log(error);
           this.toast("Error RSVPing.");
         });
-        this.attendingStatus = true;
-        this.toast("You are going to this event!");
       });
     }
   }
 
   rsvpNo() {
-    // console.log(this.eventName);
-    if (this.attendingStatus) {
+    if (this.attendingStatus) { // Check to see if the person is able to rsvp no
       this.toast("Removed you from the attending list.");
       this.attendingListRef.remove(this.user.uid);
       this.userAttendingListRef.remove(this.eventId);
