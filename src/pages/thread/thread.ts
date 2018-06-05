@@ -3,7 +3,6 @@ import { NavController, NavParams } from 'ionic-angular';
 import { Broadcast } from '../../models/broadcast';
 import { FirebaseServiceProvider } from "../../providers/firebase-service/firebase-service";
 import { User } from "../../models/user";
-import { Storage } from "@ionic/storage";
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import { ComposeThreadPage } from '../compose-thread/compose-thread';

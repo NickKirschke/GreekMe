@@ -9,11 +9,8 @@ import { UserServiceProvider } from '../../providers/user-service/user-service';
 import { Observable } from 'rxjs/Observable';
 import { AngularFireList } from 'angularfire2/database';
 import { Broadcast } from '../../models/broadcast';
-import { Event } from '../../models/event';
-import { ThreadPage } from '../thread/thread';
 import { EventViewPage } from '../event-view/event-view';
 import { PopOverComponent } from '../../components/pop-over/pop-over';
-import { populateNodeData } from 'ionic-angular/components/virtual-scroll/virtual-util';
 import { EditProfilePage } from '../edit-profile/edit-profile';
 import * as moment from 'moment';
 @Component({
@@ -41,7 +38,6 @@ export class ProfilePage {
   }
 
   async dataSetup() {
-    let count = 0;
     let profileUser = this.navParams.get("uid");
     if (profileUser == null) {
       this.isUser = true;
@@ -111,7 +107,7 @@ export class ProfilePage {
   }
 
   removeOldEvents() {
-    const promise = new Promise((resolve, reject) => {
+    new Promise((resolve, reject) => {
       this.eventItems$.subscribe(items => {
         for (let i of items) {
           var tempDate = moment(i.date);

@@ -6,8 +6,6 @@ import { AngularFireAuth } from "angularfire2/auth/auth";
 import { FirebaseServiceProvider } from "../../providers/firebase-service/firebase-service";
 import { TabsControllerPage } from "../tabs-controller/tabs-controller";
 import { LoadingController } from 'ionic-angular';
-import { UserServiceProvider } from '../../providers/user-service/user-service';
-import { GreekMePage } from '../greekme/greekme';
 import * as firebase from 'firebase/app';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
@@ -24,7 +22,6 @@ export class LoginPage {
     public navCtrl: NavController,
     public firebaseService: FirebaseServiceProvider,
     public loadingCtrl: LoadingController,
-    private userService: UserServiceProvider,
     private app: App,
     private formBuilder: FormBuilder) {
     this.loginForm = this.formBuilder.group({

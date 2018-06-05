@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
 import { AngularFireDatabase } from "angularfire2/database/database";
-import { AngularFireAuth } from "angularfire2/auth/auth";
 import { Storage } from "@ionic/storage";
 import { User } from "../../models/user";
 import { AngularFireObject } from "angularfire2/database";
@@ -11,7 +10,6 @@ import { Broadcast } from "../../models/broadcast";
 import { Event } from "../../models/event"
 import { UserLike } from '../../models/userLike';
 import { Observable } from '@firebase/util';
-import { database } from 'firebase/app';
 /*
   Generated class for the FirebaseServiceProvider provider.
 
@@ -25,7 +23,6 @@ export class FirebaseServiceProvider {
   firebaseStorage = firebase.storage();
   firebaseDb = firebase.database();
   constructor(private afDB: AngularFireDatabase,
-    private afAuth: AngularFireAuth,
     private storage: Storage) {
 
   }

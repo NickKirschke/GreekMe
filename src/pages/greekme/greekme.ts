@@ -1,25 +1,19 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { NavController, App, NavParams } from 'ionic-angular';
+import { NavController} from 'ionic-angular';
 import { AngularFireList } from "angularfire2/database";
 import { FirebaseServiceProvider } from "../../providers/firebase-service/firebase-service";
 import { AngularFireAuth } from "angularfire2/auth/auth";
-import { LoginPage } from "../login/login";
 import { User } from "../../models/user";
 import { UserLike } from "../../models/userLike";
 import { Broadcast } from "../../models/broadcast";
 import { UserServiceProvider } from "../../providers/user-service/user-service";
 import { AngularFireObject } from "angularfire2/database";
-import { async } from "rxjs/scheduler/async";
-import { Storage } from "@ionic/storage";
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import { ComposeBroadcastPage } from '../compose-broadcast/compose-broadcast';
 import { ThreadPage } from '../thread/thread';
 import { Observable } from 'rxjs/Observable';
-import { PACKAGE_ROOT_URL } from '@angular/core/src/application_tokens';
-import { getAllLifecycleHooks } from '@angular/compiler/src/lifecycle_reflector';
 import { ProfilePage } from '../profile/profile';
-import { Icon } from 'ionic-angular';
 
 @Component({
   selector: 'page-greekme',
@@ -42,9 +36,7 @@ export class GreekMePage {
     private afAuth: AngularFireAuth,
     public navCtrl: NavController,
     public firebaseService: FirebaseServiceProvider,
-    private app: App,
-    private userService: UserServiceProvider,
-    private storage: Storage) {
+    private userService: UserServiceProvider) {
         this.dataSetup();
   }
 
@@ -112,7 +104,7 @@ export class GreekMePage {
     // const likes = this.getLikeList();
     // console.log(likes);
     let likeList: UserLike[] = [];
-    const a = this.userLikedList$.subscribe(items => items.forEach(item => likeList.push(item)));
+    this.userLikedList$.subscribe(items => items.forEach(item => likeList.push(item)));
     // console.log("bacon");
     // console.log(likeList);
 
@@ -179,14 +171,14 @@ export class GreekMePage {
 
     // console.log(promise);
     promise.then((res) => {
+      var updates = {};
+      var currentLikes,numOfLikesRef;
       if (res) {
         // Do unlike
         console.log("doing unlike");
         heart.classList.toggle("hideHeart");
         // outline.classList.toggle("hideHeart");
-        var updates = {};
-        var currentLikes;
-        var numOfLikesRef = firebase.database().ref('/organization/' + this.user.organization_ID + '/broadcast/' + item.key + '/numOfLikes');
+        numOfLikesRef = firebase.database().ref('/organization/' + this.user.organization_ID + '/broadcast/' + item.key + '/numOfLikes');
         numOfLikesRef.on('value', function (snapshot) {
           currentLikes = snapshot.val();
         });
@@ -207,7 +199,6 @@ export class GreekMePage {
         console.log("doing like");
         heart.classList.toggle("hideHeart");
         // outline.classList.toggle("hideHeart");
-        var updates = {};
         //This is the object stored on the broadcast like list
         var userLikeObj = {
           name: this.user.name
@@ -217,8 +208,7 @@ export class GreekMePage {
           name: item.text,
           key: item.key
         }
-        var currentLikes;
-        var numOfLikesRef = firebase.database().ref('/organization/' + this.user.organization_ID + '/broadcast/' + item.key + '/numOfLikes');
+        numOfLikesRef = firebase.database().ref('/organization/' + this.user.organization_ID + '/broadcast/' + item.key + '/numOfLikes');
         numOfLikesRef.on('value', function (snapshot) {
           currentLikes = snapshot.val();
         });
@@ -262,7 +252,6 @@ export class GreekMePage {
   // Make an attirbute 
 
   async isLiked(key: String) {
-    var liked = false;
     const a = this.userLikedList$.forEach(likes => likes.find(like => like.key === key));
     a.then(res => {return res});
   }

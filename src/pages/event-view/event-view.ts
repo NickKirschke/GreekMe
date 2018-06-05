@@ -6,8 +6,6 @@ import { AngularFireAuth } from "angularfire2/auth/auth";
 import { LoginPage } from "../login/login";
 import { User } from "../../models/user";
 import { UserServiceProvider } from "../../providers/user-service/user-service";
-import { AngularFireObject } from "angularfire2/database";
-import { Storage } from "@ionic/storage";
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import { Event } from "../../models/event";
@@ -101,7 +99,7 @@ export class EventViewPage {
     // } catch (e) {
     //   console.log("Error checking creator");
     // }
-    var id = this.event$.subscribe(console.log);
+    // var id = this.event$.subscribe(console.log);
     // console.log(id);
     // if(id.take === this.user.uid) {
     //   this.isCreator = true;
@@ -109,20 +107,20 @@ export class EventViewPage {
   }
 
   checkAttending() {
-    try {
-      var isAttending = false;
-      var listOfNames;
-      this.attendingList$.subscribe(items => {
-        for (let i of items) {
-          if (i.key === this.user.uid) {
-            console.log("Attending set to true");
-            this.attendingStatus = true;
-          }
-        }
-      });
-    } catch (e) {
-      this.toast("Error when checking attendance");
-    }
+    // try {
+    //   var isAttending = false;
+    //   var listOfNames;
+    //   this.attendingList$.subscribe(items => {
+    //     for (let i of items) {
+    //       if (i.key === this.user.uid) {
+    //         console.log("Attending set to true");
+    //         this.attendingStatus = true;
+    //       }
+    //     }
+    //   });
+    // } catch (e) {
+    //   this.toast("Error when checking attendance");
+    // }
 
     //5.0
     // try {

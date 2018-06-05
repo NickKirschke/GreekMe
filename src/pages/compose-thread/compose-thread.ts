@@ -6,12 +6,9 @@ import { LoginPage } from "../login/login";
 import { User } from "../../models/user";
 import { Broadcast } from "../../models/broadcast";
 import { UserServiceProvider } from "../../providers/user-service/user-service";
-import { Storage } from "@ionic/storage";
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import * as moment from 'moment';
-import { Observable } from 'rxjs/Observable';
-import { CommentStmt } from '@angular/compiler';
 
 @Component({
   selector: 'page-compose-thread',
@@ -51,7 +48,6 @@ export class ComposeThreadPage {
 
   getNumOfComments() {
     return new Promise(resolve => {
-      let numOfComments = 0;
       const numOfCommentsRef = firebase.database().ref('/organization/' + this.user.organization_ID + this.typeOfRef + this.broadcastKey + '/numOfComments/');
           numOfCommentsRef.on('value', function (snapshot) {
             resolve(snapshot.val());

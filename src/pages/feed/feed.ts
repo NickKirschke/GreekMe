@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
-import { NavController, App } from 'ionic-angular';
+import { NavController } from 'ionic-angular';
 import { AngularFireList } from "angularfire2/database";
 import { FirebaseServiceProvider } from "../../providers/firebase-service/firebase-service";
 import { AngularFireAuth } from "angularfire2/auth/auth";
-import { LoginPage } from "../login/login";
 import { User } from "../../models/user";
 import { Broadcast } from "../../models/broadcast";
 import { UserServiceProvider } from "../../providers/user-service/user-service";
@@ -33,7 +32,6 @@ export class FeedPage {
     private afAuth: AngularFireAuth,
     public navCtrl: NavController,
     public firebaseService: FirebaseServiceProvider,
-    private app: App,
     private userService: UserServiceProvider) {
         const userGrab = this.userService.currentUserInfo();
         userGrab.then((result) => {

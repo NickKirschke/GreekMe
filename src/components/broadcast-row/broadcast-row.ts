@@ -28,7 +28,7 @@ export class BroadcastRowComponent {
   ngAfterViewInit() {
     // console.log(this.broadcast.key);
     if(this.broadcast.likeList) {
-      let res = this.broadcast.likeList;
+      // let res = this.broadcast.likeList;
       // console.log(res);
     }
   }

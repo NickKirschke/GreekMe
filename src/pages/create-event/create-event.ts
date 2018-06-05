@@ -1,13 +1,11 @@
 import {Component} from '@angular/core';
 import {NavController, App} from 'ionic-angular';
-import {AngularFireList} from "angularfire2/database";
 import {FirebaseServiceProvider} from "../../providers/firebase-service/firebase-service";
 import {AngularFireAuth} from "angularfire2/auth/auth";
 import { LoginPage } from "../login/login";
 import { EventsPage } from "../events/events";
 import {User} from "../../models/user";
 import {UserServiceProvider} from "../../providers/user-service/user-service";
-import {Storage} from "@ionic/storage";
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import * as moment from 'moment';

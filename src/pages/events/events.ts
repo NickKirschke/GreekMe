@@ -6,7 +6,6 @@ import { AngularFireAuth } from "angularfire2/auth/auth";
 import { LoginPage } from "../login/login";
 import { User } from "../../models/user";
 import { UserServiceProvider } from "../../providers/user-service/user-service";
-import { Storage } from "@ionic/storage";
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import { CreateEventPage } from '../create-event/create-event';
@@ -72,7 +71,7 @@ export class EventsPage {
     //   }));
 
     //5.0
-    const promise = new Promise((resolve, reject) => {
+    new Promise((resolve, reject) => {
       this.eventItems$.subscribe(items => {
         for (let i of items) {
           var tempDate = moment(i.date);

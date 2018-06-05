@@ -3,17 +3,12 @@ import { NavController, App, NavParams } from 'ionic-angular';
 import { FirebaseServiceProvider } from "../../providers/firebase-service/firebase-service";
 import { AngularFireAuth } from "angularfire2/auth/auth";
 import { LoginPage } from "../login/login";
-import { GreekMePage } from '../greekme/greekme';
 import { User } from "../../models/user";
 import { Broadcast } from "../../models/broadcast";
 import { UserServiceProvider } from "../../providers/user-service/user-service";
-import { AngularFireObject } from "angularfire2/database";
-import { Storage } from "@ionic/storage";
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import * as moment from 'moment';
-import { Observable } from 'rxjs/Observable';
-import { FeedPage } from '../feed/feed';
 
 @Component({
   selector: 'page-compose-broadcast',

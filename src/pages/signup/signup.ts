@@ -4,7 +4,6 @@ import { LoginPage } from '../login/login';
 import { User } from "../../models/user";
 import { AngularFireAuth } from "angularfire2/auth/auth";
 import { FirebaseServiceProvider } from "../../providers/firebase-service/firebase-service";
-import { Storage } from "@ionic/storage";
 import { TabsControllerPage } from "../tabs-controller/tabs-controller";
 import { LoadingController } from 'ionic-angular';
 import * as firebase from 'firebase/app';

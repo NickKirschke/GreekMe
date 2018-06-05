@@ -9,7 +9,6 @@ notifications
 make a function out of the user creation with avatar_url as the default
 push notifications
 global accent color, GREY
-JSLINT CLEANUP
 Center text on broadcast message hint
 Make the load screen better, Show gm page for a second (cordova plugins)
 look at all cordova plugins
