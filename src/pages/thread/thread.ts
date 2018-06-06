@@ -30,10 +30,18 @@ export class ThreadPage {
     private navParams: NavParams,
     private firebaseService: FirebaseServiceProvider,
     private modal: ModalController) {
+  }
 
-    this.broadcast = JSON.parse(navParams.get("broadcast"));
-    this.orgId = navParams.get("orgId");
-    this.isBroadcast = navParams.get("isBroadcast");
+
+
+  ionViewWillLoad() {
+    this.dataSetup();
+  }
+
+  async dataSetup() {
+    this.broadcast = JSON.parse(this.navParams.get("broadcast"));
+    this.orgId = this.navParams.get("orgId");
+    this.isBroadcast = this.navParams.get("isBroadcast");
     if (this.isBroadcast) {
       this.broadcastItems$ = this.firebaseService.getCommentListBroadcast(this.orgId, this.broadcast.key).valueChanges();
     } else {

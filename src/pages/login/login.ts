@@ -24,17 +24,21 @@ export class LoginPage {
     public loadingCtrl: LoadingController,
     private app: App,
     private formBuilder: FormBuilder) {
+  }
+
+  ionViewWillLoad() {
+    // If user is logged in retrieve uid then access user info from db..
+    this.afAuth.authState.subscribe(data => {
+      if(data) {
+        this.firebaseService.getUserDetails(data.uid).then(() => this.navCtrl.setRoot(TabsControllerPage));
+      }
+    });
+
     this.loginForm = this.formBuilder.group({
       email: [''],
       password: ['']
     });
     var user = firebase.auth().currentUser;
-    if (user) {
-      this.app.getRootNavs()[0].setRoot(TabsControllerPage);
-    } else {
-      // No user is signed in.
-      console.log("no one singed in.");
-    }
   }
 
   // Method used to transfer user to signup page
@@ -53,12 +57,6 @@ export class LoginPage {
       loader.present();
       // Checks to see if user credentials exist
       await this.afAuth.auth.signInWithEmailAndPassword(this.loginForm.value.email, this.loginForm.value.password);
-      // If successful login, retrieve uid then access user info from db..
-      this.afAuth.authState.subscribe(data => {
-        if(data) {
-          this.firebaseService.getUserDetails(data.uid).then(() => this.navCtrl.setRoot(TabsControllerPage));
-        }
-      });
     } catch (e) {
       var trimmedMessage = /^.*:\s*(.*)$/.exec(e.message);
       if (trimmedMessage == null) {

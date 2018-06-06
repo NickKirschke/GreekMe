@@ -37,13 +37,14 @@ export class GreekMePage {
     public navCtrl: NavController,
     public firebaseService: FirebaseServiceProvider,
     private userService: UserServiceProvider, private modal: ModalController) {
-        this.dataSetup();
   }
 
   logout() {
     this.afAuth.auth.signOut();
   }
-
+  ionViewWillLoad() {
+    this.dataSetup();
+  }
 
   async dataSetup() {
     try {
@@ -73,7 +74,6 @@ export class GreekMePage {
   } catch(e) {
     console.log(e);
   }
-    // console.log("End of data setup");
   }
 
 
@@ -231,25 +231,6 @@ export class GreekMePage {
       console.log("Error");
     });
   }
-
-  // doUnlike(item) {
-  //   var updates = {};
-  //   var currentLikes;
-  //   var numOfLikesRef = firebase.database().ref('/organization/' + this.user.organization_ID + '/broadcast/' + item.$key + '/numOfLikes');
-  //   numOfLikesRef.on('value', function (snapshot) {
-  //     currentLikes = snapshot.val();
-  //   });
-  //   updates['/organization/' + this.user.organization_ID + '/broadcast/' + item.$key + '/likeList/' + this.user.uid] = null;
-  //   updates['/users/' + this.user.uid + '/likeList/' + item.$key] = null;
-  //   updates['/organization/' + this.user.organization_ID + '/broadcast/' + item.$key + '/numOfLikes/'] = currentLikes - 1;
-  //   firebase.database().ref().update(updates).then(function () {
-  //     console.log("Like removed");
-  //   }).catch(function (error) {
-  //     console.log(error);
-  //   });
-  // }
-
-  // Make an attirbute 
 
   async isLiked(key: String) {
     const a = this.userLikedList$.forEach(likes => likes.find(like => like.key === key));

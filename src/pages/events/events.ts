@@ -28,25 +28,24 @@ export class EventsPage {
     public firebaseService: FirebaseServiceProvider,
     private app: App,
     private userService: UserServiceProvider) {
-    this.afAuth.authState.subscribe(data => {
-      if (data && data.email && data.uid) {
-        const userGrab = this.userService.currentUserInfo();
-        userGrab.then((result) => {
-          this.user = result as User;
-          this.eventItemsRef = this.firebaseService.getOrgEventList(this.user.organization_ID);
-          this.eventItems$ = this.eventItemsRef.snapshotChanges().map(action => {
-            return action.map(c => ({
-              key: c.payload.key, ...c.payload.val()
-            }));
-          });
-          this.removeOldEvents();
-        });
-      } else {
-        this.app.getRootNavs()[0].setRoot(LoginPage);
-      }
-    });
   }
-  
+
+  ionViewWillLoad() {
+    this.dataSetup();
+  }
+
+  async dataSetup() {
+    const userGrab = await this.userService.currentUserInfo();
+    this.user = userGrab as User;
+    this.eventItemsRef = this.firebaseService.getOrgEventList(this.user.organization_ID);
+    this.eventItems$ = this.eventItemsRef.snapshotChanges().map(action => {
+      return action.map(c => ({
+        key: c.payload.key, ...c.payload.val()
+      }));
+    });
+    this.removeOldEvents();
+  }
+
   logout() {
     this.afAuth.auth.signOut();
   }

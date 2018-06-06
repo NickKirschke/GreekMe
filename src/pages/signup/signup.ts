@@ -24,6 +24,9 @@ export class SignupPage {
     public firebaseService: FirebaseServiceProvider,
     public loadingCtrl: LoadingController,
     private formBuilder: FormBuilder) {
+  }
+
+  ionViewWillload() {
     this.signupForm = this.formBuilder.group({
       name: [''],
       email: [''],
@@ -32,6 +35,7 @@ export class SignupPage {
       password: ['']
     });
   }
+
   async register() {
     var user = {
       name: this.signupForm.value.name,

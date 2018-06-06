@@ -40,6 +40,9 @@ export class EventViewPage {
     private userService: UserServiceProvider,
     public navParams: NavParams,
     public toastCtrl: ToastController) {
+  }
+
+  ionViewWillLoad() {
     this.dataSetup();
   }
 

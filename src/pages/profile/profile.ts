@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Storage } from "@ionic/storage";
-import { NavController, App, PopoverController, NavParams } from 'ionic-angular';
+import { NavController, App, PopoverController, NavParams, ModalController } from 'ionic-angular';
 import { AngularFireAuth } from "angularfire2/auth/auth";
 import { FirebaseServiceProvider } from "../../providers/firebase-service/firebase-service";
 import { LoginPage } from "../login/login";
@@ -27,10 +27,13 @@ export class ProfilePage {
   eventItemsRef: AngularFireList<any>;
   profileContent: string = 'posts';
   constructor(private afAuth: AngularFireAuth, public navCtrl: NavController, private firebaseService: FirebaseServiceProvider, private userService: UserServiceProvider, private app: App,
-    private popoverCtrl: PopoverController, public navParams: NavParams, private storage: Storage) {
-      this.dataSetup();
+    private popoverCtrl: PopoverController, public navParams: NavParams, private storage: Storage, private modal: ModalController) {
   }
 
+  ionViewWillLoad() {
+    this.dataSetup();
+  }
+  
   async dataSetup() {
     let guestUser = this.navParams.get("uid");
     if (guestUser) {
@@ -58,8 +61,8 @@ export class ProfilePage {
   }
 
   editProfile() {
-    this.navCtrl.push(EditProfilePage,
-      { user: JSON.stringify(this.user) });
+    const myModal = this.modal.create(EditProfilePage, { user: JSON.stringify(this.user) });
+    myModal.present();
   }
 
   goToEvent(key: String) {

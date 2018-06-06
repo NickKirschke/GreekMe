@@ -20,11 +20,7 @@ import { ProfilePage } from '../profile/profile';
   templateUrl: 'feed.html'
 })
 export class FeedPage {
-  firebaseStorage = firebase.storage();
-  userData: AngularFireObject<User>
   user = {} as User;
-  // this tells the tabs component which Pages
-  // should be each tab's root Page
   feedItems$: Observable<Broadcast[]>;
   feedItemRef: AngularFireList<any>;
   userLikedList$: Observable<any>;
@@ -34,22 +30,28 @@ export class FeedPage {
     public firebaseService: FirebaseServiceProvider,
     private userService: UserServiceProvider,
     private modal: ModalController) {
-        const userGrab = this.userService.currentUserInfo();
-        userGrab.then((result) => {
-          this.user = result as User;
-          this.feedItemRef = this.firebaseService.getFeedList(this.user.organization_ID);
-          this.feedItems$ = this.feedItemRef.snapshotChanges().map(action => {
-            return action.map(c => ({
-              key: c.payload.key, ...c.payload.val(), iconName: "heart-outline"
-            })).reverse();
-          });
-          this.userLikedList$ = this.firebaseService.getUserLikeList(this.user.uid).snapshotChanges().map(action => {
-            return action.map(c => ({
-              key: c.payload.key, ...c.payload.val()
-            }));
-          });
+  }
+
+  ionViewWillLoad() {
+    this.dataSetup();
+  }
+
+  async dataSetup() {
+    const userGrab = await this.userService.currentUserInfo();
+    this.user = userGrab as User;
+    this.feedItemRef = this.firebaseService.getFeedList(this.user.organization_ID);
+    this.feedItems$ = this.feedItemRef.snapshotChanges().map(action => {
+      return action.map(c => ({
+        key: c.payload.key, ...c.payload.val(), iconName: "heart-outline"
+      })).reverse();
+    });
+    this.userLikedList$ = this.firebaseService.getUserLikeList(this.user.uid).snapshotChanges().map(action => {
+      return action.map(c => ({
+        key: c.payload.key, ...c.payload.val()
+      }));
     });
   }
+
   logout() {
     this.afAuth.auth.signOut();
   }
@@ -136,7 +138,7 @@ export class FeedPage {
   }
 
   goToComposeFeed() {
-    const myModal = this.modal.create(ComposeBroadcastPage,{isBroadcast: false});
+    const myModal = this.modal.create(ComposeBroadcastPage, { isBroadcast: false });
     myModal.present();
   }
 

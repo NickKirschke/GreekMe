@@ -27,14 +27,10 @@ export class ComposeBroadcastPage {
     private userService: UserServiceProvider,
     private navParams: NavParams,
     private view: ViewController) {
+  }
 
-    this.afAuth.authState.subscribe(data => {
-      if (!data || !data.email || !data.uid) {
-        this.app.getRootNavs()[0].setRoot(LoginPage);
-      } else {
-        this.dataSetup();
-      }
-    });
+  ionViewWillLoad() {
+    this.dataSetup();
   }
 
   async dataSetup() {

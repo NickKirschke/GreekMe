@@ -1,8 +1,14 @@
 <ion-header>
   <ion-navbar>
+    <ion-buttons start>
+        <button ion-button (click)="closeModal()">Close</button>
+    </ion-buttons>
     <ion-title>
       Edit Profile
     </ion-title>
+    <ion-buttons end>
+        <button ion-button (click)="updateProfile(user)" disabled>Done</button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 <ion-content padding>

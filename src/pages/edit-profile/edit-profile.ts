@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, ViewController } from 'ionic-angular';
 import { User } from '../../models/user';
 
 @Component({
@@ -10,9 +10,10 @@ export class EditProfilePage {
   // this tells the tabs component which Pages
   // should be each tab's root Page
   user = {} as User;
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, private navParams: NavParams, private view: ViewController) {
     this.user = JSON.parse(navParams.get("user"));
-    console.log(this.user.bio);
   }
-  
+  closeModal() {
+    this.view.dismiss();
+  }
 }
