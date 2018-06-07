@@ -130,10 +130,13 @@ export class FeedPage {
 
   itemSelected(item) {
     let bc = JSON.stringify(item);
-    this.navCtrl.push(ThreadPage, {
+    const data = {
       orgId: this.user.organization_ID,
       broadcast: bc,
       isBroadcast: false
+    };
+    this.navCtrl.push(ThreadPage, {
+      data: data
     });
   }
 

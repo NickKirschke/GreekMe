@@ -36,7 +36,7 @@ export class ProfilePage {
   
   async dataSetup() {
     let guestUser = this.navParams.get("uid");
-    if (guestUser) {
+    if (guestUser) { // Check to see if it is a user navigating through profile pictures, if so hide the options
       this.isUser = false;
       const guestProfileUserGrab = await this.firebaseService.getUserDetailsProfilePage(guestUser);
       this.user = guestProfileUserGrab as User;

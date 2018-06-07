@@ -60,7 +60,6 @@ export class ComposeThreadPage {
     updates['/users/' + this.user.uid + '/postList/' + tempBroadcast.key] = tempBroadcast;
     updates['/organization/' + this.user.organization_ID + this.typeOfRef + this.broadcastKey + '/numOfComments/'] = numOfComments + 1;
     firebase.database().ref().update(updates).then(function () {
-      console.log("Post added and numOfComments updated!");
     }).catch(function (error) {
       console.log(error);
     });
@@ -83,6 +82,7 @@ export class ComposeThreadPage {
         tempBroadcast.key = this.firebaseService.addCommentToMessage(tempBroadcast, this.user.organization_ID, this.broadcastKey);
       }
       this.updateUserPostListAndCommentNumber(tempBroadcast);
+      this.view.dismiss();
     }
   }
   closeModal() {

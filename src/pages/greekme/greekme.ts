@@ -42,6 +42,7 @@ export class GreekMePage {
   logout() {
     this.afAuth.auth.signOut();
   }
+  
   ionViewWillLoad() {
     this.dataSetup();
   }
@@ -110,10 +111,6 @@ export class GreekMePage {
 
     return likeList.some(item => item.key === key) ? "heart" : "heart-outline";
   }
-
-  // ionViewDidEnter() {
-  //   this.fixedHeight = this.mapElement.nativeElement.offsetHeight;
-  // }
 
   calculateCommentLength(orgId: String, broadcastId: String) {
     this.firebaseService.getCommentListBroadcast(orgId, broadcastId);
@@ -239,10 +236,13 @@ export class GreekMePage {
 
   itemSelected(item) {
     let bc = JSON.stringify(item);
-    this.navCtrl.push(ThreadPage, {
+    const data = {
       orgId: this.user.organization_ID,
       broadcast: bc,
       isBroadcast: true
+    };
+    this.navCtrl.push(ThreadPage, {
+      data: data
     });
   }
 

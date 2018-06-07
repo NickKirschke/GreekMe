@@ -39,9 +39,10 @@ export class ThreadPage {
   }
 
   async dataSetup() {
-    this.broadcast = JSON.parse(this.navParams.get("broadcast"));
-    this.orgId = this.navParams.get("orgId");
-    this.isBroadcast = this.navParams.get("isBroadcast");
+    const data = this.navParams.get("data");
+    this.broadcast = JSON.parse(data.broadcast);
+    this.orgId = data.orgId
+    this.isBroadcast = data.isBroadcast;
     if (this.isBroadcast) {
       this.broadcastItems$ = this.firebaseService.getCommentListBroadcast(this.orgId, this.broadcast.key).valueChanges();
     } else {
