@@ -38,7 +38,6 @@ export class LoginPage {
       email: [''],
       password: ['']
     });
-    var user = firebase.auth().currentUser;
   }
 
   // Method used to transfer user to signup page

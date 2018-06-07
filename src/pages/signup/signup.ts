@@ -26,7 +26,7 @@ export class SignupPage {
     private formBuilder: FormBuilder) {
   }
 
-  ionViewWillload() {
+  ionViewWillLoad() {
     this.signupForm = this.formBuilder.group({
       name: [''],
       email: [''],
