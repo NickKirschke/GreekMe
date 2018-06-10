@@ -13,7 +13,6 @@ import { FormBuilder, FormGroup } from '@angular/forms';
   templateUrl: 'signup.html'
 })
 export class SignupPage {
-  user = {} as User;
   signupForm: FormGroup;
   error;
   // this tells the tabs component which Pages
@@ -43,6 +42,7 @@ export class SignupPage {
       organization_ID: this.signupForm.value.organization_ID,
       role: this.signupForm.value.role,
     } as User;
+    console.log(user);
     try {
       var loader = this.loadingCtrl.create({
         content: "Registering...",
@@ -52,8 +52,7 @@ export class SignupPage {
       firebase.database().ref("organization/" + user.organization_ID).once('value').then((snapshot) => {
         if (snapshot.val()) {
           this.afAuth.auth.createUserWithEmailAndPassword(user.email, this.signupForm.value.password).then((res) => {
-            this.user.uid = res.uid;
-            this.user.password = '';
+            user.uid = res.user.uid;
             this.firebaseService.addUserDetails(user).then(() => {
               this.navCtrl.setRoot(TabsControllerPage);
             });

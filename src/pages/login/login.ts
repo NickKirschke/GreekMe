@@ -7,6 +7,8 @@ import { FirebaseServiceProvider } from "../../providers/firebase-service/fireba
 import { TabsControllerPage } from "../tabs-controller/tabs-controller";
 import { LoadingController } from 'ionic-angular';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { Observable } from '@firebase/util';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'page-login',
@@ -16,6 +18,7 @@ export class LoginPage {
   loginForm: FormGroup;
   user = {} as User;
   error = '';
+  userCheck: Subscription;
   constructor(
     private afAuth: AngularFireAuth,
     public navCtrl: NavController,
@@ -26,7 +29,7 @@ export class LoginPage {
 
   ionViewWillLoad() {
     // If user is logged in retrieve uid then access user info from db..
-    this.afAuth.authState.subscribe(data => {
+    this.userCheck = this.afAuth.authState.subscribe(data => {
       if(data) {
         this.firebaseService.getUserDetails(data.uid).then(() => this.navCtrl.setRoot(TabsControllerPage));
       }
@@ -36,6 +39,10 @@ export class LoginPage {
       email: [''],
       password: ['']
     });
+  }
+
+  ionViewWillLeave() {
+    this.userCheck.unsubscribe();
   }
 
   // Method used to transfer user to signup page

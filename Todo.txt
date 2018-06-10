@@ -13,6 +13,7 @@ push notifications
 global accent color, GREY
 Make the load screen better, Show gm page for a second (cordova plugins)
 look at all cordova plugins
+Set a post load limit, aka only 10 of the most recent broadcats appear, 20 for feed
 scaling input on page with lots of text
 Liking shows correct icon
 If the avatar url is null use the default one stored locally
