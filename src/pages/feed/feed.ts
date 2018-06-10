@@ -6,7 +6,6 @@ import { AngularFireAuth } from "angularfire2/auth/auth";
 import { User } from "../../models/user";
 import { Broadcast } from "../../models/broadcast";
 import { UserServiceProvider } from "../../providers/user-service/user-service";
-import { AngularFireObject } from "angularfire2/database";
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import { Observable } from 'rxjs/Observable';

@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { App, NavParams, ViewController } from 'ionic-angular';
 import { FirebaseServiceProvider } from "../../providers/firebase-service/firebase-service";
 import { AngularFireAuth } from "angularfire2/auth/auth";
-import { LoginPage } from "../login/login";
 import { User } from "../../models/user";
 import { Broadcast } from "../../models/broadcast";
 import { UserServiceProvider } from "../../providers/user-service/user-service";
@@ -21,9 +20,7 @@ export class ComposeBroadcastPage {
   tempBroadcast = {} as Broadcast;
   error = '';
   constructor(
-    private afAuth: AngularFireAuth,
     public firebaseService: FirebaseServiceProvider,
-    private app: App,
     private userService: UserServiceProvider,
     private navParams: NavParams,
     private view: ViewController) {

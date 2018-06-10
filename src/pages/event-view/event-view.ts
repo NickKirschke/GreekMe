@@ -3,7 +3,6 @@ import { NavController, App, NavParams } from 'ionic-angular';
 import { AngularFireList } from "angularfire2/database";
 import { FirebaseServiceProvider } from "../../providers/firebase-service/firebase-service";
 import { AngularFireAuth } from "angularfire2/auth/auth";
-import { LoginPage } from "../login/login";
 import { User } from "../../models/user";
 import { UserServiceProvider } from "../../providers/user-service/user-service";
 import * as firebase from 'firebase/app';
@@ -36,7 +35,6 @@ export class EventViewPage {
     private afAuth: AngularFireAuth,
     public navCtrl: NavController,
     public firebaseService: FirebaseServiceProvider,
-    private app: App,
     private userService: UserServiceProvider,
     public navParams: NavParams,
     public toastCtrl: ToastController) {

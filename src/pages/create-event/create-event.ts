@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { NavController, App } from 'ionic-angular';
 import { FirebaseServiceProvider } from "../../providers/firebase-service/firebase-service";
 import { AngularFireAuth } from "angularfire2/auth/auth";
-import { LoginPage } from "../login/login";
 import { EventsPage } from "../events/events";
 import { User } from "../../models/user";
 import { UserServiceProvider } from "../../providers/user-service/user-service";
@@ -28,7 +27,6 @@ export class CreateEventPage {
     private afAuth: AngularFireAuth,
     public navCtrl: NavController,
     public firebaseService: FirebaseServiceProvider,
-    private app: App,
     private userService: UserServiceProvider) {
   }
 

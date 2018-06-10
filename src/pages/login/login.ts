@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
-import { NavController, App } from 'ionic-angular';
+import { NavController } from 'ionic-angular';
 import { SignupPage } from '../signup/signup';
 import { User } from "../../models/user";
 import { AngularFireAuth } from "angularfire2/auth/auth";
 import { FirebaseServiceProvider } from "../../providers/firebase-service/firebase-service";
 import { TabsControllerPage } from "../tabs-controller/tabs-controller";
 import { LoadingController } from 'ionic-angular';
-import * as firebase from 'firebase/app';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
@@ -22,7 +21,6 @@ export class LoginPage {
     public navCtrl: NavController,
     public firebaseService: FirebaseServiceProvider,
     public loadingCtrl: LoadingController,
-    private app: App,
     private formBuilder: FormBuilder) {
   }
 
