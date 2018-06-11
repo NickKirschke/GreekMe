@@ -30,7 +30,7 @@ export class ProfilePage {
     private popoverCtrl: PopoverController, public navParams: NavParams, private storage: Storage, private modal: ModalController) {
   }
 
-  ionViewWillLoad() {
+  ionViewDidLoad() {
     this.dataSetup();
   }
   

@@ -30,7 +30,7 @@ export class CreateEventPage {
     private userService: UserServiceProvider) {
   }
 
-  ionViewWillLoad() {
+  ionViewDidLoad() {
     this.dataSetup();
   }
 

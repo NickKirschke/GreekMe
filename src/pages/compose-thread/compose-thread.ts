@@ -28,7 +28,7 @@ export class ComposeThreadPage {
     private view: ViewController) {
   }
 
-  ionViewWillLoad() {
+  ionViewDidLoad() {
     this.dataSetup();
   }
 

@@ -40,7 +40,7 @@ export class EventViewPage {
     public toastCtrl: ToastController) {
   }
 
-  ionViewWillLoad() {
+  ionViewDidLoad() {
     this.dataSetup();
   }
 

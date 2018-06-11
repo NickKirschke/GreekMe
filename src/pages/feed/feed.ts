@@ -31,7 +31,7 @@ export class FeedPage {
     private modal: ModalController) {
   }
 
-  ionViewWillLoad() {
+  ionViewDidLoad() {
     this.dataSetup();
   }
 

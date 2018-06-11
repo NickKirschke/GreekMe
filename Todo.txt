@@ -1,9 +1,8 @@
-Set up data so that it suscribes and unsuscribes in the ionViewWillEnter and ionViewDidEnter and ionViewWillLeave and ionViewDidLeave
+Set up data so that it subscribes and unsubscribes in the ionViewWillLoad, ionViewWillEnter and ionViewWillLeave. Utilize the boolean to check if it is the pages creation.
 Currently on the profile page there are no comments or like numbers
-Transofrm all navparams data transfers to one DATA attribute to reduce number of calls.
-
+Transform all navparams data transfers to one DATA attribute to reduce number of calls.
+Finish edit profile modal
 Signup should send email verification
-Turn edit profile into a modal
 Settings page for notifications etc
 Add bio to the user on sign up
 notifications
@@ -14,10 +13,9 @@ global accent color, GREY
 Make the load screen better, Show gm page for a second (cordova plugins)
 look at all cordova plugins
 Set a post load limit, aka only 10 of the most recent broadcats appear, 20 for feed
+Dispose of all subscriptions when loggingout, ionViewWillUnload for each page needs to have unsubscribes on pages other than homepage
 scaling input on page with lots of text
-Liking shows correct icon
 If the avatar url is null use the default one stored locally
-Store default images locally, reference on login and register page
 /// End game
 refactor DB with everyone under school
 Edit Event tab

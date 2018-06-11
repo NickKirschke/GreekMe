@@ -29,15 +29,6 @@ export class FirebaseServiceProvider {
   // Get organization's image
   getGreetingImage(organization_ID) {
     return this.firebaseStorage.ref().child(organization_ID + '/logo.png').getDownloadURL();
-    // .then(function (url) {
-    //     console.log(url);
-    //     resolve(url);
-    //   }).catch(function (error) {
-    //     // Handle any errors
-    //     console.log(error);
-    //     return 'https://firebasestorage.googleapis.com/v0/b/greekme-7475a.appspot.com/o/123456%2Ftest.jpeg?alt=media&token=20193ddb-5a82-4b6a-95d4-94c3ccd2c870';
-    //   })
-    // });
   }
 
   // Adds an event to the event list for the organization

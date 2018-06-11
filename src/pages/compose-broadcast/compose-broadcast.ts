@@ -26,7 +26,7 @@ export class ComposeBroadcastPage {
     private view: ViewController) {
   }
 
-  ionViewWillLoad() {
+  ionViewDidLoad() {
     this.dataSetup();
   }
 

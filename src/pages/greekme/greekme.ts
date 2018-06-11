@@ -14,6 +14,7 @@ import { ComposeBroadcastPage } from '../compose-broadcast/compose-broadcast';
 import { ThreadPage } from '../thread/thread';
 import { Observable } from 'rxjs/Observable';
 import { ProfilePage } from '../profile/profile';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'page-greekme',
@@ -31,6 +32,11 @@ export class GreekMePage {
   image: any;
   userLikedListRef: AngularFireList<any>;
   userLikedList$: Observable<UserLike[]>;
+  broadcastItems = [] as Broadcast[];
+  userLikeItems = [] as UserLike[];
+  userLikeSubscription: Subscription;
+  broadcastSubscription: Subscription;
+  firstLoadComplete: boolean = false;
 
   constructor(
     private afAuth: AngularFireAuth,
@@ -42,74 +48,69 @@ export class GreekMePage {
   logout() {
     this.afAuth.auth.signOut();
   }
-  
+
+  async dataSetup() {
+    try {
+      const userGrab = await this.userService.currentUserInfo();
+      this.user = userGrab as User;
+      this.userLikedListRef = this.firebaseService.getUserLikeList(this.user.uid);
+      this.broadcastItemRef = this.firebaseService.getBroadcastList(this.user.organization_ID);
+
+      if (this.user.role == 'President' || this.user.role == ('Vice President') || this.user.role == ('Chair Member')) {
+        this.validRole = true;
+      }
+      const imageGrab = this.firebaseService.getGreetingImage(this.user.organization_ID);
+      imageGrab.then((result) => {
+        this.image = result;
+      }, (error) => {
+        this.image = 'assets/img/8d9YHCdTlOXCBqO65zNP_GM_Master01.png';
+      });
+      this.buildSubscriptions();
+      this.firstLoadComplete = true;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   ionViewWillLoad() {
     this.dataSetup();
   }
 
-  async dataSetup() {
-    try {
-    const userGrab = await this.userService.currentUserInfo();
-    this.user = userGrab as User;
-    this.broadcastItemRef = this.firebaseService.getBroadcastList(this.user.organization_ID);
-    this.userLikedListRef = this.firebaseService.getUserLikeList(this.user.uid);
-    this.userLikedList$ = this.userLikedListRef.snapshotChanges().map(action => {
-      return action.map(c => ({
-        key: c.payload.key, ...c.payload.val()
-      }));
-    });
-    this.broadcastItems$ = this.broadcastItemRef.snapshotChanges().map(action => {
-      return action.map(c => ({
-        key: c.payload.key, ...c.payload.val(), iconName: this.checkIcons(c.payload.key)
-      })).reverse();
-    });
-    if (this.user.role == 'President' || this.user.role == ('Vice President') || this.user.role == ('Chair Member')) {
-      this.validRole = true;
-    }
-    const imageGrab = this.firebaseService.getGreetingImage(this.user.organization_ID);
-    imageGrab.then((result) => {
-      this.image = result;
-    }, (error) => {
-      this.image = 'https://firebasestorage.googleapis.com/v0/b/greekme-7475a.appspot.com/o/GM_Default.png?alt=media&token=6bc30d40-17a2-40bb-9af7-edff78112780';
-    });
-  } catch(e) {
-    console.log(e);
-  }
+  ionViewWillEnter() {
+    // The idea is to subscribe to the observables and then populate a data structure, then reference that datastructure in the html, clean up the subscriptions in the
+      // ionViewWillLeave and resetup the ionViewWillLoad
+      // Running into race issue between the data setup and initializing the subscriptions
+
+      //If this is the intialization, do the subscription setup in the dataSetup
+      if(this.firstLoadComplete) {
+        this.buildSubscriptions();
+      }
   }
 
-
-
-  getLikeList() {
-    return new Promise((resolve, reject) => {
-      let likeList: UserLike[] = [];
-      this.userLikedListRef.valueChanges().subscribe(items => items.forEach(item => likeList.push(item)));
-      resolve(likeList);
+  buildSubscriptions() {
+    // Need to handle updates and deletes, deletes might get a little weird with unliking stuff.
+    this.userLikeSubscription = this.userLikedListRef.snapshotChanges().subscribe(actions => {
+      actions.forEach(c => {
+        if(c.type === 'value'|| c.type === 'child_added') {
+          let userLike = { key: c.key, ...c.payload.val() }
+          this.userLikeItems.push(userLike);
+        }
+      });
+    });
+    this.broadcastSubscription = this.broadcastItemRef.snapshotChanges().subscribe(actions => {
+      actions.forEach(c => {
+        if(c.type === 'value' || c.type === 'child_added') {
+          let broadcast = { key: c.key, ...c.payload.val(), iconName: this.userLikeItems.find(item => item.key === c.key) ? 'heart': 'heart-outline' }
+          this.broadcastItems.push(broadcast);
+          this.broadcastItems.reverse();
+        }
+      });
     });
   }
 
-  checkIcons(key: string) {
-
-    // var iconType = "stupid";
-    // this.userLikedList.forEach(items => {
-    //       console.log(items);
-    //       for (let i of items) {
-    //         if (i.key === aKey) {
-    //           iconType = "heart"
-    //         }
-    //       }
-    //     });
-    // if (iconType == "stupid") {
-    //   iconType = "heart-outline";
-    // }
-    // return iconType;
-    // const likes = this.getLikeList();
-    // console.log(likes);
-    let likeList: UserLike[] = [];
-    this.userLikedList$.subscribe(items => items.forEach(item => likeList.push(item)));
-    // console.log("bacon");
-    // console.log(likeList);
-
-    return likeList.some(item => item.key === key) ? "heart" : "heart-outline";
+  ionViewWillLeave() {
+    this.userLikeSubscription.unsubscribe();
+    this.broadcastSubscription.unsubscribe();
   }
 
   calculateCommentLength(orgId: String, broadcastId: String) {
@@ -117,121 +118,48 @@ export class GreekMePage {
   }
 
   doLike(item, index, $event) {
-    // console.log($event);
-    var heart = document.getElementById(index);
-    if(item.iconName === 'heart-outline') {
-      item.iconName = 'heart';
-      console.log("heart");
-    } else {
-      item.iconName = 'heart-outline';
-
-      console.log("outline");
-    }
-    // const promise = new Promise((resolve, reject) => {
-    //   this.userLikedList.forEach(items => {
-    //     console.log(items);
-    //     var count = 0;
-    //     for (let i of items) {
-    //       if (i.key === item.key) {
-    //         console.log("Liked set to true" + count);
-    //         resolve(true);
-    //         count++;
-    //       }
-    //       count++;
-    //     }
-    //     console.log("resolving false");
-    //     resolve(false);
-    //   });
-    // });
-    // const promise = new Promise((resolve) => {
-    //   var result: boolean = false;
-    //   const a = new Promise((resolve) => {
-    //     this.userLikedList.forEach(likes => likes.forEach(like => {
-    //       if (like.key === item.key) {
-    //         resolve(true);
-    //       }
-    //     }));
-    //   }).catch(err => console.log("no match"));
-    //   a.then(function(res) {
-    //     if(res) {
-    //       resolve(true);
-    //     } else {
-    //       resolve(false);
-    //     }
-    //   }).catch(error => console.log(error))
-    // });
-    const promise = Promise.resolve(this.userLikedList$).then(function (results) {
-      return results.forEach(likes => likes.some(like => like.key === item.key)).then(function (res) {
-        // console.log(res);
-      })
-    });
-
-    // console.log(promise);
-    promise.then((res) => {
-      var updates = {};
-      var currentLikes,numOfLikesRef;
-      if (res) {
-        // Do unlike
-        console.log("doing unlike");
-        heart.classList.toggle("hideHeart");
-        // outline.classList.toggle("hideHeart");
-        numOfLikesRef = firebase.database().ref('/organization/' + this.user.organization_ID + '/broadcast/' + item.key + '/numOfLikes');
+      let updates = {};
+      let currentLikes = 0;
+      let numOfLikesRef = firebase.database().ref('/organization/' + this.user.organization_ID + '/broadcast/' + item.key + '/numOfLikes');
         numOfLikesRef.on('value', function (snapshot) {
           currentLikes = snapshot.val();
         });
+      if (item.iconName === 'heart') {
+        // Do unlike
         updates['/organization/' + this.user.organization_ID + '/broadcast/' + item.key + '/likeList/' + this.user.uid] = null;
         updates['/users/' + this.user.uid + '/likeList/' + item.key] = null;
         updates['/organization/' + this.user.organization_ID + '/broadcast/' + item.key + '/numOfLikes/'] = currentLikes - 1;
 
-        firebase.database().ref().update(updates).then(function () {
-          console.log("Like removed");
-          // console.log(outline);
-          console.log(heart);
-        }).catch(function (error) {
-          console.log("Error");
-          console.log(error);
+        firebase.database().ref().update(updates).then(() => {
+          item.iconName = 'heart-outline';
+        }).catch(error => {
+          console.log("Error unlike");
+          console.log(error.message());
         });
       } else {
         // Do like
-        console.log("doing like");
-        heart.classList.toggle("hideHeart");
-        // outline.classList.toggle("hideHeart");
-        //This is the object stored on the broadcast like list
-        var userLikeObj = {
+        var userLikeObj = { //This is the object stored on the broadcast like list
           name: this.user.name
-        }
-        //This is the object stored on the user's like list
-        var broadcastLikeObj = {
+        };
+        var broadcastLikeObj = { //This is the object stored on the user's like list
           name: item.text,
           key: item.key
-        }
-        numOfLikesRef = firebase.database().ref('/organization/' + this.user.organization_ID + '/broadcast/' + item.key + '/numOfLikes');
-        numOfLikesRef.on('value', function (snapshot) {
-          currentLikes = snapshot.val();
-        });
+        };
         updates['/organization/' + this.user.organization_ID + '/broadcast/' + item.key + '/likeList/' + this.user.uid] = userLikeObj;
         updates['/users/' + this.user.uid + '/likeList/' + item.key] = broadcastLikeObj;
         updates['/organization/' + this.user.organization_ID + '/broadcast/' + item.key + '/numOfLikes/'] = currentLikes + 1;
-        firebase.database().ref().update(updates).then(function () {
-          console.log("Like added ");
-          // console.log(outline);
-          console.log(heart);
-          // console.log(document.getElementById("0"));
-          //console.log(num)
-        }).catch(function (error) {
-          console.log("Error");
-          console.log(error);
-
+        firebase.database().ref().update(updates).then(() => {
+          item.iconName = 'heart';
+        }).catch(error => {
+          console.log("Error like");
+          console.log(error.message());
         });
       }
-    }).catch(err => {
-      console.log("Error");
-    });
   }
 
   async isLiked(key: String) {
     const a = this.userLikedList$.forEach(likes => likes.find(like => like.key === key));
-    a.then(res => {return res});
+    a.then(res => { return res });
   }
 
   itemSelected(item) {
@@ -247,7 +175,7 @@ export class GreekMePage {
   }
 
   goToComposeBroadcast() {
-    const myModal = this.modal.create(ComposeBroadcastPage,{isBroadcast: true});
+    const myModal = this.modal.create(ComposeBroadcastPage, { isBroadcast: true });
     myModal.present();
   }
 

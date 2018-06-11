@@ -28,7 +28,7 @@ export class EventsPage {
     private userService: UserServiceProvider) {
   }
 
-  ionViewWillLoad() {
+  ionViewDidLoad() {
     this.dataSetup();
   }
 
