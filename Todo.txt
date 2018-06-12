@@ -1,4 +1,5 @@
 Set up data so that it subscribes and unsubscribes in the ionViewWillLoad, ionViewWillEnter and ionViewWillLeave. Utilize the boolean to check if it is the pages creation.
+Fix all string concats to use templates
 Currently on the profile page there are no comments or like numbers
 Transform all navparams data transfers to one DATA attribute to reduce number of calls.
 Finish edit profile modal

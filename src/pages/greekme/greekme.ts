@@ -21,10 +21,6 @@ import { Subscription } from 'rxjs';
   templateUrl: 'greekme.html'
 })
 export class GreekMePage {
-  @ViewChild('fixed') mapElement: ElementRef;
-  fixedHeight: any;
-  firebaseStorage = firebase.storage();
-  userData: AngularFireObject<User>
   user = {} as User;
   validRole = false;
   broadcastItems$: Observable<Broadcast[]>;
@@ -32,10 +28,8 @@ export class GreekMePage {
   image: any;
   userLikedListRef: AngularFireList<any>;
   userLikedList$: Observable<UserLike[]>;
-  broadcastItems = [] as Broadcast[];
-  userLikeItems = [] as UserLike[];
+  userLikeItems = [];
   userLikeSubscription: Subscription;
-  broadcastSubscription: Subscription;
   firstLoadComplete: boolean = false;
 
   constructor(
@@ -66,6 +60,11 @@ export class GreekMePage {
         this.image = 'assets/img/8d9YHCdTlOXCBqO65zNP_GM_Master01.png';
       });
       this.buildSubscriptions();
+      this.broadcastItems$ = this.broadcastItemRef.snapshotChanges().map(action => {
+        return action.map(c => ({
+          key: c.payload.key, ...c.payload.val(), iconName: this.userLikeItems.find(item => item === c.key) ? 'heart' : 'heart-outline'
+        })).reverse();
+      });
       this.firstLoadComplete = true;
     } catch (e) {
       console.log(e);
@@ -78,39 +77,33 @@ export class GreekMePage {
 
   ionViewWillEnter() {
     // The idea is to subscribe to the observables and then populate a data structure, then reference that datastructure in the html, clean up the subscriptions in the
-      // ionViewWillLeave and resetup the ionViewWillLoad
-      // Running into race issue between the data setup and initializing the subscriptions
+    // ionViewWillLeave and resetup the ionViewWillLoad
+    // Running into race issue between the data setup and initializing the subscriptions
 
-      //If this is the intialization, do the subscription setup in the dataSetup
-      if(this.firstLoadComplete) {
-        this.buildSubscriptions();
-      }
+    //If this is the intialization, do the subscription setup in the dataSetup
+    if (this.firstLoadComplete) {
+      this.buildSubscriptions();
+
+    }
   }
 
   buildSubscriptions() {
     // Need to handle updates and deletes, deletes might get a little weird with unliking stuff.
-    this.userLikeSubscription = this.userLikedListRef.snapshotChanges().subscribe(actions => {
-      actions.forEach(c => {
-        if(c.type === 'value'|| c.type === 'child_added') {
-          let userLike = { key: c.key, ...c.payload.val() }
-          this.userLikeItems.push(userLike);
+    this.userLikeSubscription = this.userLikedListRef.stateChanges().subscribe(action => {
+        let type = action.type;
+        if (type === 'value' || type === 'child_added') {
+          this.userLikeItems.push(action.key);
+        } else if (type === 'child_removed') {
+          let index = this.userLikeItems.indexOf(action.key);
+          if(index !== -1) {
+            this.userLikeItems.splice(index, 1);
+          }
         }
       });
-    });
-    this.broadcastSubscription = this.broadcastItemRef.snapshotChanges().subscribe(actions => {
-      actions.forEach(c => {
-        if(c.type === 'value' || c.type === 'child_added') {
-          let broadcast = { key: c.key, ...c.payload.val(), iconName: this.userLikeItems.find(item => item.key === c.key) ? 'heart': 'heart-outline' }
-          this.broadcastItems.push(broadcast);
-          this.broadcastItems.reverse();
-        }
-      });
-    });
   }
 
   ionViewWillLeave() {
     this.userLikeSubscription.unsubscribe();
-    this.broadcastSubscription.unsubscribe();
   }
 
   calculateCommentLength(orgId: String, broadcastId: String) {
@@ -118,48 +111,50 @@ export class GreekMePage {
   }
 
   doLike(item, index, $event) {
-      let updates = {};
-      let currentLikes = 0;
-      let numOfLikesRef = firebase.database().ref('/organization/' + this.user.organization_ID + '/broadcast/' + item.key + '/numOfLikes');
-        numOfLikesRef.on('value', function (snapshot) {
-          currentLikes = snapshot.val();
-        });
-      if (item.iconName === 'heart') {
-        // Do unlike
-        updates['/organization/' + this.user.organization_ID + '/broadcast/' + item.key + '/likeList/' + this.user.uid] = null;
-        updates['/users/' + this.user.uid + '/likeList/' + item.key] = null;
-        updates['/organization/' + this.user.organization_ID + '/broadcast/' + item.key + '/numOfLikes/'] = currentLikes - 1;
+    let updates = {};
+    let currentLikes = 0;
+    const broadcastPath = `/organization/${this.user.organization_ID}/broadcast/${item.key}/likeList/${this.user.uid}`;
+    const userLikePath = `/users/${this.user.uid}/likeList/${item.key}`;
+    const numOfLikePath = `/organization/${this.user.organization_ID}/broadcast/${item.key}/numOfLikes/`;
+    let numOfLikesRef = firebase.database().ref('/organization/' + this.user.organization_ID + '/broadcast/' + item.key + '/numOfLikes');
+    numOfLikesRef.on('value', function (snapshot) {
+      currentLikes = snapshot.val();
+    });
+    let isLiked = this.userLikeItems.find(bcItem => bcItem === item.key);
+    console.log(isLiked);
+    if (isLiked) {
+      // Do unlike
+      updates[broadcastPath] = null;
+      updates[userLikePath] = null;
+      updates[numOfLikePath] = currentLikes - 1;
 
-        firebase.database().ref().update(updates).then(() => {
-          item.iconName = 'heart-outline';
-        }).catch(error => {
-          console.log("Error unlike");
-          console.log(error.message());
-        });
-      } else {
-        // Do like
-        var userLikeObj = { //This is the object stored on the broadcast like list
-          name: this.user.name
-        };
-        var broadcastLikeObj = { //This is the object stored on the user's like list
-          name: item.text,
-          key: item.key
-        };
-        updates['/organization/' + this.user.organization_ID + '/broadcast/' + item.key + '/likeList/' + this.user.uid] = userLikeObj;
-        updates['/users/' + this.user.uid + '/likeList/' + item.key] = broadcastLikeObj;
-        updates['/organization/' + this.user.organization_ID + '/broadcast/' + item.key + '/numOfLikes/'] = currentLikes + 1;
-        firebase.database().ref().update(updates).then(() => {
-          item.iconName = 'heart';
-        }).catch(error => {
-          console.log("Error like");
-          console.log(error.message());
-        });
-      }
-  }
+      firebase.database().ref().update(updates).then(() => {
+        console.log("Did unlike");
+        
+      }).catch(error => {
+        console.log("Error unlike");
+        console.log(error.message());
+      });
+    } else {
+      // Do like
+      let userLikeObj = { //This is the object stored on the broadcast like list
+        name: this.user.name
+      };
+      let broadcastLikeObj = { //This is the object stored on the user's like list
+        name: item.text,
+        key: item.key
+      };
+      updates[broadcastPath] = userLikeObj;
+      updates[userLikePath] = broadcastLikeObj;
+      updates[numOfLikePath] = currentLikes + 1;
 
-  async isLiked(key: String) {
-    const a = this.userLikedList$.forEach(likes => likes.find(like => like.key === key));
-    a.then(res => { return res });
+      firebase.database().ref().update(updates).then(() => {
+        console.log("Did like");
+      }).catch(error => {
+        console.log("Error like");
+        console.log(error.message());
+      });
+    }
   }
 
   itemSelected(item) {
@@ -183,6 +178,10 @@ export class GreekMePage {
     this.navCtrl.push(ProfilePage, {
       uid: $event
     });
+  }
+
+  trackByFn(index, item) {
+    return index;
   }
 }
 
