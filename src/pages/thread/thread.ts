@@ -39,7 +39,7 @@ export class ThreadPage {
   }
 
   async dataSetup() {
-    const data = this.navParams.get("data");
+    const data = this.navParams.data;
     this.broadcast = JSON.parse(data.broadcast);
     this.orgId = data.orgId
     this.isBroadcast = data.isBroadcast;

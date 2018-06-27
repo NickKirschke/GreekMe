@@ -42,6 +42,7 @@
     "rxjs": "^6.2.0",
     "rxjs-compat": "^6.2.0",
     "sw-toolbox": "3.6.0",
+    "tslint-config-airbnb": "^5.9.2",
     "zone.js": "0.8.26"
   },
   "devDependencies": {
