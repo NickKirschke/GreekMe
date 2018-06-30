@@ -45,7 +45,7 @@
     <ion-list no-lines *ngSwitchCase="'attendingList'">
       <ion-item *ngFor="let item of attendingList$ |  async">
         <ion-avatar item-start>
-          <img src="{{item.avatar_url}}">
+          <img src="{{item.avatarUrl}}">
         </ion-avatar>
         <h4>{{item.name}}</h4>
       </ion-item>

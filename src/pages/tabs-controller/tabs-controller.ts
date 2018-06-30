@@ -7,7 +7,7 @@ import { ProfilePage } from '../profile/profile';
 
 @Component({
   selector: 'page-tabs-controller',
-  templateUrl: 'tabs-controller.html'
+  templateUrl: 'tabs-controller.html',
 })
 export class TabsControllerPage {
   // this tells the tabs component which Pages

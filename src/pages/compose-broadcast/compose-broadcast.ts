@@ -1,17 +1,17 @@
 import { Component } from '@angular/core';
 import { App, NavParams, ViewController } from 'ionic-angular';
-import { FirebaseServiceProvider } from "../../providers/firebase-service/firebase-service";
-import { AngularFireAuth } from "angularfire2/auth/auth";
-import { User } from "../../models/user";
-import { Broadcast } from "../../models/broadcast";
-import { UserServiceProvider } from "../../providers/user-service/user-service";
+import { FirebaseServiceProvider } from '../../providers/firebase-service/firebase-service';
+import { AngularFireAuth } from 'angularfire2/auth/auth';
+import { User } from '../../models/user';
+import { Broadcast } from '../../models/broadcast';
+import { UserServiceProvider } from '../../providers/user-service/user-service';
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import * as moment from 'moment';
 
 @Component({
   selector: 'page-compose-broadcast',
-  templateUrl: 'compose-broadcast.html'
+  templateUrl: 'compose-broadcast.html',
 })
 export class ComposeBroadcastPage {
   isBroadcast: boolean;
@@ -31,27 +31,27 @@ export class ComposeBroadcastPage {
   }
 
   async dataSetup() {
-    this.isBroadcast = this.navParams.get("isBroadcast");
+    this.isBroadcast = this.navParams.get('isBroadcast');
     const userGrab = await this.userService.currentUserInfo();
     this.user = userGrab as User;
   }
 
   updatePostList(tempBroadcast: Broadcast) {
-    let updates = {};
+    const updates = {};
     updates['/users/' + this.user.uid + '/postList/' + tempBroadcast.key] = tempBroadcast;
-    firebase.database().ref().update(updates).then(function () {
-      console.log("Post added!");
-    }).catch(function (error) {
+    firebase.database().ref().update(updates).then(() => {
+      console.log('Post added!');
+    }).catch((error) => {
       console.log(error);
     });
   }
 
   composeBroadcast(tempBroadcast: Broadcast) {
-    if (tempBroadcast.text == null || tempBroadcast.text == '') {
-      this.error = "Message cannot be blank!";
+    if (tempBroadcast.text == null || tempBroadcast.text === '') {
+      this.error = 'Message cannot be blank!';
     } else {
-      this.error = "";
-      tempBroadcast.avatar_url = this.user.avatar_url;
+      this.error = '';
+      tempBroadcast.avatarUrl = this.user.avatarUrl;
       tempBroadcast.uid = this.user.uid;
       tempBroadcast.name = this.user.name;
       tempBroadcast.numOfComments = 0;
@@ -60,9 +60,11 @@ export class ComposeBroadcastPage {
 
       if (this.isBroadcast) {
         // Need to still update user commentList, need to get the broadcast ID
-        tempBroadcast.key = this.firebaseService.addToBroadcastList(tempBroadcast, this.user.organization_ID);
+        tempBroadcast.key = this.firebaseService
+        .addToBroadcastList(tempBroadcast, this.user.organizationId);
       } else {
-        tempBroadcast.key = this.firebaseService.addToFeedList(tempBroadcast, this.user.organization_ID);
+        tempBroadcast.key = this.firebaseService
+        .addToFeedList(tempBroadcast, this.user.organizationId);
       }
       this.updatePostList(tempBroadcast);
       this.view.dismiss();

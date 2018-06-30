@@ -21,15 +21,15 @@ import { Subscription } from 'rxjs';
 })
 export class GreekMePage {
   user = {} as User;
-  validRole = false;
+  validRole: boolean = false;
   broadcastItems$: Observable<Broadcast[]>;
   broadcastItemRef: AngularFireList<any>;
-  broadcastItems = [];
+  broadcastItems: Broadcast[] = [];
   broadcastItemSubscription: Subscription;
-  image: any;
+  image: string;
   userLikedListRef: AngularFireList<any>;
   userLikedList$: Observable<UserLike[]>;
-  userLikeItems = [];
+  userLikeItems: string[] = [];
   userLikeSubscription: Subscription;
   firstLoadComplete: boolean = false;
 
@@ -49,16 +49,15 @@ export class GreekMePage {
       const userGrab = await this.userService.currentUserInfo();
       this.user = userGrab as User;
       this.userLikedListRef = this.firebaseService.getUserLikeList(this.user.uid);
-      this.broadcastItemRef = this.firebaseService.getBroadcastList(this.user.organization_ID);
+      this.broadcastItemRef = this.firebaseService.getBroadcastList(this.user.organizationId);
 
       if (this.isValidBroadcastRole()) {
         this.validRole = true;
       }
-      const imageGrab = this.firebaseService.getGreetingImage(this.user.organization_ID);
+      const imageGrab = this.firebaseService.getGreetingImage(this.user.organizationId);
       imageGrab.then((result) => {
         this.image = result;
-      },
-      () => {
+      },             () => {
         this.image = 'assets/img/8d9YHCdTlOXCBqO65zNP_GM_Master01.png';
       });
       this.buildSubscriptions();
@@ -81,21 +80,10 @@ export class GreekMePage {
     this.user.role === 'Vice President' ||
     this.user.role === 'Chair Member';
   }
-  ionViewWillLoad() {
-    this.dataSetup();
-  }
 
-  ionViewWillEnter() {
-    // The idea is to subscribe to the observables and then populate a data structure,
-    // then reference that datastructure in the html, clean up the subscriptions in the
-    // ionViewWillLeave and resetup the ionViewWillLoad
-    // Running into race issue between the data setup and initializing the subscriptions
-
-    // If this is the intialization, do the subscription setup in the dataSetup
-    if (this.firstLoadComplete) {
-      this.buildSubscriptions();
-
-    }
+  destroySubscriptions() {
+    this.userLikeSubscription.unsubscribe();
+    this.broadcastItemSubscription.unsubscribe();
   }
 
   buildSubscriptions() {
@@ -116,7 +104,7 @@ export class GreekMePage {
     // Need to handle updates and deletes, deletes might get a little weird with unliking stuff.
     this.broadcastItemSubscription = this.broadcastItemRef.stateChanges().subscribe((action) => {
       const broadcastType = action.type;
-      const index = this.broadcastItems.indexOf(action.key);
+      const index = this.broadcastItems.indexOf(action.payload.val());
       if (broadcastType === 'value' || broadcastType === 'child_added') {
         // console.log(broadcastType);
         bc = {
@@ -128,19 +116,14 @@ export class GreekMePage {
         this.broadcastItems.push(bc);
       } else if (broadcastType === 'child_removed') {
         if (index !== -1) {
-          this.userLikeItems.splice(index, 1);
+          // this.userLikeItems.splice(index, 1);
         }
       } else if (broadcastType === 'child_changed') {
-        // this.userLikeItems[index] = 
+        // this.userLikeItems[index] =
         console.log('child changed');
       }
     });
 
-  }
-
-  ionViewWillLeave() {
-    this.userLikeSubscription.unsubscribe();
-    this.broadcastItemSubscription.unsubscribe();
   }
 
   calculateCommentLength(orgId: string, broadcastId: string) {
@@ -150,13 +133,13 @@ export class GreekMePage {
   doLike(item, index, $event) {
     const updates = {};
     let currentLikes = 0;
-    const broadcastPath = `/organization/${this.user.organization_ID}
-      /broadcast/${item.key}/likeList/${this.user.uid}`;
+    const broadcastPath = `/organization/${
+      this.user.organizationId}/broadcast/${item.key}/likeList/${this.user.uid}`;
     const userLikePath = `/users/${this.user.uid}/likeList/${item.key}`;
-    const numOfLikePath = `/organization/${this.user.organization_ID}
-      /broadcast/${item.key}/numOfLikes/`;
-    const numOfLikesRef = firebase.database().ref(`/organization/
-      ${this.user.organization_ID}/broadcast/${item.key}/numOfLikes`);
+    const numOfLikePath = `/organization/${
+      this.user.organizationId}/broadcast/${item.key}/numOfLikes/`;
+    const numOfLikesRef = firebase.database().ref(`/organization/${
+      this.user.organizationId}/broadcast/${item.key}/numOfLikes`);
     numOfLikesRef.on('value', (snapshot) => {
       currentLikes = snapshot.val();
     });
@@ -169,7 +152,6 @@ export class GreekMePage {
 
       firebase.database().ref().update(updates).then(() => {
         console.log('Did unlike');
-
       }).catch((error) => {
         console.log('Error unlike');
         console.log(error.message());
@@ -200,7 +182,7 @@ export class GreekMePage {
   itemSelected(item: Broadcast) {
     const bc = JSON.stringify(item);
     const data = {
-      orgId: this.user.organization_ID,
+      organizationId: this.user.organizationId,
       broadcast: bc,
       isBroadcast: true,
     };
@@ -221,4 +203,29 @@ export class GreekMePage {
   trackByFn(index: number, item: Broadcast) {
     return item.key;
   }
+
+  ionViewWillLoad() {
+    this.dataSetup();
+  }
+
+  ionViewWillEnter() {
+    // The idea is to subscribe to the observables and then populate a data structure,
+    // then reference that datastructure in the html, clean up the subscriptions in the
+    // ionViewWillLeave and resetup the ionViewWillLoad
+    // Running into race issue between the data setup and initializing the subscriptions
+    // If this is the intialization, do the subscription setup in the dataSetup
+    if (this.firstLoadComplete) {
+      this.buildSubscriptions();
+
+    }
+  }
+
+  ionViewWillLeave() {
+    this.destroySubscriptions();
+  }
+
+  ionViewWillUnload() {
+    this.destroySubscriptions();
+  }
+
 }

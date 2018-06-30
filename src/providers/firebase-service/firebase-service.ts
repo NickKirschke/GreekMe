@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
-import { AngularFireDatabase } from "angularfire2/database/database";
-import { Storage } from "@ionic/storage";
-import { User } from "../../models/user";
-import { AngularFireObject } from "angularfire2/database";
+import { AngularFireDatabase } from 'angularfire2/database/database';
+import { Storage } from '@ionic/storage';
+import { User } from '../../models/user';
+import { AngularFireObject } from 'angularfire2/database';
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
-import { Broadcast } from "../../models/broadcast";
-import { Event } from "../../models/event"
+import { Broadcast } from '../../models/broadcast';
+import { Event } from '../../models/event';
 import { UserLike } from '../../models/userLike';
 import { Observable } from '@firebase/util';
 /*
@@ -18,92 +18,96 @@ import { Observable } from '@firebase/util';
 */
 @Injectable()
 export class FirebaseServiceProvider {
-  user: Observable<any>
-  userData: AngularFireObject<User>
+  user: Observable<any>;
+  userData: AngularFireObject<User>;
   firebaseStorage = firebase.storage();
   firebaseDb = firebase.database();
   constructor(private afDB: AngularFireDatabase,
-    private storage: Storage) {
+              private storage: Storage) {
 
   }
   // Get organization's image
-  getGreetingImage(organization_ID) {
-    return this.firebaseStorage.ref().child(organization_ID + '/logo.png').getDownloadURL();
+  getGreetingImage(organizationId: string) {
+    return this.firebaseStorage.ref().child(organizationId + '/logo.png').getDownloadURL();
   }
 
   // Adds an event to the event list for the organization
   // Need to add return handling
-  addToOrgEventList(event: Event, organization_ID: String) {
+  addToOrgEventList(event: Event, organizationId: string) {
     // console.log(broadcast);
-    this.afDB.list('/organization/' + organization_ID + '/broadcast/').push(event);
+    this.afDB.list('/organization/' + organizationId + '/broadcast/').push(event);
   }
 
   // Accesses the event information by key
-  getEventInfo(key: String, organization_ID: String) {
-    return this.afDB.object<Event>('/organization/' + organization_ID + '/event/' + key);
+  getEventInfo(key: string, organizationId: string) {
+    return this.afDB.object<Event>('/organization/' + organizationId + '/event/' + key);
   }
 
   // Accesses the event information by key
-  getEventInfo2(key: String, organization_ID: String) {
-    return this.afDB.object<Event>('/organization/' + organization_ID + '/event/' + key);
+  getEventInfo2(key: string, organizationId: string) {
+    return this.afDB.object<Event>('/organization/' + organizationId + '/event/' + key);
   }
 
   // Accesses the event attendingList by key
-  getEventAttendingList(key, organization_ID) {
-    return this.afDB.list('/organization/' + organization_ID + '/event/' + key + '/attendingList/');
+  getEventAttendingList(key, organizationId) {
+    return this.afDB.list('/organization/' + organizationId + '/event/' + key + '/attendingList/');
   }
 
   // Returns the event list for the organization
-  getOrgEventList(organization_ID: String) {
-    return this.afDB.list('/organization/' + organization_ID + '/event/');
+  getOrgEventList(organizationId: string) {
+    return this.afDB.list('/organization/' + organizationId + '/event/');
   }
 
-  // Adds an event to a user's list of events that they are "going" to
-  getUserEventList(uid: String) {
+  // Adds an event to a user's list of events that they are 'going' to
+  getUserEventList(uid: string) {
     return this.afDB.list('/users/' + uid + '/eventsAttending/');
   }
 
   // Returns the broadcast list for the greekme page
-  getBroadcastList(organization_ID: String) {
-    return this.afDB.list('/organization/' + organization_ID + '/broadcast/');
+  getBroadcastList(organizationId: string) {
+    return this.afDB.list('/organization/' + organizationId + '/broadcast/');
   }
 
-  addToBroadcastList(broadcast: Broadcast, organization_ID: String) {
+  addToBroadcastList(broadcast: Broadcast, organizationId: string) {
     // console.log(broadcast);
-    return this.afDB.list('/organization/' + organization_ID + '/broadcast/').push(broadcast).key;
+    return this.afDB.list('/organization/' + organizationId + '/broadcast/').push(broadcast).key;
   }
 
-  //Adds a comment to a broadcast commentList
-  addCommentToBroadcast(broadcast: Broadcast, organization_ID: String, key: String) {
+  // Adds a comment to a broadcast commentList
+  addCommentToBroadcast(broadcast: Broadcast, organizationId: string, key: string) {
     // console.log(broadcast);
-    return this.afDB.list('/organization/' + organization_ID + '/broadcast/' + key + '/commentList/').push(broadcast).key;
+    return this.afDB.list('/organization/' + organizationId + '/broadcast/' + key +
+     '/commentList/').push(broadcast).key;
   }
 
-  //Adds a comment to a message commentList
-  addCommentToMessage(broadcast: Broadcast, organization_ID: String, key: String) {
+  // Adds a comment to a message commentList
+  addCommentToMessage(broadcast: Broadcast, organizationId: string, key: string) {
     // console.log(broadcast);
-    return this.afDB.list('/organization/' + organization_ID + '/message/' + key + '/commentList/').push(broadcast).key;
+    return this.afDB.list('/organization/' + organizationId + '/message/' + key +
+     '/commentList/').push(broadcast).key;
   }
 
-  // Returns the feed list for the organization 
-  getFeedList(organization_ID: String) {
-    return this.afDB.list('/organization/' + organization_ID + '/message/');
+  // Returns the feed list for the organization
+  getFeedList(organizationId: string) {
+    return this.afDB.list('/organization/' + organizationId + '/message/');
   }
 
   // Adds a feed to the feed list for the organization (Feed uses same structure as broadcast)
-  addToFeedList(broadcast: Broadcast, organization_ID: String) {
+  addToFeedList(broadcast: Broadcast, organizationId: string) {
     // console.log(broadcast);
-    return this.afDB.list('/organization/' + organization_ID + '/message/').push(broadcast).key;
+    return this.afDB.list('/organization/' + organizationId + '/message/').push(broadcast).key;
   }
 
   // Returns the comments for the broadcast
-  getCommentListBroadcast(organization_ID: String, broadcast_ID: String) {
-    return this.afDB.list('/organization/' + organization_ID + '/broadcast/' + broadcast_ID + '/commentList/');
+  getCommentListBroadcast(organizationId: string, broadcastId: string) {
+    return this.afDB.list('/organization/' + organizationId + '/broadcast/' +
+     broadcastId + '/commentList/');
   }
 
   // Returns the comments for the message
-  getCommentListMessage(organization_ID: String, message_ID: String) {
-    return this.afDB.list('/organization/' + organization_ID + '/message/' + message_ID + '/commentList/');
+  getCommentListMessage(organizationId: string, messageId: string) {
+    return this.afDB.list('/organization/' + organizationId + '/message/' +
+     messageId + '/commentList/');
   }
 
   // Return a user's Liked list
@@ -123,20 +127,19 @@ export class FirebaseServiceProvider {
 
   getUserDetailsProfilePage(uid: string) {
     return new Promise((resolve) => {
-      this.firebaseDb.ref('/users/' + uid).once('value').then(snapshot => {
+      this.firebaseDb.ref('/users/' + uid).once('value').then((snapshot) => {
         resolve(snapshot.val());
       });
     });
   }
 
-
-  //5.0
+  // 5.0
   getUserDetails(uid: string) {
     return new Promise((resolve) => {
-      this.firebaseDb.ref('/users/' + uid).once('value').then(snapshot => {
-        let user = JSON.stringify(snapshot.val());
+      this.firebaseDb.ref('/users/' + uid).once('value').then((snapshot) => {
+        const user = JSON.stringify(snapshot.val());
         // Store user details locally
-        this.storage.set("user", user).then(() => {
+        this.storage.set('user', user).then(() => {
           resolve(true);
         });
       });
@@ -146,12 +149,16 @@ export class FirebaseServiceProvider {
   // Add new user details to firebase storage
   addUserDetails(userDetails: User) {
     return new Promise((resolve) => {
-        userDetails.bio = "A sample bio: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed placerat nulla sit amet tempor viverra. Cras egestas facilisis metus in consequat. Vivamus scelerisque eros non imperdiet scelerisque. Aliquam at ante ante. Phasellus commodo, mauris sit amet hendrerit molestie, massa ligula iaculis lorem, sed posuere risus nibh varius ligula. Mauris ut turpis blandit leo imperdiet egestas. Curabitur tincidunt neque non orci varius, sed egestas risus faucibus. ";
-        userDetails.avatar_url = 'https://firebasestorage.googleapis.com/v0/b/greekme-7475a.appspot.com/o/GM_Default.png?alt=media&token=6bc30d40-17a2-40bb-9af7-edff78112780';
-        // userDetails.avatar_url ="https://firebasestorage.googleapis.com/v0/b/greekme-7475a.appspot.com/o/123456%2Fn3KA2xjGAaNbr8xymrHAyc4StJM2.jpeg?alt=media&token=e74020a0-3323-4e83-a1f9-8ea53e91ab91";
-        this.afDB.object('/users/' + userDetails.uid).set(userDetails);
-        this.storage.set("user", JSON.stringify(userDetails)).then(() => resolve(true));
-      });
+      userDetails.bio = 'A sample bio: Lorem ipsum dolor sit amet, consectetur adipiscing elit.' +
+      'Sed placerat nulla sit amet tempor viverra. Cras egestas facilisis metus in consequat. ' +
+      'Vivamus scelerisque eros non imperdiet scelerisque. Aliquam at ante ante. Phasellus' +
+      ' commodo, mauris sit amet hendrerit molestie, massa ligula iaculis lorem, sed posuere' +
+      ' risus nibh varius ligula. Mauris ut turpis blandit leo imperdiet egestas. Curabitur' +
+      ' tincidunt neque non orci varius, sed egestas risus faucibus. ';
+      userDetails.avatarUrl = 'https://firebasestorage.googleapis.com/v0/b/greekme-' +
+      '7475a.appspot.com/o/GM_Default.png?alt=media&token=6bc30d40-17a2-40bb-9af7-edff78112780';
+      this.afDB.object('/users/' + userDetails.uid).set(userDetails);
+      this.storage.set('user', JSON.stringify(userDetails)).then(() => resolve(true));
+    });
   }
 }
-

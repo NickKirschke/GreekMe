@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, ModalController } from 'ionic-angular';
 import { Broadcast } from '../../models/broadcast';
-import { FirebaseServiceProvider } from "../../providers/firebase-service/firebase-service";
-import { User } from "../../models/user";
+import { FirebaseServiceProvider } from '../../providers/firebase-service/firebase-service';
+import { User } from '../../models/user';
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import { ComposeThreadPage } from '../compose-thread/compose-thread';
@@ -21,18 +21,15 @@ import { ProfilePage } from '../profile/profile';
 })
 export class ThreadPage {
   firebaseStorage = firebase.storage();
-  user = {} as User;
   broadcastItems$: Observable<any>;
   broadcast = {} as Broadcast;
-  orgId = "";
+  orgId = '';
   isBroadcast: boolean;
   constructor(public navCtrl: NavController,
-    private navParams: NavParams,
-    private firebaseService: FirebaseServiceProvider,
-    private modal: ModalController) {
+              private navParams: NavParams,
+              private firebaseService: FirebaseServiceProvider,
+              private modal: ModalController) {
   }
-
-
 
   ionViewDidLoad() {
     this.dataSetup();
@@ -41,27 +38,28 @@ export class ThreadPage {
   async dataSetup() {
     const data = this.navParams.data;
     this.broadcast = JSON.parse(data.broadcast);
-    this.orgId = data.orgId
+    this.orgId = data.organizationId;
     this.isBroadcast = data.isBroadcast;
     if (this.isBroadcast) {
-      this.broadcastItems$ = this.firebaseService.getCommentListBroadcast(this.orgId, this.broadcast.key).valueChanges();
+      this.broadcastItems$ = this.firebaseService
+        .getCommentListBroadcast(this.orgId, this.broadcast.key).valueChanges();
     } else {
-      this.broadcastItems$ = this.firebaseService.getCommentListMessage(this.orgId, this.broadcast.key).valueChanges();
+      this.broadcastItems$ = this.firebaseService
+        .getCommentListMessage(this.orgId, this.broadcast.key).valueChanges();
     }
   }
 
   goToComposeThread() {
-    const myModal = this.modal.create(ComposeThreadPage,{
+    const myModal = this.modal.create(ComposeThreadPage, {
       key: this.broadcast.key,
-      isBroadcast: this.isBroadcast
+      isBroadcast: this.isBroadcast,
     });
     myModal.present();
   }
 
   viewProfile($event) {
     this.navCtrl.push(ProfilePage, {
-      uid: $event
+      uid: $event,
     });
   }
-
 }

@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { Broadcast } from '../../models/broadcast'
+import { Broadcast } from '../../models/broadcast';
 
 /**
  * Generated class for the BroadcastRowComponent component.
@@ -9,7 +9,7 @@ import { Broadcast } from '../../models/broadcast'
  */
 @Component({
   selector: 'broadcast-row',
-  templateUrl: 'broadcast-row.html'
+  templateUrl: 'broadcast-row.html',
 })
 export class BroadcastRowComponent {
   @Input('broadcast') broadcast : Broadcast;
@@ -22,12 +22,11 @@ export class BroadcastRowComponent {
 
   constructor() {
     // console.log('Hello BroadcastRowComponent Component');
-    
   }
 
   ngAfterViewInit() {
     // console.log(this.broadcast.key);
-    if(this.broadcast.likeList) {
+    if (this.broadcast.likeList) {
       // let res = this.broadcast.likeList;
       // console.log(res);
     }

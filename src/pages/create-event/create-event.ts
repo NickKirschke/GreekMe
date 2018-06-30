@@ -1,21 +1,19 @@
 import { Component } from '@angular/core';
 import { NavController, App } from 'ionic-angular';
-import { FirebaseServiceProvider } from "../../providers/firebase-service/firebase-service";
-import { AngularFireAuth } from "angularfire2/auth/auth";
-import { EventsPage } from "../events/events";
-import { User } from "../../models/user";
-import { UserServiceProvider } from "../../providers/user-service/user-service";
+import { FirebaseServiceProvider } from '../../providers/firebase-service/firebase-service';
+import { AngularFireAuth } from 'angularfire2/auth/auth';
+import { EventsPage } from '../events/events';
+import { User } from '../../models/user';
+import { UserServiceProvider } from '../../providers/user-service/user-service';
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import * as moment from 'moment';
-import { Event } from "../../models/event";
+import { Event } from '../../models/event';
 import { Observable } from 'rxjs/Observable';
-
-
 
 @Component({
   selector: 'page-create-event',
-  templateUrl: 'create-event.html'
+  templateUrl: 'create-event.html',
 })
 export class CreateEventPage {
   firebaseStorage = firebase.storage();
@@ -37,7 +35,8 @@ export class CreateEventPage {
   async dataSetup() {
     const userGrab = await this.userService.currentUserInfo();
     this.user = userGrab as User;
-    this.eventItems$ = this.firebaseService.getOrgEventList(this.user.organization_ID).valueChanges();
+    this.eventItems$ = this.firebaseService
+    .getOrgEventList(this.user.organizationId).valueChanges();
     this.attendingItems$ = this.firebaseService.getUserEventList(this.user.uid).valueChanges();
     this.event.date = moment().format();
   }
@@ -49,19 +48,21 @@ export class CreateEventPage {
   createEvent() {
     this.event.creator = this.user.name;
     this.event.creatorUid = this.user.uid;
-    var newEventKey = this.firebaseService.getOrgEventList(this.user.organization_ID).push(this.event).key;
+    const newEventKey = this.firebaseService
+    .getOrgEventList(this.user.organizationId).push(this.event).key;
     console.log(newEventKey);
-    var updates = {};
-    var nameObj = {
+    const updates = {};
+    const nameObj = {
       name: this.user.name,
-      avatar_url: this.user.avatar_url
+      avatarUrl: this.user.avatarUrl,
     };
 
-    updates['/organization/' + this.user.organization_ID + '/event/' + newEventKey + '/attendingList/' + this.user.uid] = nameObj;
+    updates['/organization/' + this.user.organizationId + '/event/'
+      + newEventKey + '/attendingList/' + this.user.uid] = nameObj;
     updates['/users/' + this.user.uid + '/eventsAttending/' + newEventKey] = this.event;
-    firebase.database().ref().update(updates).then(function () {
-      console.log("Event Added!");
-    }).catch(function (error) {
+    firebase.database().ref().update(updates).then(() => {
+      console.log('Event Added!');
+    }).catch((error) => {
       console.log(error);
     });
     this.navCtrl.setRoot(EventsPage);

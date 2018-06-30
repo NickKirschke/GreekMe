@@ -9,12 +9,12 @@ import { ViewController, NavParams } from 'ionic-angular';
  */
 @Component({
   selector: 'pop-over',
-  templateUrl: 'pop-over.html'
+  templateUrl: 'pop-over.html',
 })
 export class PopOverComponent {
   items: any;
   constructor(public viewCtrl: ViewController, public navParams: NavParams) {
-    this.items = this.navParams.get("items");
+    this.items = this.navParams.get('items');
   }
 
   itemClick(item) {

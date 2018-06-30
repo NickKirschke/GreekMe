@@ -1,14 +1,13 @@
 import { Component } from '@angular/core';
-import { NavController, App, NavParams } from 'ionic-angular';
-import { AngularFireList } from "angularfire2/database";
-import { FirebaseServiceProvider } from "../../providers/firebase-service/firebase-service";
-import { AngularFireAuth } from "angularfire2/auth/auth";
-import { User } from "../../models/user";
-import { UserServiceProvider } from "../../providers/user-service/user-service";
+import { NavController, App, NavParams, ToastController } from 'ionic-angular';
+import { AngularFireList } from 'angularfire2/database';
+import { FirebaseServiceProvider } from '../../providers/firebase-service/firebase-service';
+import { AngularFireAuth } from 'angularfire2/auth/auth';
+import { User } from '../../models/user';
+import { UserServiceProvider } from '../../providers/user-service/user-service';
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
-import { Event } from "../../models/event";
-import { ToastController } from 'ionic-angular';
+import { Event } from '../../models/event';
 import { Observable } from 'rxjs/Observable';
 
 @Component({
@@ -45,22 +44,24 @@ export class EventViewPage {
   }
 
   async dataSetup() {
-    this.eventId = this.navParams.get("eventId");
+    this.eventId = this.navParams.get('eventId');
     const userGrab = await this.userService.currentUserInfo();
     this.user = userGrab as User;
-    this.event$ = this.firebaseService.getEventInfo(this.eventId, this.user.organization_ID).valueChanges();
-    this.attendingListRef = this.firebaseService.getEventAttendingList(this.eventId, this.user.organization_ID)
-    this.attendingList$ = this.attendingListRef.snapshotChanges().map(action => {
+    this.event$ = this.firebaseService
+      .getEventInfo(this.eventId, this.user.organizationId).valueChanges();
+    this.attendingListRef = this.firebaseService
+      .getEventAttendingList(this.eventId, this.user.organizationId);
+    this.attendingList$ = this.attendingListRef.snapshotChanges().map((action) => {
       return action.map(c => ({
-        key: c.payload.key, ...c.payload.val()
+        key: c.payload.key, ...c.payload.val(),
       }));
     });
     // this.checkCreator();
     this.checkAttending();
     this.userAttendingListRef = this.firebaseService.getUserEventList(this.user.uid);
-    this.userAttendingList$ = this.userAttendingListRef.snapshotChanges().map(action => {
+    this.userAttendingList$ = this.userAttendingListRef.snapshotChanges().map((action) => {
       return action.map(c => ({
-        key: c.payload.key, ...c.payload.val()
+        key: c.payload.key, ...c.payload.val(),
       }));
     });
   }
@@ -82,8 +83,8 @@ export class EventViewPage {
     //     }
     //   });
 
-    //5.0
-    // console.log("checking creator");
+    // 5.0
+    // console.log('checking creator');
     // try {
     //   this.event.subscribe(item => {
     //     if (item.creatorUid === this.user.uid) {
@@ -93,7 +94,7 @@ export class EventViewPage {
     //   });
     //   this.event.subscribe(console.log);
     // } catch (e) {
-    //   console.log("Error checking creator");
+    //   console.log('Error checking creator');
     // }
     // var id = this.event$.subscribe(console.log);
     // console.log(id);
@@ -108,7 +109,8 @@ export class EventViewPage {
 
   checkAttending() {
     try {
-      this.attendingList$.subscribe(items => {
+      this.attendingList$.subscribe((items) => {
+        // tslint:disable-next-line:prefer-const
         for (let i of items) {
           if (i.key === this.user.uid) {
             this.attendingStatus = true;
@@ -116,27 +118,30 @@ export class EventViewPage {
         }
       });
     } catch (e) {
-      this.toast("Error when checking attendance");
+      this.toast('Error when checking attendance');
     }
   }
 
   rsvpYes() {
     if (!this.attendingStatus) { // Check to see if the person is able to rsvp yes
-      let updates = {};
-      let nameObj = {
+      const updates = {};
+      const nameObj = {
         name: this.user.name,
-        avatar_url: this.user.avatar_url
+        avatarUrl: this.user.avatarUrl,
       };
       let eventObj = {} as Event;
-      this.firebase.ref('/organization/' + this.user.organization_ID + '/event/' + this.eventId).once('value').then(snapshot => {
+      this.firebase.ref('/organization/' + this.user.organizationId
+        + '/event/' + this.eventId).once('value')
+      .then((snapshot) => {
         eventObj = snapshot.val();
-        updates['/organization/' + this.user.organization_ID + '/event/' + this.eventId + '/attendingList/' + this.user.uid] = nameObj;
+        updates['/organization/' + this.user.organizationId + '/event/'
+          + this.eventId + '/attendingList/' + this.user.uid] = nameObj;
         updates['/users/' + this.user.uid + '/eventsAttending/' + this.eventId] = eventObj;
         firebase.database().ref().update(updates).then(() => {
           this.attendingStatus = true;
-          this.toast("You are going to this event!");
+          this.toast('You are going to this event!');
         }).catch(function (error) {
-          this.toast("Error RSVPing.");
+          this.toast('Error RSVPing.');
         });
       });
     }
@@ -144,7 +149,7 @@ export class EventViewPage {
 
   rsvpNo() {
     if (this.attendingStatus) { // Check to see if the person is able to rsvp no
-      this.toast("Removed you from the attending list.");
+      this.toast('Removed you from the attending list.');
       this.attendingListRef.remove(this.user.uid);
       this.userAttendingListRef.remove(this.eventId);
       this.attendingStatus = false;
@@ -152,10 +157,10 @@ export class EventViewPage {
   }
 
   toast(text) {
-    let toast = this.toastCtrl.create({
+    const toast = this.toastCtrl.create({
       message: text,
       duration: 2000,
-      position: 'top'
+      position: 'top',
     });
     toast.present();
   }
