@@ -39,10 +39,6 @@ export class LoginPage {
     });
   }
 
-  ionViewWillLeave() {
-    this.userCheck.unsubscribe();
-  }
-
   // Method used to transfer user to signup page
   goToSignup() {
     this.navCtrl.setRoot(SignupPage, {}, { animate: true, direction: 'forward' });
@@ -56,7 +52,6 @@ export class LoginPage {
     });
     try {
       loader.present();
-      // Checks to see if user credentials exist
       await this.afAuth.auth
         .signInWithEmailAndPassword(this.loginForm.value.email, this.loginForm.value.password);
     } catch (e) {
@@ -69,5 +64,13 @@ export class LoginPage {
     } finally {
       loader.dismiss();
     }
+  }
+
+  ionViewWillLeave() {
+    this.userCheck.unsubscribe();
+  }
+
+  ionViewWillUnload() {
+    this.userCheck.unsubscribe();
   }
 }
