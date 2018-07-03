@@ -1,16 +1,12 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component } from '@angular/core';
 import { NavController, ModalController } from 'ionic-angular';
 import { AngularFireList } from 'angularfire2/database';
 import { FirebaseServiceProvider } from '../../providers/firebase-service/firebase-service';
-import { AngularFireAuth } from 'angularfire2/auth/auth';
 import { User } from '../../models/user';
-import { UserLike } from '../../models/userLike';
 import { Broadcast } from '../../models/broadcast';
 import { UserServiceProvider } from '../../providers/user-service/user-service';
-import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import { ComposeBroadcastPage } from '../compose-broadcast/compose-broadcast';
-import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs';
 import { ContentType } from '../../models/contentType';
 
@@ -30,8 +26,7 @@ export class GreekMePage {
   userLikeSubscription: Subscription;
   contentType: ContentType = ContentType.Broadcast;
 
-  constructor(private afAuth: AngularFireAuth,
-              public navCtrl: NavController,
+  constructor(public navCtrl: NavController,
               public firebaseService: FirebaseServiceProvider,
               private userService: UserServiceProvider,
               private modal: ModalController) {
