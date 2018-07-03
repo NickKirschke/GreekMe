@@ -21,11 +21,10 @@ export class EventsPage {
   user = {} as User;
   eventItems$: Observable<any>;
   eventItemsRef: AngularFireList<any>;
-  constructor(
-    private afAuth: AngularFireAuth,
-    public navCtrl: NavController,
-    public firebaseService: FirebaseServiceProvider,
-    private userService: UserServiceProvider) {
+  constructor(private afAuth: AngularFireAuth,
+              public navCtrl: NavController,
+              public firebaseService: FirebaseServiceProvider,
+              private userService: UserServiceProvider) {
   }
 
   ionViewDidLoad() {

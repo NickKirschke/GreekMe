@@ -20,11 +20,10 @@ export class ComposeThreadPage {
   error = '';
   broadcastKey = '';
   typeOfRef = '';
-  constructor(
-    private firebaseService: FirebaseServiceProvider,
-    private userService: UserServiceProvider,
-    private navParams: NavParams,
-    private view: ViewController) {
+  constructor(private firebaseService: FirebaseServiceProvider,
+              private userService: UserServiceProvider,
+              private navParams: NavParams,
+              private view: ViewController) {
   }
 
   ionViewDidLoad() {

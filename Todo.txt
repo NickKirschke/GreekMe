@@ -1,8 +1,8 @@
-Set up data so that it suscribes and unsuscribes in the ionViewWillEnter and ionViewDidEnter and ionViewWillLeave and ionViewDidLeave
+Type update on the models, fix all string concatination to template strings
+Transfer the broadcast onlick components to the component and replicate on the feed page!
+
 Currently on the profile page there are no comments or like numbers
 Transform all navparams data transfers to one DATA attribute to reduce number of calls.
-
-Type update on the models, fix all string concatination to template strings
 
 Signup should send email verification
 Turn edit profile into a modal

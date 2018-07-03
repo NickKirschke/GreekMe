@@ -23,7 +23,7 @@ export class ThreadPage {
   firebaseStorage = firebase.storage();
   broadcastItems$: Observable<any>;
   broadcast = {} as Broadcast;
-  orgId = '';
+  organizationId = '';
   isBroadcast: boolean;
   constructor(public navCtrl: NavController,
               private navParams: NavParams,
@@ -38,14 +38,14 @@ export class ThreadPage {
   async dataSetup() {
     const data = this.navParams.data;
     this.broadcast = JSON.parse(data.broadcast);
-    this.orgId = data.organizationId;
+    this.organizationId = data.organizationId;
     this.isBroadcast = data.isBroadcast;
     if (this.isBroadcast) {
       this.broadcastItems$ = this.firebaseService
-        .getCommentListBroadcast(this.orgId, this.broadcast.key).valueChanges();
+        .getCommentListBroadcast(this.organizationId, this.broadcast.key).valueChanges();
     } else {
       this.broadcastItems$ = this.firebaseService
-        .getCommentListMessage(this.orgId, this.broadcast.key).valueChanges();
+        .getCommentListMessage(this.organizationId, this.broadcast.key).valueChanges();
     }
   }
 

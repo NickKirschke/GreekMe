@@ -1,4 +1,5 @@
 import { AngularFireList } from 'angularfire2/database';
+import { UserLike } from './userLike';
 export interface Broadcast {
   avatarUrl: any;
   text: any;
@@ -7,7 +8,7 @@ export interface Broadcast {
   uid: any;
   key: any;
   commentList: AngularFireList<any>;
-  likeList: string[];
+  likeList: UserLike[];
   numOfComments: any;
   numOfLikes: any;
   liked: boolean;

@@ -18,5 +18,4 @@ export class TabsControllerPage {
   tab4Root: any = ProfilePage;
   constructor(public navCtrl: NavController) {
   }
-
 }

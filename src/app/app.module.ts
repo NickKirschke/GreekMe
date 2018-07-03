@@ -20,15 +20,17 @@ import { FirebaseServiceProvider } from '../providers/firebase-service/firebase-
 import { HttpModule } from '@angular/http';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireModule } from 'angularfire2';
-import { FIREBASE_CONST } from "./app.firebase.config";
-import { AngularFireAuthModule } from "angularfire2/auth/auth.module";
-import { IonicStorageModule } from "@ionic/storage";
-import { UserServiceProvider } from "../providers/user-service/user-service";
+import { FIREBASE_CONST } from './app.firebase.config';
+import { AngularFireAuthModule } from 'angularfire2/auth/auth.module';
+import { IonicStorageModule } from '@ionic/storage';
+import { UserServiceProvider } from '../providers/user-service/user-service';
 import { MomentModule } from 'angular2-moment';
 import { EventViewPage } from '../pages/event-view/event-view';
 import { NgPipesModule } from 'ngx-pipes';
 import { BroadcastRowComponent } from '../components/broadcast-row/broadcast-row';
 import { PopOverComponent } from '../components/pop-over/pop-over';
+import { PipesModule } from '../pipes/pipes.module';
+
 @NgModule({
   declarations: [
     MyApp,
@@ -46,7 +48,8 @@ import { PopOverComponent } from '../components/pop-over/pop-over';
     EventViewPage,
     ComposeThreadPage,
     BroadcastRowComponent,
-    PopOverComponent
+    PopOverComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -57,7 +60,9 @@ import { PopOverComponent } from '../components/pop-over/pop-over';
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot(),
     MomentModule,
-    NgPipesModule
+    NgPipesModule,
+    PipesModule,
+
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -76,15 +81,14 @@ import { PopOverComponent } from '../components/pop-over/pop-over';
     EventViewPage,
     ComposeThreadPage,
     BroadcastRowComponent,
-    PopOverComponent
-    
+    PopOverComponent,
   ],
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    { provide: ErrorHandler, useClass: IonicErrorHandler },
     FirebaseServiceProvider,
-    UserServiceProvider
-  ]
+    UserServiceProvider,
+  ],
 })
 export class AppModule {}

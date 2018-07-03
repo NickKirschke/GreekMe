@@ -22,12 +22,11 @@ export class FeedPage {
   feedItems$: Observable<Broadcast[]>;
   feedItemRef: AngularFireList<any>;
   userLikedList$: Observable<any>;
-  constructor(
-    private afAuth: AngularFireAuth,
-    public navCtrl: NavController,
-    public firebaseService: FirebaseServiceProvider,
-    private userService: UserServiceProvider,
-    private modal: ModalController) {
+  constructor(private afAuth: AngularFireAuth,
+              public navCtrl: NavController,
+              public firebaseService: FirebaseServiceProvider,
+              private userService: UserServiceProvider,
+              private modal: ModalController) {
   }
 
   ionViewDidLoad() {

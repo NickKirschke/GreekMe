@@ -20,7 +20,7 @@
     <img class="headerPicture" [src]="image" />
   </div>
   <ion-list>
-    <broadcast-row text-wrap *ngFor="let item of broadcastItems$ | async; let i = index; trackBy: trackByFn" class="chat-boxes"
-     [broadcast]="item" (likeEmitter)="doLike(item, i, $event)" (commentEmitter)="itemSelected(item)" (profileUidEmitter)="viewProfile($event)"></broadcast-row>
-  </ion-list>
+    <broadcast-row text-wrap *ngFor="let item of broadcastItems | iterable; let i = index; trackBy: trackByFn" class="chat-boxes"
+     [broadcast]="item.key" [user]="user" [userLikeItems]="userLikeItems" (commentEmitter)="itemSelected(item)" (profileUidEmitter)="viewProfile($event)"></broadcast-row>
+  </ion-list> 
 </ion-content>

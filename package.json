@@ -48,7 +48,8 @@
   "devDependencies": {
     "@angular/cli": "^6.0.8",
     "@ionic/app-scripts": "3.1.10",
-    "typescript": "2.9.2"
+    "tslint": "^5.10.0",
+    "typescript": "^2.9.2"
   },
   "description": "An Ionic project",
   "cordova": {

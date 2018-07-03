@@ -30,13 +30,12 @@ export class EventViewPage {
   eventName: String;
   attendingListRef: AngularFireList<any>;
 
-  constructor(
-    private afAuth: AngularFireAuth,
-    public navCtrl: NavController,
-    public firebaseService: FirebaseServiceProvider,
-    private userService: UserServiceProvider,
-    public navParams: NavParams,
-    public toastCtrl: ToastController) {
+  constructor(private afAuth: AngularFireAuth,
+              public navCtrl: NavController,
+              public firebaseService: FirebaseServiceProvider,
+              private userService: UserServiceProvider,
+              public navParams: NavParams,
+              public toastCtrl: ToastController) {
   }
 
   ionViewDidLoad() {

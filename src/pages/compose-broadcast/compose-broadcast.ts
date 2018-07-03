@@ -19,11 +19,10 @@ export class ComposeBroadcastPage {
   user = {} as User;
   tempBroadcast = {} as Broadcast;
   error = '';
-  constructor(
-    public firebaseService: FirebaseServiceProvider,
-    private userService: UserServiceProvider,
-    private navParams: NavParams,
-    private view: ViewController) {
+  constructor(public firebaseService: FirebaseServiceProvider,
+              private userService: UserServiceProvider,
+              private navParams: NavParams,
+              private view: ViewController) {
   }
 
   ionViewDidLoad() {
