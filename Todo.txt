@@ -12,6 +12,7 @@ notifications
 ----Messages for if you dont have any posts or events ( changes these from dynamic lists to once reads to get the object to get the length)
 make a function out of the user creation with avatar_url as the default
 push notifications
+slight addition in margin on the bottom of the like badge, use rem instead of px
 global accent color, GREY
 Make the load screen better, Show gm page for a second (cordova plugins)
 look at all cordova plugins

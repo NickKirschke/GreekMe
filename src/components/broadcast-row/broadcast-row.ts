@@ -1,8 +1,12 @@
-import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Broadcast } from '../../models/broadcast';
 import * as firebase from 'firebase/app';
 import { User } from '../../models/user';
 import { UserLike } from '../../models/userLike';
+import { NavController } from 'ionic-angular';
+import { ProfilePage } from '../../pages/profile/profile';
+import { ThreadPage } from '../../pages/thread/thread';
+import { ContentType } from '../../models/contentType';
 
 /**
  * Generated class for the BroadcastRowComponent component.
@@ -13,40 +17,37 @@ import { UserLike } from '../../models/userLike';
 @Component({
   selector: 'broadcast-row',
   templateUrl: 'broadcast-row.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BroadcastRowComponent {
+  @Input('contentType') contentType: ContentType;
   @Input('broadcast') broadcast : Broadcast;
-  @Output() likeEmitter = new EventEmitter();
   @Input('user') user: User;
-  @Input('userLikeItems') userLikeItems: Set<string>;
-  @Output() commentEmitter = new EventEmitter();
-  @Input() showComments : boolean = true;
-  @Input() showLikes : boolean = true;
-  @Output() profileUidEmitter = new EventEmitter();
-  likeList: UserLike[];
-  constructor() {
-  }
-
-  ngAfterViewInit() {
+  @Input('userLikeItems') userLikeItems: Set<string> = new Set<string>();
+  @Input('showComments') showComments : boolean = true;
+  @Input('showLikes') showLikes : boolean = true;
+  constructor(public navCtrl: NavController) {
   }
 
   goToProfile() {
-    this.profileUidEmitter.emit(this.broadcast.uid);
+    this.navCtrl.push(ProfilePage, {
+      uid: this.broadcast.uid,
+    });
   }
 
   doLike() {
+    // TODO Need to determine if it is a message or broadcast,
+    // and handle the update paths accordingly.
     this.broadcast.iconName = this.broadcast.iconName === 'heart-outline' ?
       'heart' : 'heart-outline';
     const updates = {};
     let currentLikes = 0;
-    const broadcastPath = `/organization/${
-        this.user.organizationId}/broadcast/${this.broadcast.key}/likeList/${this.user.uid}`;
+    const broadcastPath = `/organization/${this.user.organizationId}/${this.contentType}/${
+      this.broadcast.key}/likeList/${this.user.uid}`;
     const userLikePath = `/users/${this.user.uid}/likeList/${this.broadcast.key}`;
     const numOfLikePath = `/organization/${
-        this.user.organizationId}/broadcast/${this.broadcast.key}/numOfLikes/`;
+      this.user.organizationId}/${this.contentType}/${this.broadcast.key}/numOfLikes/`;
     const numOfLikesRef = firebase.database().ref(`/organization/${
-        this.user.organizationId}/broadcast/${this.broadcast.key}/numOfLikes`);
+      this.user.organizationId}/${this.contentType}/${this.broadcast.key}/numOfLikes`);
     numOfLikesRef.on('value', (snapshot) => {
       currentLikes = snapshot.val();
     });
@@ -86,6 +87,12 @@ export class BroadcastRowComponent {
   }
 
   itemSelected() {
-    this.commentEmitter.emit(this.broadcast);
+    const bc = JSON.stringify(this.broadcast);
+    const data = {
+      organizationId: this.user.organizationId,
+      broadcast: bc,
+      contentType: this.contentType,
+    };
+    this.navCtrl.push(ThreadPage, data);
   }
 }

@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ModalController } from 'ionic-angular';
+import { NavController, NavParams, ModalController, Content } from 'ionic-angular';
 import { Broadcast } from '../../models/broadcast';
 import { FirebaseServiceProvider } from '../../providers/firebase-service/firebase-service';
-import { User } from '../../models/user';
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import { ComposeThreadPage } from '../compose-thread/compose-thread';
 import { Observable } from 'rxjs/Observable';
 import { ProfilePage } from '../profile/profile';
+import { ContentType } from '../../models/contentType';
 /**
  * Generated class for the ThreadPage page.
  *
@@ -24,7 +24,7 @@ export class ThreadPage {
   broadcastItems$: Observable<any>;
   broadcast = {} as Broadcast;
   organizationId = '';
-  isBroadcast: boolean;
+  contentType: ContentType;
   constructor(public navCtrl: NavController,
               private navParams: NavParams,
               private firebaseService: FirebaseServiceProvider,
@@ -39,11 +39,12 @@ export class ThreadPage {
     const data = this.navParams.data;
     this.broadcast = JSON.parse(data.broadcast);
     this.organizationId = data.organizationId;
-    this.isBroadcast = data.isBroadcast;
-    if (this.isBroadcast) {
+    this.contentType = data.contentType;
+
+    if (this.contentType === ContentType.Broadcast) {
       this.broadcastItems$ = this.firebaseService
         .getCommentListBroadcast(this.organizationId, this.broadcast.key).valueChanges();
-    } else {
+    } else if (this.contentType === ContentType.Message) {
       this.broadcastItems$ = this.firebaseService
         .getCommentListMessage(this.organizationId, this.broadcast.key).valueChanges();
     }
@@ -52,14 +53,8 @@ export class ThreadPage {
   goToComposeThread() {
     const myModal = this.modal.create(ComposeThreadPage, {
       key: this.broadcast.key,
-      isBroadcast: this.isBroadcast,
+      contentType: this.contentType,
     });
     myModal.present();
-  }
-
-  viewProfile($event) {
-    this.navCtrl.push(ProfilePage, {
-      uid: $event,
-    });
   }
 }

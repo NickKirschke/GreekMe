@@ -10,10 +10,9 @@ import { UserServiceProvider } from '../../providers/user-service/user-service';
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import { ComposeBroadcastPage } from '../compose-broadcast/compose-broadcast';
-import { ThreadPage } from '../thread/thread';
 import { Observable } from 'rxjs/Observable';
-import { ProfilePage } from '../profile/profile';
 import { Subscription } from 'rxjs';
+import { ContentType } from '../../models/contentType';
 
 @Component({
   selector: 'page-greekme',
@@ -22,34 +21,27 @@ import { Subscription } from 'rxjs';
 export class GreekMePage {
   user = {} as User;
   validRole: boolean = false;
-  broadcastItems$: Observable<Broadcast[]>;
+  image: string;
   broadcastItemRef: AngularFireList<any>;
   broadcastItems: Map<string, Broadcast> = new Map<string, Broadcast>();
   broadcastItemSubscription: Subscription;
-  image: string;
-  userLikedListRef: AngularFireList<any>;
-  userLikedList$: Observable<UserLike[]>;
+  userLikeListRef: AngularFireList<any>;
   userLikeItems: Set<string> = new Set<string>();
   userLikeSubscription: Subscription;
-  firstLoadComplete: boolean = false;
+  contentType: ContentType = ContentType.Broadcast;
 
   constructor(private afAuth: AngularFireAuth,
               public navCtrl: NavController,
               public firebaseService: FirebaseServiceProvider,
               private userService: UserServiceProvider,
-              private modal: ModalController,
-              private cd: ChangeDetectorRef) {
-  }
-
-  logout() {
-    this.afAuth.auth.signOut();
+              private modal: ModalController) {
   }
 
   async dataSetup() {
     try {
       const userGrab = await this.userService.currentUserInfo();
       this.user = userGrab as User;
-      this.userLikedListRef = this.firebaseService.getUserLikeList(this.user.uid);
+      this.userLikeListRef = this.firebaseService.getUserLikeList(this.user.uid);
       this.broadcastItemRef = this.firebaseService.getBroadcastList(this.user.organizationId);
       // Validates whether or not the user can make broadcasts
       if (this.isValidBroadcastRole()) {
@@ -76,18 +68,11 @@ export class GreekMePage {
     this.user.role === 'Chair Member';
   }
 
-  destroySubscriptions() {
-    this.userLikeSubscription.unsubscribe();
-    this.broadcastItemSubscription.unsubscribe();
-  }
-
   buildSubscriptions() {
-    // TODO Set up the pipe to reverse the list
     let broadcast : Broadcast;
-    this.userLikeSubscription = this.userLikedListRef.stateChanges().subscribe((action) => {
+    this.userLikeSubscription = this.userLikeListRef.stateChanges().subscribe((action) => {
       const likeType = action.type;
       if (likeType === 'value' || likeType === 'child_added') {
-        // console.log(likeType);
         this.userLikeItems.add(action.key);
       } else if (likeType === 'child_removed') {
         this.userLikeItems.delete(action.key);
@@ -115,32 +100,16 @@ export class GreekMePage {
         console.log('child changed');
       }
     });
-
   }
 
-  calculateCommentLength(organizationId: string, broadcastId: string) {
-    this.firebaseService.getCommentListBroadcast(organizationId, broadcastId);
-  }
-
-  itemSelected(item: Broadcast) {
-    const bc = JSON.stringify(item);
-    const data = {
-      organizationId: this.user.organizationId,
-      broadcast: bc,
-      isBroadcast: true,
-    };
-    this.navCtrl.push(ThreadPage, data);
+  destroySubscriptions() {
+    this.userLikeSubscription.unsubscribe();
+    this.broadcastItemSubscription.unsubscribe();
   }
 
   goToComposeBroadcast() {
-    const myModal = this.modal.create(ComposeBroadcastPage, { isBroadcast: true });
+    const myModal = this.modal.create(ComposeBroadcastPage, { contentType: this.contentType });
     myModal.present();
-  }
-
-  viewProfile($event) {
-    this.navCtrl.push(ProfilePage, {
-      uid: $event,
-    });
   }
 
   trackByFn(index: number, item: Broadcast) {
@@ -149,22 +118,6 @@ export class GreekMePage {
 
   ionViewWillLoad() {
     this.dataSetup();
-  }
-
-  ionViewWillEnter() {
-    // The idea is to subscribe to the observables and then populate a data structure,
-    // then reference that datastructure in the html, clean up the subscriptions in the
-    // ionViewWillLeave and resetup the ionViewWillLoad
-    // Running into race issue between the data setup and initializing the subscriptions
-    // If this is the intialization, do the subscription setup in the dataSetup
-    // if (this.firstLoadComplete) {
-    //   this.buildSubscriptions();
-
-    // }
-  }
-
-  ionViewWillLeave() {
-    // this.destroySubscriptions();
   }
 
   ionViewWillUnload() {

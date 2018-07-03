@@ -21,6 +21,6 @@
   </div>
   <ion-list>
     <broadcast-row text-wrap *ngFor="let item of broadcastItems | iterable; let i = index; trackBy: trackByFn" class="chat-boxes"
-     [broadcast]="item.key" [user]="user" [userLikeItems]="userLikeItems" (commentEmitter)="itemSelected(item)" (profileUidEmitter)="viewProfile($event)"></broadcast-row>
+     [broadcast]="item.key" [user]="user" [userLikeItems]="userLikeItems" [contentType]="contentType"></broadcast-row>
   </ion-list> 
 </ion-content>

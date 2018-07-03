@@ -25,7 +25,6 @@ export class ProfilePage {
   eventItems$: Observable<any>;
   eventItemsRef: AngularFireList<any>;
   profileContent: string = 'posts';
-  app: App;
   constructor(private afAuth: AngularFireAuth,
               public navCtrl: NavController,
               private firebaseService: FirebaseServiceProvider,
@@ -33,7 +32,8 @@ export class ProfilePage {
               private popoverCtrl: PopoverController,
               public navParams: NavParams,
               private storage: Storage,
-              private modal: ModalController) {
+              private modal: ModalController,
+              private app: App) {
   }
 
   ionViewDidLoad() {
@@ -88,9 +88,10 @@ export class ProfilePage {
       if (data) {
         if (data.name === 'Log Out') {
           this.logout();
-        } else if (data.name === 'Edit Profile') {
-          this.editProfile();
         }
+        // else if (data.name === 'Edit Profile') {
+        //   this.editProfile();
+        // }
       }
     });
   }

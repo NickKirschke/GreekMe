@@ -7,7 +7,7 @@
   <ion-note style="position: absolute;top:0;">{{this.broadcast.date | amTimeAgo}}</ion-note>
   <ion-row class="comments">
     <ion-col col-4>
-      <label *ngIf="showComments" (click)="itemSelected(item)">Comments</label>
+      <label *ngIf="showComments" (click)="itemSelected()">Comments</label>
       <ion-badge *ngIf="this.broadcast.numOfComments > 0" class="comment-badge">{{this.broadcast.numOfComments}}</ion-badge>
     </ion-col>
     <ion-col col-4>
