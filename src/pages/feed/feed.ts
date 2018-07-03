@@ -42,6 +42,7 @@ export class FeedPage {
   }
 
   async dataSetup() {
+    // Setup the user's data and retrieve the data references in firebase
     const userGrab = await this.userService.currentUserInfo();
     this.user = userGrab as User;
     this.userLikeListRef = this.firebaseService.getUserLikeList(this.user.uid);
@@ -50,35 +51,36 @@ export class FeedPage {
   }
 
   buildSubscriptions() {
-    let broadcast : Broadcast;
+    let message : Broadcast;
+    // Subscriptions for handling the user's likes and the broadcasts on the page
+    // Data is passed into a Set
     this.userLikeSubscription = this.userLikeListRef.stateChanges().subscribe((action) => {
-      const likeType = action.type;
-      if (likeType === 'value' || likeType === 'child_added') {
+      if (action.type === 'value' || action.type === 'child_added') {
         this.userLikeItems.add(action.key);
-      } else if (likeType === 'child_removed') {
+      } else if (action.type === 'child_removed') {
         this.userLikeItems.delete(action.key);
       }
     });
 
+    // Message data is stored in a Map
     this.messageItemSubscription = this.messageItemRef.stateChanges()
     .subscribe((action) => {
-      const broadcastType = action.type;
-      if (broadcastType === 'value' || broadcastType === 'child_added') {
-        broadcast = {
+      if (action.type === 'value' || action.type === 'child_added') {
+        message = {
           key: action.payload.key,
           ...action.payload.val(),
           iconName: this.userLikeItems.has(action.key) ? 'heart' : 'heart-outline',
         };
-        this.messageItems.set(broadcast.key, broadcast);
-      } else if (broadcastType === 'child_changed') {
+        this.messageItems.set(message.key, message);
+      } else if (action.type === 'child_changed') {
         const expectedIconName = this.userLikeItems.has(action.key) ? 'heart-outline' : 'heart';
-        broadcast = {
+        // Construct the replacement message
+        message = {
           key: action.payload.key,
           ...action.payload.val(),
           iconName: expectedIconName,
         };
-        this.messageItems.set(broadcast.key, broadcast);
-        console.log('child changed');
+        this.messageItems.set(message.key, message);
       }
     });
   }

@@ -39,6 +39,7 @@ export class GreekMePage {
 
   async dataSetup() {
     try {
+      // Setup the user's details and aqcuire the references to the data in firebase
       const userGrab = await this.userService.currentUserInfo();
       this.user = userGrab as User;
       this.userLikeListRef = this.firebaseService.getUserLikeList(this.user.uid);
@@ -56,7 +57,6 @@ export class GreekMePage {
           this.image = 'assets/img/8d9YHCdTlOXCBqO65zNP_GM_Master01.png';
         });
       this.buildSubscriptions();
-      // this.firstLoadComplete = true;
     } catch (e) {
       console.log(e);
     }
@@ -70,34 +70,35 @@ export class GreekMePage {
 
   buildSubscriptions() {
     let broadcast : Broadcast;
+    // Subscriptions for handling the user's likes and the broadcasts on the page
+    // Data is passed into a Set
     this.userLikeSubscription = this.userLikeListRef.stateChanges().subscribe((action) => {
-      const likeType = action.type;
-      if (likeType === 'value' || likeType === 'child_added') {
+      if (action.type === 'value' || action.type === 'child_added') {
         this.userLikeItems.add(action.key);
-      } else if (likeType === 'child_removed') {
+      } else if (action.type === 'child_removed') {
         this.userLikeItems.delete(action.key);
       }
     });
 
+    // Broadcast data is stored in a Map
     this.broadcastItemSubscription = this.broadcastItemRef.stateChanges()
     .subscribe((action) => {
-      const broadcastType = action.type;
-      if (broadcastType === 'value' || broadcastType === 'child_added') {
+      if (action.type === 'value' || action.type === 'child_added') {
         broadcast = {
           key: action.payload.key,
           ...action.payload.val(),
           iconName: this.userLikeItems.has(action.key) ? 'heart' : 'heart-outline',
         };
         this.broadcastItems.set(broadcast.key, broadcast);
-      } else if (broadcastType === 'child_changed') {
+      } else if (action.type === 'child_changed') {
         const expectedIconName = this.userLikeItems.has(action.key) ? 'heart-outline' : 'heart';
+        // Construct the replacement broadcast
         broadcast = {
           key: action.payload.key,
           ...action.payload.val(),
           iconName: expectedIconName,
         };
         this.broadcastItems.set(broadcast.key, broadcast);
-        console.log('child changed');
       }
     });
   }
