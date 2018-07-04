@@ -65,6 +65,7 @@ export class GreekMePage {
 
   buildSubscriptions() {
     let broadcast : Broadcast;
+    // let tempBroadcast: Broadcast;
     // Subscriptions for handling the user's likes and the broadcasts on the page
     // Data is passed into a Set
     this.userLikeSubscription = this.userLikeListRef.stateChanges().subscribe((action) => {
@@ -93,7 +94,14 @@ export class GreekMePage {
           ...action.payload.val(),
           iconName: expectedIconName,
         };
-        this.broadcastItems.set(broadcast.key, broadcast);
+        const previousBroadcast = this.broadcastItems.get(broadcast.key);
+        Object.keys(this.broadcastItems.get(broadcast.key)).forEach((aProperty) => {
+          // If the value of the new broadcast is different, replace it on the previous one
+          if (previousBroadcast[aProperty] !==  broadcast[aProperty]) {
+            previousBroadcast[aProperty] = broadcast[aProperty];
+          }
+        });
+        // this.broadcastItems.set(broadcast.key, broadcast);
       }
     });
   }

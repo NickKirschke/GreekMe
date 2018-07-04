@@ -1,24 +1,21 @@
-Type update on the models, fix all string concatination to template strings
-
 Currently on the profile page there are no comments or like numbers
 Transform all navparams data transfers to one DATA attribute to reduce number of calls.
+Consider changing up the way updates are pushed out. Currently only update relative fields not entire item in locations. Comment list needs to update postList also postlist into a map?
+
+Updating fields only if they are different rather than replacing the entire dom
 
 Signup should send email verification
 Turn edit profile into a modal
 Settings page for notifications etc
-Add bio to the user on sign up
 notifications
+Have updating posts also update a user's post list
 ----Messages for if you dont have any posts or events ( changes these from dynamic lists to once reads to get the object to get the length)
-make a function out of the user creation with avatar_url as the default
 push notifications
 slight addition in margin on the bottom of the like badge, use rem instead of px
 global accent color, GREY
 Make the load screen better, Show gm page for a second (cordova plugins)
 look at all cordova plugins
 Set a post load limit, aka only 10 of the most recent broadcats appear, 20 for feed
-scaling input on page with lots of text
-If the avatar url is null use the default one stored locally
-Store default images locally, reference on login and register page
 /// End game
 refactor DB with everyone under school
 Edit Event tab

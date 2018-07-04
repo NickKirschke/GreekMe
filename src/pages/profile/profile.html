@@ -51,7 +51,7 @@
       <div *ngSwitchCase="'posts'">
           <h4 *ngIf="!postItems$" class="emptyMessage">You have not posted yet</h4>
       <ion-list class="pepSwitcher">
-        <broadcast-row text-wrap *ngFor="let item of (postItems$ |  async); let i = index" class="chat-boxes" [broadcast]="item"></broadcast-row>
+        <broadcast-row text-wrap *ngFor="let item of (postItems$ |  async); let i = index" class="chat-boxes" [broadcast]="item" [user]="user"></broadcast-row>
       </ion-list>
       </div>
       <div *ngSwitchCase="'eventsAttending'">

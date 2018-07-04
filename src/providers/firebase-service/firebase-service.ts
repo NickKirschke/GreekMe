@@ -23,7 +23,7 @@ export class FirebaseServiceProvider {
   }
   // Get organization's image
   getGreetingImage(organizationId: string) {
-    return this.firebaseStorage.ref().child(organizationId + '/logo.png').getDownloadURL();
+    return this.firebaseStorage.ref().child(`${organizationId}/logo.png`).getDownloadURL();
   }
 
   // Adds an event to the event list for the organization
@@ -65,7 +65,7 @@ export class FirebaseServiceProvider {
 
   addToBroadcastList(broadcast: Broadcast, organizationId: string) {
     // console.log(broadcast);
-    return this.afDB.list(`/organization/'${organizationId}/broadcast/`).push(broadcast).key;
+    return this.afDB.list(`/organization/${organizationId}/broadcast/`).push(broadcast).key;
   }
 
   // Adds a comment to a broadcast commentList

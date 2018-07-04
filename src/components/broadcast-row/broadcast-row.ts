@@ -41,11 +41,13 @@ export class BroadcastRowComponent {
       'heart' : 'heart-outline';
     const updates = {};
     let currentLikes = 0;
-    const broadcastPath = `/organization/${this.user.organizationId}/${this.contentType}/${
+    const broadcastLikePath = `/organization/${this.user.organizationId}/${this.contentType}/${
       this.broadcast.key}/likeList/${this.user.uid}`;
     const userLikePath = `/users/${this.user.uid}/likeList/${this.broadcast.key}`;
     const numOfLikePath = `/organization/${
       this.user.organizationId}/${this.contentType}/${this.broadcast.key}/numOfLikes/`;
+    // TODO only update the num of likes and likeList on the post List?
+    const userPostPath = `/users/${this.user.uid}/postList/${this.broadcast.key}`;
     const numOfLikesRef = firebase.database().ref(`/organization/${
       this.user.organizationId}/${this.contentType}/${this.broadcast.key}/numOfLikes`);
     numOfLikesRef.on('value', (snapshot) => {
@@ -55,7 +57,7 @@ export class BroadcastRowComponent {
     const isLiked = this.userLikeItems.has(this.broadcast.key);
     if (isLiked) {
         // Do unlike
-      updates[broadcastPath] = null;
+      updates[broadcastLikePath] = null;
       updates[userLikePath] = null;
       updates[numOfLikePath] = currentLikes - 1;
     } else {
@@ -70,10 +72,11 @@ export class BroadcastRowComponent {
         name: this.broadcast.text,
         key: this.broadcast.key,
       };
-      updates[broadcastPath] = userLikeObj;
+      updates[broadcastLikePath] = userLikeObj;
       updates[userLikePath] = broadcastLikeObj;
       updates[numOfLikePath] = currentLikes + 1;
     }
+    updates[userPostPath] = this.broadcast;
     firebase.database().ref().update(updates).then(() => {
       if (isLiked) {
         console.log('Did unlike');
