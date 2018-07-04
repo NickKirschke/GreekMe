@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, App } from 'ionic-angular';
+import { NavController } from 'ionic-angular';
 import { AngularFireList } from 'angularfire2/database';
 import { FirebaseServiceProvider } from '../../providers/firebase-service/firebase-service';
 import { AngularFireAuth } from 'angularfire2/auth/auth';
@@ -50,7 +50,7 @@ export class EventsPage {
   goToCreateEvent() {
     this.navCtrl.push(CreateEventPage);
   }
-  goToEvent(key: String) {
+  goToEvent(key: string) {
     const paramObj = {
       eventId: key,
     };
@@ -58,15 +58,6 @@ export class EventsPage {
   }
   removeOldEvents() {
     // Removes events that are 1 day old.
-    // this.eventItems.subscribe(arr =>
-    //   arr.forEach(element => {
-    //     var tempDate = moment(element.date);
-    //     if (tempDate.diff(moment()) < -86400000) {
-    //       this.eventItems.remove(element.$key);
-    //     }
-    //   }));
-
-    // 5.0
     new Promise((resolve, reject) => {
       this.eventItems$.subscribe((items) => {
         // tslint:disable-next-line:prefer-const
@@ -80,9 +71,4 @@ export class EventsPage {
       });
     });
   }
-  // const $key = action.payload.key;
-  // const data = { $key, ...action.payload.val() };
-  // return data;
-  // var datee = moment('2017-08-29T20:59:51-04:00');
-  // console.log(datee.diff(moment()));
 }

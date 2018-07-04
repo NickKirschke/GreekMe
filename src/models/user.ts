@@ -1,14 +1,14 @@
 import { AngularFireList } from 'angularfire2/database';
+import { UserLike } from './userLike';
 export interface User {
-  name: any;
-  email: any;
-  password: any;
-  organizationId: any;
-  organizationSchool?: any;
-  avatarUrl?: any;
-  uid?: any;
-  role: any;
+  name: string;
+  email: string;
+  organizationId: string;
+  organizationSchool?: string;
+  avatarUrl?: string;
+  uid?: string;
+  role: string;
   eventsAttending?: AngularFireList<any[]>;
-  likeList?: AngularFireList<any>;
+  likeList?: UserLike[];
   bio?: any;
 }

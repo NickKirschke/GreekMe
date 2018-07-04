@@ -10,12 +10,7 @@ import { Broadcast } from '../../models/broadcast';
 import { Event } from '../../models/event';
 import { UserLike } from '../../models/userLike';
 import { Observable } from '@firebase/util';
-/*
-  Generated class for the FirebaseServiceProvider provider.
 
-  See https://angular.io/docs/ts/latest/guide/dependency-injection.html
-  for more info on providers and Angular DI.
-*/
 @Injectable()
 export class FirebaseServiceProvider {
   user: Observable<any>;
@@ -35,99 +30,98 @@ export class FirebaseServiceProvider {
   // Need to add return handling
   addToOrgEventList(event: Event, organizationId: string) {
     // console.log(broadcast);
-    this.afDB.list('/organization/' + organizationId + '/broadcast/').push(event);
+    this.afDB.list(`/organization/${organizationId}/broadcast/`).push(event);
   }
 
   // Accesses the event information by key
   getEventInfo(key: string, organizationId: string) {
-    return this.afDB.object<Event>('/organization/' + organizationId + '/event/' + key);
+    return this.afDB.object<Event>(`/organization/${organizationId}/event/${key}`);
   }
 
   // Accesses the event information by key
   getEventInfo2(key: string, organizationId: string) {
-    return this.afDB.object<Event>('/organization/' + organizationId + '/event/' + key);
+    return this.afDB.object<Event>(`/organization/${organizationId}/event/${key}`);
   }
 
   // Accesses the event attendingList by key
   getEventAttendingList(key, organizationId) {
-    return this.afDB.list('/organization/' + organizationId + '/event/' + key + '/attendingList/');
+    return this.afDB.list(`/organization/${organizationId}/event/${key}/attendingList/`);
   }
 
   // Returns the event list for the organization
   getOrgEventList(organizationId: string) {
-    return this.afDB.list('/organization/' + organizationId + '/event/');
+    return this.afDB.list(`/organization/${organizationId}/event/`);
   }
 
   // Adds an event to a user's list of events that they are 'going' to
   getUserEventList(uid: string) {
-    return this.afDB.list('/users/' + uid + '/eventsAttending/');
+    return this.afDB.list(`/users/${uid}/eventsAttending/`);
   }
 
   // Returns the broadcast list for the greekme page
   getBroadcastList(organizationId: string) {
-    return this.afDB.list('/organization/' + organizationId + '/broadcast/');
+    return this.afDB.list(`/organization/${organizationId}/broadcast/`);
   }
 
   addToBroadcastList(broadcast: Broadcast, organizationId: string) {
     // console.log(broadcast);
-    return this.afDB.list('/organization/' + organizationId + '/broadcast/').push(broadcast).key;
+    return this.afDB.list(`/organization/'${organizationId}/broadcast/`).push(broadcast).key;
   }
 
   // Adds a comment to a broadcast commentList
   addCommentToBroadcast(broadcast: Broadcast, organizationId: string, key: string) {
     // console.log(broadcast);
-    return this.afDB.list('/organization/' + organizationId + '/broadcast/' + key +
-     '/commentList/').push(broadcast).key;
+    return this.afDB.list(`/organization/${organizationId}/broadcast/${
+      key}/commentList/`).push(broadcast).key;
   }
 
   // Adds a comment to a message commentList
   addCommentToMessage(broadcast: Broadcast, organizationId: string, key: string) {
     // console.log(broadcast);
-    return this.afDB.list('/organization/' + organizationId + '/message/' + key +
-     '/commentList/').push(broadcast).key;
+    return this.afDB.list(`/organization/${organizationId}/message/${
+      key}/commentList/`).push(broadcast).key;
   }
 
   // Returns the feed list for the organization
   getFeedList(organizationId: string) {
-    return this.afDB.list('/organization/' + organizationId + '/message/');
+    return this.afDB.list(`/organization/${organizationId}/message/`);
   }
 
   // Adds a feed to the feed list for the organization (Feed uses same structure as broadcast)
   addToFeedList(broadcast: Broadcast, organizationId: string) {
     // console.log(broadcast);
-    return this.afDB.list('/organization/' + organizationId + '/message/').push(broadcast).key;
+    return this.afDB.list(`/organization/${organizationId}/message/`).push(broadcast).key;
   }
 
   // Returns the comments for the broadcast
   getCommentListBroadcast(organizationId: string, broadcastId: string) {
-    return this.afDB.list('/organization/' + organizationId + '/broadcast/' +
-     broadcastId + '/commentList/');
+    return this.afDB.list(`/organization/${organizationId}/broadcast/${
+      broadcastId}/commentList/`);
   }
 
   // Returns the comments for the message
   getCommentListMessage(organizationId: string, messageId: string) {
-    return this.afDB.list('/organization/' + organizationId + '/message/' +
-     messageId + '/commentList/');
+    return this.afDB.list(`/organization/${organizationId}/message/${messageId}/commentList/`);
   }
 
   // Return a user's Liked list
   getUserLikeList(uid: string) {
-    return this.afDB.list<UserLike>('users/' + uid + '/likeList/');
+    return this.afDB.list<UserLike>(`/users/${uid}/likeList/`);
   }
 
   // Return a user's post list
   getUserPostList(uid: string) {
-    return this.afDB.list<Broadcast>('users/' + uid + '/postList/');
+    return this.afDB.list<Broadcast>(`users/${uid}/postList/`);
   }
 
   // Return a user's post list
   getUserEventsAttending(uid: string) {
-    return this.afDB.list('users/' + uid + '/eventsAttending/');
+    return this.afDB.list(`/users/${uid}/eventsAttending/`);
   }
 
   getUserDetailsProfilePage(uid: string) {
     return new Promise((resolve) => {
-      this.firebaseDb.ref('/users/' + uid).once('value').then((snapshot) => {
+      this.firebaseDb.ref(`/users/${uid}`).once('value').then((snapshot) => {
         resolve(snapshot.val());
       });
     });
@@ -136,7 +130,7 @@ export class FirebaseServiceProvider {
   // 5.0
   getUserDetails(uid: string) {
     return new Promise((resolve) => {
-      this.firebaseDb.ref('/users/' + uid).once('value').then((snapshot) => {
+      this.firebaseDb.ref(`/users/${uid}`).once('value').then((snapshot) => {
         const user = JSON.stringify(snapshot.val());
         // Store user details locally
         this.storage.set('user', user).then(() => {
@@ -155,9 +149,10 @@ export class FirebaseServiceProvider {
       ' commodo, mauris sit amet hendrerit molestie, massa ligula iaculis lorem, sed posuere' +
       ' risus nibh varius ligula. Mauris ut turpis blandit leo imperdiet egestas. Curabitur' +
       ' tincidunt neque non orci varius, sed egestas risus faucibus. ';
-      userDetails.avatarUrl = 'https://firebasestorage.googleapis.com/v0/b/greekme-' +
-      '7475a.appspot.com/o/GM_Default.png?alt=media&token=6bc30d40-17a2-40bb-9af7-edff78112780';
-      this.afDB.object('/users/' + userDetails.uid).set(userDetails);
+      userDetails.avatarUrl = '../../assets/icon/GMIcon.png';
+      // 'https://firebasestorage.googleapis.com/v0/b/greekme-' +
+      // '7475a.appspot.com/o/GM_Default.png?alt=media&token=6bc30d40-17a2-40bb-9af7-edff78112780';
+      this.afDB.object(`/users/${userDetails.uid}`).set(userDetails);
       this.storage.set('user', JSON.stringify(userDetails)).then(() => resolve(true));
     });
   }

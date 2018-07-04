@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, App } from 'ionic-angular';
+import { NavController } from 'ionic-angular';
 import { FirebaseServiceProvider } from '../../providers/firebase-service/firebase-service';
 import { AngularFireAuth } from 'angularfire2/auth/auth';
 import { EventsPage } from '../events/events';
@@ -56,9 +56,9 @@ export class CreateEventPage {
       avatarUrl: this.user.avatarUrl,
     };
 
-    updates['/organization/' + this.user.organizationId + '/event/'
-      + newEventKey + '/attendingList/' + this.user.uid] = nameObj;
-    updates['/users/' + this.user.uid + '/eventsAttending/' + newEventKey] = this.event;
+    updates[`/organization/${this.user.organizationId}/event/${
+      newEventKey}/attendingList/${this.user.uid}`] = nameObj;
+    updates[`/users/${this.user.uid}/eventsAttending/${newEventKey}`] = this.event;
     firebase.database().ref().update(updates).then(() => {
       console.log('Event Added!');
     }).catch((error) => {

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, App, NavParams, ToastController } from 'ionic-angular';
+import { NavController, NavParams, ToastController } from 'ionic-angular';
 import { AngularFireList } from 'angularfire2/database';
 import { FirebaseServiceProvider } from '../../providers/firebase-service/firebase-service';
 import { AngularFireAuth } from 'angularfire2/auth/auth';
@@ -9,6 +9,7 @@ import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import { Event } from '../../models/event';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'page-event-view',
@@ -24,11 +25,12 @@ export class EventViewPage {
   eventInfo: string = 'details';
   attendingStatus: boolean = false;
   isCreator: boolean = false;
-  eventId;
+  eventId: string;
   event2$: Observable<Event>;
   userAttendingList$: Observable<any>;
-  eventName: String;
+  eventName: string;
   attendingListRef: AngularFireList<any>;
+  attendingSubscription: Subscription;
 
   constructor(private afAuth: AngularFireAuth,
               public navCtrl: NavController,
@@ -36,10 +38,6 @@ export class EventViewPage {
               private userService: UserServiceProvider,
               public navParams: NavParams,
               public toastCtrl: ToastController) {
-  }
-
-  ionViewDidLoad() {
-    this.dataSetup();
   }
 
   async dataSetup() {
@@ -102,13 +100,9 @@ export class EventViewPage {
     // }
   }
 
-  ionViewWillLeave() {
-
-  }
-
   checkAttending() {
     try {
-      this.attendingList$.subscribe((items) => {
+      this.attendingSubscription = this.attendingList$.subscribe((items) => {
         // tslint:disable-next-line:prefer-const
         for (let i of items) {
           if (i.key === this.user.uid) {
@@ -129,13 +123,13 @@ export class EventViewPage {
         avatarUrl: this.user.avatarUrl,
       };
       let eventObj = {} as Event;
-      this.firebase.ref('/organization/' + this.user.organizationId
-        + '/event/' + this.eventId).once('value')
+      this.firebase.ref(`/organization/${this.user.organizationId}/event/${
+        this.eventId}`).once('value')
       .then((snapshot) => {
         eventObj = snapshot.val();
-        updates['/organization/' + this.user.organizationId + '/event/'
-          + this.eventId + '/attendingList/' + this.user.uid] = nameObj;
-        updates['/users/' + this.user.uid + '/eventsAttending/' + this.eventId] = eventObj;
+        updates[`/organization/${this.user.organizationId}/event/${
+          this.eventId}/attendingList/${this.user.uid}`] = nameObj;
+        updates[`/users/${this.user.uid}/eventsAttending/${this.eventId}`] = eventObj;
         firebase.database().ref().update(updates).then(() => {
           this.attendingStatus = true;
           this.toast('You are going to this event!');
@@ -162,5 +156,13 @@ export class EventViewPage {
       position: 'top',
     });
     toast.present();
+  }
+
+  ionViewDidLoad() {
+    this.dataSetup();
+  }
+
+  ionViewWillLeave() {
+    this.attendingSubscription.unsubscribe();
   }
 }

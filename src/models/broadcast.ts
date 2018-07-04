@@ -1,16 +1,15 @@
-import { AngularFireList } from 'angularfire2/database';
 import { UserLike } from './userLike';
 export interface Broadcast {
-  avatarUrl: any;
-  text: any;
-  name: any;
+  avatarUrl: string;
+  text: string;
+  name: string;
   date: any;
-  uid: any;
-  key: any;
-  commentList: AngularFireList<any>;
+  uid: string;
+  key: string;
+  commentList: Broadcast[];
   likeList: UserLike[];
-  numOfComments: any;
-  numOfLikes: any;
+  numOfComments: number;
+  numOfLikes: number;
   liked: boolean;
   iconName: string;
 }

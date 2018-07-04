@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ModalController, Content } from 'ionic-angular';
+import { NavController, NavParams, ModalController } from 'ionic-angular';
 import { Broadcast } from '../../models/broadcast';
 import { FirebaseServiceProvider } from '../../providers/firebase-service/firebase-service';
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import { ComposeThreadPage } from '../compose-thread/compose-thread';
 import { Observable } from 'rxjs/Observable';
-import { ProfilePage } from '../profile/profile';
 import { ContentType } from '../../models/contentType';
 /**
  * Generated class for the ThreadPage page.

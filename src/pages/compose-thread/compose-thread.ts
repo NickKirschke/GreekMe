@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { App, NavParams, ViewController, Content } from 'ionic-angular';
+import { NavParams, ViewController } from 'ionic-angular';
 import { FirebaseServiceProvider } from '../../providers/firebase-service/firebase-service';
 import { User } from '../../models/user';
 import { Broadcast } from '../../models/broadcast';

@@ -72,7 +72,7 @@ export class ProfilePage {
     myModal.present();
   }
 
-  goToEvent(key: String) {
+  goToEvent(key: string) {
     const paramObj = {
       eventId: key,
     };

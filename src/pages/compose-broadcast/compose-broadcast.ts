@@ -37,9 +37,8 @@ export class ComposeBroadcastPage {
 
   updatePostList(tempBroadcast: Broadcast) {
     const updates = {};
-    updates['/users/' + this.user.uid + '/postList/' + tempBroadcast.key] = tempBroadcast;
+    updates[`/users/${this.user.uid}/postList/${tempBroadcast.key}`] = tempBroadcast;
     firebase.database().ref().update(updates).then(() => {
-      console.log('Post added!');
     }).catch((error) => {
       console.log(error);
     });

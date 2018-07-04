@@ -13,7 +13,10 @@ export class EditProfilePage {
   constructor(public navCtrl: NavController,
               private navParams: NavParams,
               private view: ViewController) {
-    this.user = JSON.parse(navParams.get('user'));
+  }
+
+  ionViewWillEnter() {
+    this.user = JSON.parse(this.navParams.get('user'));
   }
   closeModal() {
     this.view.dismiss();

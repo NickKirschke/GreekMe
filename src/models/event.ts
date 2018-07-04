@@ -1,10 +1,10 @@
 import { AngularFireList } from 'angularfire2/database';
 export interface Event {
-  creator: any;
-  creatorUid: any;
-  name: any;
+  creator: string;
+  creatorUid: string;
+  name: string;
   date: any;
-  location: any;
-  info: any;
+  location: string;
+  info: string;
   attendingList: AngularFireList<any[]>;
 }
