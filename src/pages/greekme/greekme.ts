@@ -24,7 +24,6 @@ export class GreekMePage {
   userLikeListRef: AngularFireList<any>;
   userLikeItems: Set<string> = new Set<string>();
   userLikeSubscription: Subscription;
-  contentType: ContentType = ContentType.Broadcast;
 
   constructor(public navCtrl: NavController,
               public firebaseService: FirebaseServiceProvider,
@@ -65,7 +64,6 @@ export class GreekMePage {
 
   buildSubscriptions() {
     let broadcast : Broadcast;
-    // let tempBroadcast: Broadcast;
     // Subscriptions for handling the user's likes and the broadcasts on the page
     // Data is passed into a Set
     this.userLikeSubscription = this.userLikeListRef.stateChanges().subscribe((action) => {
@@ -101,7 +99,6 @@ export class GreekMePage {
             previousBroadcast[aProperty] = broadcast[aProperty];
           }
         });
-        // this.broadcastItems.set(broadcast.key, broadcast);
       }
     });
   }
@@ -112,7 +109,7 @@ export class GreekMePage {
   }
 
   goToComposeBroadcast() {
-    const myModal = this.modal.create(ComposeBroadcastPage, { contentType: this.contentType });
+    const myModal = this.modal.create(ComposeBroadcastPage, { contentType: ContentType.Broadcast });
     myModal.present();
   }
 

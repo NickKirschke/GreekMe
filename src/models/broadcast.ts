@@ -1,4 +1,5 @@
 import { UserLike } from './userLike';
+import { ContentType } from './contentType';
 export interface Broadcast {
   avatarUrl: string;
   text: string;
@@ -12,4 +13,5 @@ export interface Broadcast {
   numOfLikes: number;
   liked: boolean;
   iconName: string;
+  contentType: ContentType;
 }

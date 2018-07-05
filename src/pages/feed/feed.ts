@@ -23,7 +23,6 @@ export class FeedPage {
   userLikeListRef: AngularFireList<any>;
   userLikeItems: Set<string> = new Set<string>();
   userLikeSubscription: Subscription;
-  contentType: ContentType = ContentType.Message;
 
   constructor(private afAuth: AngularFireAuth,
               public navCtrl: NavController,
@@ -33,7 +32,7 @@ export class FeedPage {
   }
 
   goToComposeFeed() {
-    const myModal = this.modal.create(ComposeBroadcastPage, { contentType: this.contentType });
+    const myModal = this.modal.create(ComposeBroadcastPage, { contentType: ContentType.Message });
     myModal.present();
   }
 

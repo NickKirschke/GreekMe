@@ -19,7 +19,7 @@ export class ComposeThreadPage {
   user = {} as User;
   tempBroadcast = {} as Broadcast;
   error: string = '';
-  broadcastKey: string = '';
+  postKey: string = '';
   constructor(private firebaseService: FirebaseServiceProvider,
               private userService: UserServiceProvider,
               private navParams: NavParams,
@@ -31,7 +31,7 @@ export class ComposeThreadPage {
   }
 
   async dataSetup() {
-    this.broadcastKey = this.navParams.get('key');
+    this.postKey = this.navParams.get('key');
     this.contentType = this.navParams.get('contentType');
     const userGrab = await this.userService.currentUserInfo();
     this.user = userGrab as User;
@@ -40,7 +40,7 @@ export class ComposeThreadPage {
   getNumOfComments() {
     return new Promise((resolve) => {
       const numOfCommentsRef = firebase.database().ref(`/organization/${
-        this.user.organizationId}/${this.contentType}/${this.broadcastKey}/numOfComments/`);
+        this.user.organizationId}/${this.contentType}/${this.postKey}/numOfComments/`);
       numOfCommentsRef.on('value', (snapshot) => {
         resolve(snapshot.val());
       });
@@ -51,9 +51,8 @@ export class ComposeThreadPage {
     let numOfComments;
     numOfComments = await this.getNumOfComments();
     const updates = {};
-    updates[`/users/${this.user.uid}/postList/${tempBroadcast.key}`] = tempBroadcast;
     updates[`/organization/${this.user.organizationId}/${this.contentType}/${
-      this.broadcastKey}/numOfComments/`] = numOfComments + 1;
+      this.postKey}/numOfComments/`] = numOfComments + 1;
     firebase.database().ref().update(updates).then(() => {
     }).catch((error) => {
       console.log(error);
@@ -71,13 +70,13 @@ export class ComposeThreadPage {
       tempBroadcast.date = moment().toISOString();
       tempBroadcast.numOfComments = 0;
       tempBroadcast.numOfLikes = 0;
-      console.log(tempBroadcast.key);
+      tempBroadcast.contentType = ContentType.Thread;
       if (this.contentType === ContentType.Broadcast) {
         tempBroadcast.key = this.firebaseService
-        .addCommentToBroadcast(tempBroadcast, this.user.organizationId, this.broadcastKey);
+        .addCommentToBroadcast(tempBroadcast, this.user.organizationId, this.postKey);
       } else if (this.contentType === ContentType.Message) {
         tempBroadcast.key = this.firebaseService
-        .addCommentToMessage(tempBroadcast, this.user.organizationId, this.broadcastKey);
+        .addCommentToMessage(tempBroadcast, this.user.organizationId, this.postKey);
       }
       if (tempBroadcast.key) {
         this.updateUserPostListAndCommentNumber(tempBroadcast);

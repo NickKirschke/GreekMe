@@ -55,7 +55,7 @@ export class ComposeBroadcastPage {
       tempBroadcast.numOfComments = 0;
       tempBroadcast.numOfLikes = 0;
       tempBroadcast.date = moment().toISOString();
-
+      tempBroadcast.contentType = this.contentType;
       if (this.contentType === ContentType.Broadcast) {
         // Need to still update user commentList, need to get the broadcast ID
         tempBroadcast.key = this.firebaseService

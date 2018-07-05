@@ -23,7 +23,6 @@ export class ThreadPage {
   broadcastItems$: Observable<any>;
   broadcast = {} as Broadcast;
   organizationId = '';
-  contentType: ContentType;
   constructor(public navCtrl: NavController,
               private navParams: NavParams,
               private firebaseService: FirebaseServiceProvider,
@@ -38,12 +37,11 @@ export class ThreadPage {
     const data = this.navParams.data;
     this.broadcast = JSON.parse(data.broadcast);
     this.organizationId = data.organizationId;
-    this.contentType = data.contentType;
 
-    if (this.contentType === ContentType.Broadcast) {
+    if (this.broadcast.contentType === ContentType.Broadcast) {
       this.broadcastItems$ = this.firebaseService
         .getCommentListBroadcast(this.organizationId, this.broadcast.key).valueChanges();
-    } else if (this.contentType === ContentType.Message) {
+    } else if (this.broadcast.contentType === ContentType.Message) {
       this.broadcastItems$ = this.firebaseService
         .getCommentListMessage(this.organizationId, this.broadcast.key).valueChanges();
     }
@@ -52,7 +50,7 @@ export class ThreadPage {
   goToComposeThread() {
     const myModal = this.modal.create(ComposeThreadPage, {
       key: this.broadcast.key,
-      contentType: this.contentType,
+      contentType: this.broadcast.contentType,
     });
     myModal.present();
   }

@@ -6,7 +6,6 @@ import { UserLike } from '../../models/userLike';
 import { NavController } from 'ionic-angular';
 import { ProfilePage } from '../../pages/profile/profile';
 import { ThreadPage } from '../../pages/thread/thread';
-import { ContentType } from '../../models/contentType';
 
 /**
  * Generated class for the BroadcastRowComponent component.
@@ -19,7 +18,6 @@ import { ContentType } from '../../models/contentType';
   templateUrl: 'broadcast-row.html',
 })
 export class BroadcastRowComponent {
-  @Input('contentType') contentType: ContentType;
   @Input('broadcast') broadcast : Broadcast;
   @Input('user') user: User;
   @Input('userLikeItems') userLikeItems: Set<string> = new Set<string>();
@@ -35,21 +33,20 @@ export class BroadcastRowComponent {
   }
 
   doLike() {
-    // TODO Need to determine if it is a message or broadcast,
-    // and handle the update paths accordingly.
     this.broadcast.iconName = this.broadcast.iconName === 'heart-outline' ?
       'heart' : 'heart-outline';
     const updates = {};
     let currentLikes = 0;
-    const broadcastLikePath = `/organization/${this.user.organizationId}/${this.contentType}/${
-      this.broadcast.key}/likeList/${this.user.uid}`;
+    // Paths for the updates regarding data that are push out upon like
+    const broadcastLikePath = `/organization/${this.user.organizationId}/${
+      this.broadcast.contentType}/${this.broadcast.key}/likeList/${this.user.uid}`;
     const userLikePath = `/users/${this.user.uid}/likeList/${this.broadcast.key}`;
     const numOfLikePath = `/organization/${
-      this.user.organizationId}/${this.contentType}/${this.broadcast.key}/numOfLikes/`;
+      this.user.organizationId}/${this.broadcast.contentType}/${this.broadcast.key}/numOfLikes/`;
     // TODO only update the num of likes and likeList on the post List?
-    const userPostPath = `/users/${this.user.uid}/postList/${this.broadcast.key}`;
+    const userPostPath = `/users/${this.broadcast.uid}/postList/${this.broadcast.key}`;
     const numOfLikesRef = firebase.database().ref(`/organization/${
-      this.user.organizationId}/${this.contentType}/${this.broadcast.key}/numOfLikes`);
+      this.user.organizationId}/${this.broadcast.contentType}/${this.broadcast.key}/numOfLikes`);
     numOfLikesRef.on('value', (snapshot) => {
       currentLikes = snapshot.val();
     });
@@ -94,7 +91,6 @@ export class BroadcastRowComponent {
     const data = {
       organizationId: this.user.organizationId,
       broadcast: bc,
-      contentType: this.contentType,
     };
     this.navCtrl.push(ThreadPage, data);
   }
