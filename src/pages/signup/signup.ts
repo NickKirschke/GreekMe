@@ -3,7 +3,7 @@ import { NavController, LoadingController } from 'ionic-angular';
 import { LoginPage } from '../login/login';
 import { User } from '../../models/user';
 import { AngularFireAuth } from 'angularfire2/auth/auth';
-import { FirebaseServiceProvider } from '../../providers/firebase-service/firebase-service';
+import { FirebaseServiceProvider } from '../../providers/firebaseService/firebaseService';
 import { TabsControllerPage } from '../tabs-controller/tabs-controller';
 import * as firebase from 'firebase/app';
 import { FormBuilder, FormGroup } from '@angular/forms';

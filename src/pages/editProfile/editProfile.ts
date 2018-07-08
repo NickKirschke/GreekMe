@@ -3,8 +3,8 @@ import { NavController, NavParams, ViewController } from 'ionic-angular';
 import { User } from '../../models/user';
 
 @Component({
-  selector: 'page-edit-profile',
-  templateUrl: 'edit-profile.html',
+  selector: 'page-editProfile',
+  templateUrl: 'editProfile.html',
 })
 export class EditProfilePage {
   // this tells the tabs component which Pages

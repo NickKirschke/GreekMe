@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { AngularFireList } from 'angularfire2/database';
-import { FirebaseServiceProvider } from '../../providers/firebase-service/firebase-service';
+import { FirebaseServiceProvider } from '../../providers/firebaseService/firebaseService';
 import { AngularFireAuth } from 'angularfire2/auth/auth';
 import { User } from '../../models/user';
-import { UserServiceProvider } from '../../providers/user-service/user-service';
+import { UserServiceProvider } from '../../providers/userService/userService';
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
-import { CreateEventPage } from '../create-event/create-event';
-import { EventViewPage } from '../event-view/event-view';
+import { CreateEventPage } from '../createEvent/createEvent';
+import { EventViewPage } from '../eventView/eventView';
 import * as moment from 'moment';
 import { Observable } from 'rxjs/Observable';
 
@@ -51,10 +51,10 @@ export class EventsPage {
     this.navCtrl.push(CreateEventPage);
   }
   goToEvent(key: string) {
-    const paramObj = {
+    const data = {
       eventId: key,
     };
-    this.navCtrl.push(EventViewPage, paramObj);
+    this.navCtrl.push(EventViewPage, data);
   }
   removeOldEvents() {
     // Removes events that are 1 day old.

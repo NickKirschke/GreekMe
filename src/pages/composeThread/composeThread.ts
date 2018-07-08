@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { NavParams, ViewController } from 'ionic-angular';
-import { FirebaseServiceProvider } from '../../providers/firebase-service/firebase-service';
+import { FirebaseServiceProvider } from '../../providers/firebaseService/firebaseService';
 import { User } from '../../models/user';
 import { Post } from '../../models/post';
-import { UserServiceProvider } from '../../providers/user-service/user-service';
+import { UserServiceProvider } from '../../providers/userService/userService';
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import * as moment from 'moment';
@@ -31,8 +31,9 @@ export class ComposeThreadPage {
   }
 
   async dataSetup() {
-    this.postKey = this.navParams.get('key');
-    this.contentType = this.navParams.get('contentType');
+    const data = this.navParams.data;
+    this.postKey = data.key;
+    this.contentType = data.contentType;
     const userGrab = await this.userService.currentUserInfo();
     this.user = userGrab as User;
   }

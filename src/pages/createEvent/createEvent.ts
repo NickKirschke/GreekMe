@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
-import { FirebaseServiceProvider } from '../../providers/firebase-service/firebase-service';
+import { FirebaseServiceProvider } from '../../providers/firebaseService/firebaseService';
 import { AngularFireAuth } from 'angularfire2/auth/auth';
 import { EventsPage } from '../events/events';
 import { User } from '../../models/user';
-import { UserServiceProvider } from '../../providers/user-service/user-service';
+import { UserServiceProvider } from '../../providers/userService/userService';
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import * as moment from 'moment';
@@ -12,8 +12,8 @@ import { Event } from '../../models/event';
 import { Observable } from 'rxjs/Observable';
 
 @Component({
-  selector: 'page-create-event',
-  templateUrl: 'create-event.html',
+  selector: 'page-createEvent',
+  templateUrl: 'createEvent.html',
 })
 export class CreateEventPage {
   firebaseStorage = firebase.storage();
@@ -49,7 +49,6 @@ export class CreateEventPage {
     this.event.creatorUid = this.user.uid;
     const newEventKey = this.firebaseService
     .getOrgEventList(this.user.organizationId).push(this.event).key;
-    console.log(newEventKey);
     const updates = {};
     const nameObj = {
       name: this.user.name,

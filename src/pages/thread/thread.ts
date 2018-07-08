@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, ModalController } from 'ionic-angular';
 import { Post } from '../../models/post';
-import { FirebaseServiceProvider } from '../../providers/firebase-service/firebase-service';
+import { FirebaseServiceProvider } from '../../providers/firebaseService/firebaseService';
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import { ComposeThreadPage } from '../composeThread/composeThread';
@@ -48,10 +48,11 @@ export class ThreadPage {
   }
 
   goToComposeThread() {
-    const myModal = this.modal.create(ComposeThreadPage, {
+    const data = {
       key: this.post.key,
       contentType: this.post.contentType,
-    });
+    };
+    const myModal = this.modal.create(ComposeThreadPage, data);
     myModal.present();
   }
 }

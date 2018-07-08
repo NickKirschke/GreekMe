@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { NavController, ModalController } from 'ionic-angular';
 import { AngularFireList } from 'angularfire2/database';
-import { FirebaseServiceProvider } from '../../providers/firebase-service/firebase-service';
+import { FirebaseServiceProvider } from '../../providers/firebaseService/firebaseService';
 import { User } from '../../models/user';
 import { Post } from '../../models/post';
-import { UserServiceProvider } from '../../providers/user-service/user-service';
+import { UserServiceProvider } from '../../providers/userService/userService';
 import 'firebase/storage';
 import { ComposePostPage } from '../composePost/composePost';
 import { Subscription } from 'rxjs';
@@ -85,7 +85,7 @@ export class GreekMePage {
         };
         this.broadcastItems.set(broadcast.key, broadcast);
       } else if (action.type === 'child_changed') {
-        const previousBroadcast = this.broadcastItems.get(broadcast.key);
+        const previousBroadcast = this.broadcastItems.get(action.key);
         const expectedIconName = previousBroadcast.iconName;
         // Construct the replacement broadcast
         broadcast = {

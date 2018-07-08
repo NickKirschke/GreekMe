@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { NavController, ModalController } from 'ionic-angular';
 import { AngularFireList } from 'angularfire2/database';
-import { FirebaseServiceProvider } from '../../providers/firebase-service/firebase-service';
+import { FirebaseServiceProvider } from '../../providers/firebaseService/firebaseService';
 import { AngularFireAuth } from 'angularfire2/auth/auth';
 import { User } from '../../models/user';
 import { Post } from '../../models/post';
-import { UserServiceProvider } from '../../providers/user-service/user-service';
+import { UserServiceProvider } from '../../providers/userService/userService';
 import 'firebase/storage';
 import { ComposePostPage } from '../composePost/composePost';
 import { ContentType } from '../../models/contentType';
@@ -68,7 +68,7 @@ export class FeedPage {
         };
         this.messageItems.set(message.key, message);
       } else if (action.type === 'child_changed') {
-        const previousMessage = this.messageItems.get(message.key);
+        const previousMessage = this.messageItems.get(action.key);
         const expectedIconName = previousMessage.iconName;
         // Construct the replacement broadcast
         message = {
