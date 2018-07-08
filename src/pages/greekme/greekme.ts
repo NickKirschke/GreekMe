@@ -3,10 +3,10 @@ import { NavController, ModalController } from 'ionic-angular';
 import { AngularFireList } from 'angularfire2/database';
 import { FirebaseServiceProvider } from '../../providers/firebase-service/firebase-service';
 import { User } from '../../models/user';
-import { Broadcast } from '../../models/broadcast';
+import { Post } from '../../models/post';
 import { UserServiceProvider } from '../../providers/user-service/user-service';
 import 'firebase/storage';
-import { ComposeBroadcastPage } from '../compose-broadcast/compose-broadcast';
+import { ComposePostPage } from '../composePost/composePost';
 import { Subscription } from 'rxjs';
 import { ContentType } from '../../models/contentType';
 
@@ -19,7 +19,7 @@ export class GreekMePage {
   validRole: boolean = false;
   image: string;
   broadcastItemRef: AngularFireList<any>;
-  broadcastItems: Map<string, Broadcast> = new Map<string, Broadcast>();
+  broadcastItems: Map<string, Post> = new Map<string, Post>();
   broadcastItemSubscription: Subscription;
   userLikeListRef: AngularFireList<any>;
   userLikeItems: Set<string> = new Set<string>();
@@ -63,7 +63,7 @@ export class GreekMePage {
   }
 
   buildSubscriptions() {
-    let broadcast : Broadcast;
+    let broadcast : Post;
     // Subscriptions for handling the user's likes and the broadcasts on the page
     // Data is passed into a Set
     this.userLikeSubscription = this.userLikeListRef.stateChanges().subscribe((action) => {
@@ -85,14 +85,14 @@ export class GreekMePage {
         };
         this.broadcastItems.set(broadcast.key, broadcast);
       } else if (action.type === 'child_changed') {
-        const expectedIconName = this.userLikeItems.has(action.key) ? 'heart-outline' : 'heart';
+        const previousBroadcast = this.broadcastItems.get(broadcast.key);
+        const expectedIconName = previousBroadcast.iconName;
         // Construct the replacement broadcast
         broadcast = {
           key: action.payload.key,
           ...action.payload.val(),
           iconName: expectedIconName,
         };
-        const previousBroadcast = this.broadcastItems.get(broadcast.key);
         Object.keys(this.broadcastItems.get(broadcast.key)).forEach((aProperty) => {
           // If the value of the new broadcast is different, replace it on the previous one
           if (previousBroadcast[aProperty] !==  broadcast[aProperty]) {
@@ -109,11 +109,11 @@ export class GreekMePage {
   }
 
   goToComposeBroadcast() {
-    const myModal = this.modal.create(ComposeBroadcastPage, { contentType: ContentType.Broadcast });
+    const myModal = this.modal.create(ComposePostPage, { contentType: ContentType.Broadcast });
     myModal.present();
   }
 
-  trackByFn(index: number, item: Broadcast) {
+  trackByFn(index: number, item: Post) {
     return item.key;
   }
 

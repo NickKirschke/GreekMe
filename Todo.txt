@@ -1,16 +1,13 @@
-Currently liking is broken on the post on profile page
 Transform all navparams data transfers to one DATA attribute to reduce number of calls.
-Consider changing up the way updates are pushed out. Currently only update relative fields not entire item in locations. Comment list needs to update postList also postlist into a map?
-Refactor all 'broadcasts' into Post due to the distinguish of contentType
-Updating fields only if they are different rather than replacing the entire dom
+Consider changing up the way updates are pushed out. Currently only update relative 
+ not entire item in locations.
 
 Signup should send email verification
-Turn edit profile into a modal
 Settings page for notifications etc
 notifications
 cloud function to update all posts with the new photo
-Have updating posts also update a user's post list
-----Messages for if you dont have any posts or events ( changes these from dynamic lists to once reads to get the object to get the length)
+
+Handle event list being empty
 push notifications
 slight addition in margin on the bottom of the like badge, use rem instead of px
 global accent color, GREY

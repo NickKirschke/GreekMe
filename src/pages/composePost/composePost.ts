@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { NavParams, ViewController } from 'ionic-angular';
 import { FirebaseServiceProvider } from '../../providers/firebase-service/firebase-service';
 import { User } from '../../models/user';
-import { Broadcast } from '../../models/broadcast';
+import { Post } from '../../models/post';
 import { UserServiceProvider } from '../../providers/user-service/user-service';
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
@@ -10,14 +10,14 @@ import * as moment from 'moment';
 import { ContentType } from '../../models/contentType';
 
 @Component({
-  selector: 'page-compose-broadcast',
-  templateUrl: 'compose-broadcast.html',
+  selector: 'page-composePost',
+  templateUrl: 'composePost.html',
 })
-export class ComposeBroadcastPage {
+export class ComposePostPage {
   contentType: ContentType;
   firebaseStorage = firebase.storage();
   user = {} as User;
-  tempBroadcast = {} as Broadcast;
+  tempPost = {} as Post;
   error = '';
   constructor(public firebaseService: FirebaseServiceProvider,
               private userService: UserServiceProvider,
@@ -35,37 +35,37 @@ export class ComposeBroadcastPage {
     this.user = userGrab as User;
   }
 
-  updatePostList(tempBroadcast: Broadcast) {
+  updatePostList(tempPost: Post) {
     const updates = {};
-    updates[`/users/${this.user.uid}/postList/${tempBroadcast.key}`] = tempBroadcast;
+    updates[`/users/${this.user.uid}/postList/${tempPost.key}`] = tempPost;
     firebase.database().ref().update(updates).then(() => {
     }).catch((error) => {
       console.log(error);
     });
   }
 
-  composeBroadcast(tempBroadcast: Broadcast) {
-    if (tempBroadcast.text == null || tempBroadcast.text === '') {
+  composePost(tempPost: Post) {
+    if (tempPost.text == null || tempPost.text === '') {
       this.error = 'Message cannot be blank!';
     } else {
       this.error = '';
-      tempBroadcast.avatarUrl = this.user.avatarUrl;
-      tempBroadcast.uid = this.user.uid;
-      tempBroadcast.name = this.user.name;
-      tempBroadcast.numOfComments = 0;
-      tempBroadcast.numOfLikes = 0;
-      tempBroadcast.date = moment().toISOString();
-      tempBroadcast.contentType = this.contentType;
+      tempPost.avatarUrl = this.user.avatarUrl;
+      tempPost.uid = this.user.uid;
+      tempPost.name = this.user.name;
+      tempPost.numOfComments = 0;
+      tempPost.numOfLikes = 0;
+      tempPost.date = moment().toISOString();
+      tempPost.contentType = this.contentType;
       if (this.contentType === ContentType.Broadcast) {
         // Need to still update user commentList, need to get the broadcast ID
-        tempBroadcast.key = this.firebaseService
-        .addToBroadcastList(tempBroadcast, this.user.organizationId);
+        tempPost.key = this.firebaseService
+        .addToBroadcastList(tempPost, this.user.organizationId);
       } else if (this.contentType === ContentType.Message) {
-        tempBroadcast.key = this.firebaseService
-        .addToFeedList(tempBroadcast, this.user.organizationId);
+        tempPost.key = this.firebaseService
+        .addToFeedList(tempPost, this.user.organizationId);
       }
-      if (tempBroadcast.key) {
-        this.updatePostList(tempBroadcast);
+      if (tempPost.key) {
+        this.updatePostList(tempPost);
         this.view.dismiss();
       } else {
         // Add logging here

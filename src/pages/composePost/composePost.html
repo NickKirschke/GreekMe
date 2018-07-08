@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-navbar>
+    <ion-buttons start>
+      <button ion-button (click)="closeModal()">Close</button>
+    </ion-buttons>
+    <ion-title>
+      {{isBroadcast ? "Compose a broadcast" : "Compose a message"}}
+    </ion-title>
+    <ion-buttons end>
+        <button ion-button (click)="composePost(tempPost)">Post</button>
+      </ion-buttons>
+  </ion-navbar>
+</ion-header>
+<ion-content padding>
+    <div id="composePost-markdown1" *ngIf="error" class="show-list-numbers-and-dots error-box">
+    <p>{{error}}</p>
+  </div>
+  <form id="composePost-form3" (ngSubmit)="composePost(tempPost)">
+    <ion-item text-wrap id="composePost-input9">
+      <ion-label></ion-label>
+      <ion-textarea type="text" placeholder="Update everyone about?" name="postText" [(ngModel)]="tempPost.text" autocomplete="on" autocorrect="on"></ion-textarea>
+    </ion-item>
+  </form>
+</ion-content>

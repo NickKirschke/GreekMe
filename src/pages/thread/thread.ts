@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, ModalController } from 'ionic-angular';
-import { Broadcast } from '../../models/broadcast';
+import { Post } from '../../models/post';
 import { FirebaseServiceProvider } from '../../providers/firebase-service/firebase-service';
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
-import { ComposeThreadPage } from '../compose-thread/compose-thread';
+import { ComposeThreadPage } from '../composeThread/composeThread';
 import { Observable } from 'rxjs/Observable';
 import { ContentType } from '../../models/contentType';
 /**
@@ -20,8 +20,8 @@ import { ContentType } from '../../models/contentType';
 })
 export class ThreadPage {
   firebaseStorage = firebase.storage();
-  broadcastItems$: Observable<any>;
-  broadcast = {} as Broadcast;
+  postItems$: Observable<any>;
+  post = {} as Post;
   organizationId = '';
   constructor(public navCtrl: NavController,
               private navParams: NavParams,
@@ -35,22 +35,22 @@ export class ThreadPage {
 
   async dataSetup() {
     const data = this.navParams.data;
-    this.broadcast = JSON.parse(data.broadcast);
+    this.post = JSON.parse(data.post);
     this.organizationId = data.organizationId;
 
-    if (this.broadcast.contentType === ContentType.Broadcast) {
-      this.broadcastItems$ = this.firebaseService
-        .getCommentListBroadcast(this.organizationId, this.broadcast.key).valueChanges();
-    } else if (this.broadcast.contentType === ContentType.Message) {
-      this.broadcastItems$ = this.firebaseService
-        .getCommentListMessage(this.organizationId, this.broadcast.key).valueChanges();
+    if (this.post.contentType === ContentType.Broadcast) {
+      this.postItems$ = this.firebaseService
+        .getCommentListBroadcast(this.organizationId, this.post.key).valueChanges();
+    } else if (this.post.contentType === ContentType.Message) {
+      this.postItems$ = this.firebaseService
+        .getCommentListMessage(this.organizationId, this.post.key).valueChanges();
     }
   }
 
   goToComposeThread() {
     const myModal = this.modal.create(ComposeThreadPage, {
-      key: this.broadcast.key,
-      contentType: this.broadcast.contentType,
+      key: this.post.key,
+      contentType: this.post.contentType,
     });
     myModal.present();
   }

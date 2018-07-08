@@ -6,7 +6,7 @@ import { User } from '../../models/user';
 import { AngularFireObject } from 'angularfire2/database';
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
-import { Broadcast } from '../../models/broadcast';
+import { Post } from '../../models/post';
 import { Event } from '../../models/event';
 import { UserLike } from '../../models/userLike';
 import { Observable } from '@firebase/util';
@@ -63,20 +63,20 @@ export class FirebaseServiceProvider {
     return this.afDB.list(`/organization/${organizationId}/broadcast/`);
   }
 
-  addToBroadcastList(broadcast: Broadcast, organizationId: string) {
+  addToBroadcastList(broadcast: Post, organizationId: string) {
     // console.log(broadcast);
     return this.afDB.list(`/organization/${organizationId}/broadcast/`).push(broadcast).key;
   }
 
   // Adds a comment to a broadcast commentList
-  addCommentToBroadcast(broadcast: Broadcast, organizationId: string, key: string) {
+  addCommentToBroadcast(broadcast: Post, organizationId: string, key: string) {
     // console.log(broadcast);
     return this.afDB.list(`/organization/${organizationId}/broadcast/${
       key}/commentList/`).push(broadcast).key;
   }
 
   // Adds a comment to a message commentList
-  addCommentToMessage(broadcast: Broadcast, organizationId: string, key: string) {
+  addCommentToMessage(broadcast: Post, organizationId: string, key: string) {
     // console.log(broadcast);
     return this.afDB.list(`/organization/${organizationId}/message/${
       key}/commentList/`).push(broadcast).key;
@@ -88,7 +88,7 @@ export class FirebaseServiceProvider {
   }
 
   // Adds a feed to the feed list for the organization (Feed uses same structure as broadcast)
-  addToFeedList(broadcast: Broadcast, organizationId: string) {
+  addToFeedList(broadcast: Post, organizationId: string) {
     // console.log(broadcast);
     return this.afDB.list(`/organization/${organizationId}/message/`).push(broadcast).key;
   }
@@ -111,7 +111,7 @@ export class FirebaseServiceProvider {
 
   // Return a user's post list
   getUserPostList(uid: string) {
-    return this.afDB.list<Broadcast>(`users/${uid}/postList/`);
+    return this.afDB.list<Post>(`users/${uid}/postList/`);
   }
 
   // Return a user's post list
