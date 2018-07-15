@@ -59,7 +59,7 @@ export class EditProfilePage {
     this.bio.nativeElement.style.height = this.bio.nativeElement.scrollHeight + 'px';
   }
 
-  async updatedProfile() {
+  async updateProfile() {
     try {
       const updates = [];
       const jsonUser = JSON.stringify(this.user);
