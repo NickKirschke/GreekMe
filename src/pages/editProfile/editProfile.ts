@@ -4,7 +4,6 @@ import { User } from '../../models/user';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { storage } from 'firebase';
 import * as firebase from 'firebase/app';
-import { FirebaseServiceProvider } from '../../providers/firebaseService/firebaseService';
 import { Storage } from '@ionic/storage';
 
 @Component({
@@ -34,7 +33,7 @@ export class EditProfilePage {
     try {
       console.log('click');
       const options: CameraOptions = {
-        quality: 50,
+        quality: 80,
         targetHeight: 136,
         targetWidth: 99,
         destinationType: this.camera.DestinationType.DATA_URL,
@@ -63,8 +62,7 @@ export class EditProfilePage {
     try {
       const updates = [];
       const jsonUser = JSON.stringify(this.user);
-      updates[`users/${this.user.uid}/`] = jsonUser;
-      await firebase.database().ref().update(updates);
+      await firebase.database().ref(`users/${this.user.uid}/`).set(this.user);
       await this.storage.set('user', jsonUser);
       this.view.dismiss(jsonUser);
     } catch (error) {

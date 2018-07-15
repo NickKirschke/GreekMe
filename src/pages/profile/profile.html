@@ -49,7 +49,7 @@
     </ion-row>
     <div [ngSwitch]="profileContent">
       <div *ngSwitchCase="'posts'">
-          <h4 *ngIf="postItems.size <= 1" class="emptyMessage">You have not posted yet</h4>
+          <h4 *ngIf="postItems.size < 1" class="emptyMessage">You have not posted yet</h4>
       <ion-list class="pepSwitcher">
         <post-row text-wrap *ngFor="let item of postItems | iterable; let i = index; trackBy: trackByFn" class="chat-boxes"
         [post]="item.key" [user]="user" [userLikeItems]="userLikeItems"></post-row>
