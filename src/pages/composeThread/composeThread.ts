@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { NavParams, ViewController } from 'ionic-angular';
 import { FirebaseServiceProvider } from '../../providers/firebaseService/firebaseService';
 import { User } from '../../models/user';
@@ -14,6 +14,7 @@ import { ContentType } from '../../models/contentType';
   templateUrl: 'composeThread.html',
 })
 export class ComposeThreadPage {
+  @ViewChild('comment') comment: ElementRef;
   contentType: ContentType;
   firebaseStorage = firebase.storage();
   user = {} as User;
@@ -87,6 +88,11 @@ export class ComposeThreadPage {
         this.error = 'Key not initialized error with ContentType';
       }
     }
+  }
+
+  resize() {
+    this.comment.nativeElement.style.height = 'auto';
+    this.comment.nativeElement.style.height = this.comment.nativeElement.scrollHeight + 'px';
   }
 
   closeModal() {

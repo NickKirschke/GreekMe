@@ -4,7 +4,7 @@
       <button ion-button (click)="closeModal()">Close</button>
     </ion-buttons>
     <ion-title>
-      {{isBroadcast ? "Compose a broadcast" : "Compose a message"}}
+      {{contentMessage}}
     </ion-title>
     <ion-buttons end>
         <button ion-button (click)="composePost(tempPost)">Post</button>
@@ -17,8 +17,8 @@
   </div>
   <form id="composePost-form3" (ngSubmit)="composePost(tempPost)">
     <ion-item text-wrap id="composePost-input9">
-      <ion-label></ion-label>
-      <ion-textarea type="text" placeholder="Update everyone about?" name="postText" [(ngModel)]="tempPost.text" autocomplete="on" autocorrect="on"></ion-textarea>
+      <textarea #post id="post" class="post" type="text" placeholder="Update everyone about?" name="post" 
+       [(ngModel)]="tempPost.text" autocomplete="on" autocorrect="on" (keyup)="resize()"></textarea>
     </ion-item>
   </form>
 </ion-content>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { NavParams, ViewController } from 'ionic-angular';
 import { FirebaseServiceProvider } from '../../providers/firebaseService/firebaseService';
 import { User } from '../../models/user';
@@ -14,11 +14,13 @@ import { ContentType } from '../../models/contentType';
   templateUrl: 'composePost.html',
 })
 export class ComposePostPage {
+  @ViewChild('post') post: ElementRef;
   contentType: ContentType;
   firebaseStorage = firebase.storage();
   user = {} as User;
   tempPost = {} as Post;
   error = '';
+  contentMessage = '' as string;
   constructor(public firebaseService: FirebaseServiceProvider,
               private userService: UserServiceProvider,
               private navParams: NavParams,
@@ -31,6 +33,8 @@ export class ComposePostPage {
 
   async dataSetup() {
     this.contentType = this.navParams.get('contentType');
+    this.contentMessage = this.contentType === ContentType.Broadcast ?
+     'Compose a broadcast' : 'Compose a message';
     const userGrab = await this.userService.currentUserInfo();
     this.user = userGrab as User;
   }
@@ -72,6 +76,11 @@ export class ComposePostPage {
         this.error = 'Key not initialized error with ContentType';
       }
     }
+  }
+
+  resize() {
+    this.post.nativeElement.style.height = 'auto';
+    this.post.nativeElement.style.height = this.post.nativeElement.scrollHeight + 'px';
   }
 
   closeModal() {

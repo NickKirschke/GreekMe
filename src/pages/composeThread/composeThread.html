@@ -16,10 +16,9 @@
     <p>{{error}}</p>
   </div>
   <form id="composeThread-form3" (ngSubmit)="composeThread(tempPost)">
-    <ion-item text-wrap id="composeThread-input9">
-      <ion-label></ion-label>
-      <ion-textarea type="text" placeholder="Respond with?" name="commentText" [(ngModel)]="tempPost.text" autocomplete="on"
-        autocorrect="on"></ion-textarea>
+    <ion-item id="composeThread-input9">
+      <textarea #comment id="comment" type="text" class="comment" placeholder="Respond with?" name="comment" 
+        [(ngModel)]="tempPost.text" autocomplete="on" autocorrect="on" (keyup)="resize()"></textarea>
     </ion-item>
   </form>
 </ion-content>

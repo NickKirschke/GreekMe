@@ -134,10 +134,9 @@ export class ProfilePage {
       if (data) {
         if (data.name === 'Log Out') {
           this.logout();
+        } else if (data.name === 'Edit Profile') {
+          this.editProfile();
         }
-        // else if (data.name === 'Edit Profile') {
-        //   this.editProfile();
-        // }
       }
     });
   }

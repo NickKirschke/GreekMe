@@ -30,6 +30,7 @@ import { NgPipesModule } from 'ngx-pipes';
 import { PostRowComponent } from '../components/post-row/post-row';
 import { PopOverComponent } from '../components/pop-over/pop-over';
 import { PipesModule } from '../pipes/pipes.module';
+import { Camera } from '@ionic-native/camera';
 
 @NgModule({
   declarations: [
@@ -86,6 +87,7 @@ import { PipesModule } from '../pipes/pipes.module';
   providers: [
     StatusBar,
     SplashScreen,
+    Camera,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     FirebaseServiceProvider,
     UserServiceProvider,

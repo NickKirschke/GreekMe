@@ -16,16 +16,18 @@
     <ion-row>
       <ion-col col-12>
         <div class="profile-image">
-          <img id="profilePicture" src="{{user.avatar_url}}" />
+          <img id="profilePicture" src="{{user.avatarUrl}}" />
         </div>
       </ion-col>
     </ion-row>
-    <ion-row style="height:200px;">
+    <ion-row>
+      <h6 class="profile-picture" col-12 (click)="changePhoto()">Change Profile Picture</h6>
       <ion-col col-12>
         <h6 class="role">{{user.role}}</h6>
               <ion-label>Update you bio:</ion-label>
-              <ion-textarea class="bio" autocomplete="on" autocorrect="on" placeholder="Tell everyone a little about yourself!" [(ngModel)]="user.bio" name="bio">
-              </ion-textarea>
+              <textarea #bio id="bio" class="bio" autocomplete="on" autocorrect="on" 
+              placeholder="Tell everyone a little about yourself!" [(ngModel)]="user.bio"
+              name="bio" rows="1" (keyup)="resize()" maxlength="150"> </textarea>
       </ion-col>
     </ion-row>
   </ion-grid>

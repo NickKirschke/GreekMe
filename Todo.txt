@@ -1,11 +1,8 @@
-Transform all navparams data transfers to one DATA attribute to reduce number of calls.
-Consider changing up the way updates are pushed out. Currently only update relative 
- not entire item in locations.
-push notifications
-Signup should send email verification
+
+on hold - push notifications
+Edit profile - photo, then fields in an input list
+sanitize all text coming in.
 Settings page for notifications etc
-notifications
-Edit profile
 cloud function to update all posts with the new photo
 Set a post load limit, aka only 10 of the most recent broadcats appear, 20 for feed
 Handle event list being empty
@@ -13,6 +10,18 @@ slight addition in margin on the bottom of the like badge, use rem instead of px
 global accent color, GREY
 Make the load screen better, Show gm page for a second (cordova plugins)
 look at all cordova plugins
+stacked labels
+Event repeat and alarms
 /// End game
 refactor DB with everyone under school
 Edit Event tab
+
+
+
+Steps to change a profile picture,
+prompt user for access to camera/photos,
+have the user choose/take a photo,
+Upload to storage,
+get the storage downloadURL,
+store that in the users avatarUrl,
+update all posts of the user to the new photo via cloud function

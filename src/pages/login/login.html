@@ -7,7 +7,7 @@
   </div>
 
   <ion-list class="center-form" id="login-list1">
-    <form class="input-form" (ngSubmit)="login(user)"[formGroup]="loginForm">
+    <form class="input-form" (ngSubmit)="login(user)" [formGroup]="loginForm">
       <ion-item id="login-input1" class="ion-item-top">
         <ion-label>Email</ion-label>
         <ion-input type="email" name="user email" formControlName="email" required></ion-input>
