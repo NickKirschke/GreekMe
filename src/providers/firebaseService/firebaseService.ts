@@ -144,14 +144,8 @@ export class FirebaseServiceProvider {
   addUserDetails(userDetails: User) {
     return new Promise((resolve) => {
       userDetails.bio = 'A sample bio: Lorem ipsum dolor sit amet, consectetur adipiscing elit.' +
-      'Sed placerat nulla sit amet tempor viverra. Cras egestas facilisis metus in consequat. ' +
-      'Vivamus scelerisque eros non imperdiet scelerisque. Aliquam at ante ante. Phasellus' +
-      ' commodo, mauris sit amet hendrerit molestie, massa ligula iaculis lorem, sed posuere' +
-      ' risus nibh varius ligula. Mauris ut turpis blandit leo imperdiet egestas. Curabitur' +
-      ' tincidunt neque non orci varius, sed egestas risus faucibus. ';
+      'Sed placerat nulla sit amet tempor viverra.';
       userDetails.avatarUrl = '../../assets/icon/GMIcon.png';
-      // 'https://firebasestorage.googleapis.com/v0/b/greekme-' +
-      // '7475a.appspot.com/o/GM_Default.png?alt=media&token=6bc30d40-17a2-40bb-9af7-edff78112780';
       this.afDB.object(`/users/${userDetails.uid}`).set(userDetails);
       this.storage.set('user', JSON.stringify(userDetails)).then(() => resolve(true));
     });

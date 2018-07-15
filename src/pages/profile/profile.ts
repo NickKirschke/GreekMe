@@ -116,6 +116,17 @@ export class ProfilePage {
   editProfile() {
     const myModal = this.modal.create(EditProfilePage, { user: JSON.stringify(this.user) });
     myModal.present();
+    myModal.onWillDismiss((userData) => {
+      if (userData) {
+        const updatedUser = JSON.parse(userData) as User;
+        Object.keys(this.user).forEach((aProperty) => {
+          // If the value of the new user is different, replace it on the previous one
+          if (this.user[aProperty] !==  updatedUser[aProperty]) {
+            this.user[aProperty] = updatedUser[aProperty];
+          }
+        });
+      }
+    });
   }
 
   goToEvent(key: string) {

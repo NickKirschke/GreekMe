@@ -2,6 +2,10 @@ import { Component, ViewChild, ElementRef } from '@angular/core';
 import { NavController, NavParams, ViewController } from 'ionic-angular';
 import { User } from '../../models/user';
 import { Camera, CameraOptions } from '@ionic-native/camera';
+import { storage } from 'firebase';
+import * as firebase from 'firebase/app';
+import { FirebaseServiceProvider } from '../../providers/firebaseService/firebaseService';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'page-editProfile',
@@ -14,7 +18,8 @@ export class EditProfilePage {
   constructor(public navCtrl: NavController,
               private navParams: NavParams,
               private view: ViewController,
-              private camera: Camera) {
+              private camera: Camera,
+              private storage: Storage) {
   }
 
   ionViewWillEnter() {
@@ -25,28 +30,46 @@ export class EditProfilePage {
     this.resize();
   }
 
-  changePhoto() {
-    console.log('click');
-    const options: CameraOptions = {
-      quality: 70,
-      destinationType: this.camera.DestinationType.DATA_URL,
-      encodingType: this.camera.EncodingType.JPEG,
-      mediaType: this.camera.MediaType.PICTURE,
-    };
+  async changePhoto() {
+    try {
+      console.log('click');
+      const options: CameraOptions = {
+        quality: 50,
+        targetHeight: 136,
+        targetWidth: 99,
+        destinationType: this.camera.DestinationType.DATA_URL,
+        encodingType: this.camera.EncodingType.JPEG,
+        mediaType: this.camera.MediaType.PICTURE,
+        correctOrientation: true,
+      };
 
-    this.camera.getPicture(options).then(
-    (imageData) => {
-      // imageData is either a base64 encoded string or a file URI
-      // If it's base64 (DATA_URL):
-      this.user.avatarUrl = 'data:image/jpeg;base64,' + imageData;
-    },
-    (err) => {
-     // Handle error
-    });
+      const result = await this.camera.getPicture(options);
+
+      const image = `data:image/jpeg;base64,${result}`;
+
+      const pictures = storage().ref(`${this.user.organizationId}/profilePhotos/${this.user.uid}`);
+      const uploadResult = await pictures.putString(image, 'data_url');
+      this.user.avatarUrl = await uploadResult.ref.getDownloadURL();
+    } catch (error) {
+      console.log('ERROR', error.code);
+    }
   }
   resize() {
     this.bio.nativeElement.style.height = 'auto';
     this.bio.nativeElement.style.height = this.bio.nativeElement.scrollHeight + 'px';
+  }
+
+  async updatedProfile() {
+    try {
+      const updates = [];
+      const jsonUser = JSON.stringify(this.user);
+      updates[`users/${this.user.uid}/`] = jsonUser;
+      await firebase.database().ref().update(updates);
+      await this.storage.set('user', jsonUser);
+      this.view.dismiss(jsonUser);
+    } catch (error) {
+      console.log('ERROR', error.code);
+    }
   }
 
   closeModal() {

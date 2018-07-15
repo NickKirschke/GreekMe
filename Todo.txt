@@ -1,6 +1,7 @@
 
 on hold - push notifications
 Edit profile - photo, then fields in an input list
+transform all updates to async
 sanitize all text coming in.
 Settings page for notifications etc
 cloud function to update all posts with the new photo
