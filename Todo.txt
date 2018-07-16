@@ -1,10 +1,11 @@
 
 on hold - push notifications
-Edit profile - photo, then fields in an input list
-transform all updates to async
+Edit profile - photo (needs option to choose a photo, then fields in an input list
+cloud function to update all posts with the new photo
+transform all updates to async !!! update is deprecated, use set now.
 sanitize all text coming in.
 Settings page for notifications etc
-cloud function to update all posts with the new photo
+
 Set a post load limit, aka only 10 of the most recent broadcats appear, 20 for feed
 Handle event list being empty
 slight addition in margin on the bottom of the like badge, use rem instead of px
@@ -13,6 +14,7 @@ Make the load screen better, Show gm page for a second (cordova plugins)
 look at all cordova plugins
 stacked labels
 Event repeat and alarms
+fix import on firebase
 /// End game
 refactor DB with everyone under school
 Edit Event tab
