@@ -1,5 +1,6 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { NavController, NavParams, ViewController } from 'ionic-angular';
+import { NavController, NavParams, ViewController, ActionSheetController,
+  LoadingController } from 'ionic-angular';
 import { User } from '../../models/user';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { storage } from 'firebase';
@@ -18,7 +19,9 @@ export class EditProfilePage {
               private navParams: NavParams,
               private view: ViewController,
               private camera: Camera,
-              private storage: Storage) {
+              private storage: Storage,
+              public actionSheetCtrl: ActionSheetController,
+              public loadingCtrl: LoadingController) {
   }
 
   ionViewWillEnter() {
@@ -29,30 +32,57 @@ export class EditProfilePage {
     this.resize();
   }
 
-  async changePhoto() {
+  async photoMenu() {
+    const actionSheet = this.actionSheetCtrl.create({
+      enableBackdropDismiss: true,
+      buttons: [
+        {
+          text: 'Take a Photo',
+          handler: () => {
+            this.choosePhoto(1);
+          },
+        }, {
+          text: 'Camera Roll',
+          handler: () => {
+            this.choosePhoto(0);
+          },
+        }, {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+      ],
+    });
+    actionSheet.present();
+  }
+
+  async choosePhoto(aSourceType: number) {
+    const loader = this.loadingCtrl.create({
+      content: 'Loading photo...',
+    });
     try {
-      console.log('click');
       const options: CameraOptions = {
-        quality: 80,
-        targetHeight: 136,
-        targetWidth: 99,
+        quality: 50,
+        targetHeight: 1000,
+        targetWidth: 1000,
         destinationType: this.camera.DestinationType.DATA_URL,
+        sourceType: aSourceType,
         encodingType: this.camera.EncodingType.JPEG,
-        mediaType: this.camera.MediaType.PICTURE,
         correctOrientation: true,
       };
 
       const result = await this.camera.getPicture(options);
-
+      loader.present();
       const image = `data:image/jpeg;base64,${result}`;
 
       const pictures = storage().ref(`${this.user.organizationId}/profilePhotos/${this.user.uid}`);
       const uploadResult = await pictures.putString(image, 'data_url');
       this.user.avatarUrl = await uploadResult.ref.getDownloadURL();
+      loader.dismiss();
     } catch (error) {
       console.log('ERROR', error.code);
     }
   }
+
   resize() {
     this.bio.nativeElement.style.height = 'auto';
     this.bio.nativeElement.style.height = this.bio.nativeElement.scrollHeight + 'px';
@@ -60,7 +90,6 @@ export class EditProfilePage {
 
   async updateProfile() {
     try {
-      const updates = [];
       const jsonUser = JSON.stringify(this.user);
       await firebase.database().ref(`users/${this.user.uid}/`).set(this.user);
       await this.storage.set('user', jsonUser);

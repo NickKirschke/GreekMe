@@ -31,6 +31,7 @@ import { PostRowComponent } from '../components/post-row/post-row';
 import { PopOverComponent } from '../components/pop-over/pop-over';
 import { PipesModule } from '../pipes/pipes.module';
 import { Camera } from '@ionic-native/camera';
+import { PhotoLibrary } from '@ionic-native/photo-library';
 
 @NgModule({
   declarations: [
@@ -88,6 +89,7 @@ import { Camera } from '@ionic-native/camera';
     StatusBar,
     SplashScreen,
     Camera,
+    PhotoLibrary,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     FirebaseServiceProvider,
     UserServiceProvider,
