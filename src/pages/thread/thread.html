@@ -21,6 +21,6 @@
   </ion-card>
   <ion-list>
     <post-row text-wrap *ngFor="let item of (postItems$ |  async); let i = index" class="chat-boxes" [post]="item"
-      [showComments]="false" [showLikes]="false" ></post-row>
+      [showComments]="false" [showLikes]="false" [user]="user"></post-row>
   </ion-list>
 </ion-content>

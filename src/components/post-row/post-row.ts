@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, SimpleChanges, OnChanges, SimpleChange, } from '@angular/core';
 import { Post } from '../../models/post';
 import * as firebase from 'firebase/app';
 import { User } from '../../models/user';
@@ -12,12 +12,23 @@ import { ThreadPage } from '../../pages/thread/thread';
   templateUrl: 'post-row.html',
 })
 export class PostRowComponent {
-  @Input('post') post : Post;
+  @Input('post') post: Post;
   @Input('user') user: User;
   @Input('userLikeItems') userLikeItems: Set<string> = new Set<string>();
   @Input('showComments') showComments : boolean = true;
   @Input('showLikes') showLikes : boolean = true;
+  avatar = '' as string;
   constructor(public navCtrl: NavController) {
+  }
+
+  ngOnInit() {
+    console.log('ngOnInit');
+    this.setupAvatar();
+  }
+
+  async setupAvatar() {
+    const path = `${this.user.organizationId}/profilePhotos/${this.post.uid}`;
+    this.avatar = await firebase.storage().ref(path).getDownloadURL();
   }
 
   goToProfile() {
@@ -79,9 +90,11 @@ export class PostRowComponent {
 
   itemSelected() {
     const aPost = JSON.stringify(this.post);
+    const aUser = JSON.stringify(this.user);
     const data = {
       organizationId: this.user.organizationId,
       post: aPost,
+      user: aUser,
     };
     this.navCtrl.push(ThreadPage, data);
   }

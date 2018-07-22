@@ -1,4 +1,3 @@
-import { UserLike } from './userLike';
 import { ContentType } from './contentType';
 export interface Post {
   avatarUrl: string;

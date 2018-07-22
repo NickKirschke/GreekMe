@@ -1,11 +1,12 @@
-
+Currently the data manipulation happens in the greekme view vs the component. Component is dumb
 on hold - push notifications
 Edit profile - Fields in an input list
-cloud function to update all posts with the new photo
 transform all updates to async !!! update is deprecated, use set now.
 sanitize all text coming in.
 Settings page for notifications etc
 
+
+profile image changes size based on picture
 Set a post load limit, aka only 10 of the most recent broadcats appear, 20 for feed
 Handle event list being empty
 slight addition in margin on the bottom of the like badge, use rem instead of px
@@ -20,6 +21,11 @@ refactor DB with everyone under school
 Edit Event tab
 
 update all posts of the user to the new photo via cloud function
-Alternative to the cloud function updating set user.avatarUrl = storageLink,
- from there set the broadcastImage or userImage to the download storageLink
+Storage link works, however run into an issue with updating when a new picture is put in
+look into angular life cycles
 
+
+
+
+A post doesnt store a user's url, that is retrieved from their "user" spot on the DB
+Because when a user updated their photo they update their avatarURL

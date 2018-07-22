@@ -21,6 +21,6 @@
   </div>
   <ion-list>
     <post-row text-wrap *ngFor="let item of broadcastItems | iterable; let i = index; trackBy: trackByFn" class="chat-boxes"
-     [post]="item.key" [user]="user" [userLikeItems]="userLikeItems"></post-row>
+     [post]="item.key" [user]="user" [userLikeItems]="userLikeItems" #PostRow></post-row>
   </ion-list> 
 </ion-content>

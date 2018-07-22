@@ -2,7 +2,8 @@
   "extends": "tslint-config-airbnb",
   "rules": {
     "no-duplicate-variable": true,
-    "no-unused-variable": [true]
+    "no-unused-variable": [true],
+    "allow-leading-underscore": true,
   },
   "rulesDirectory": ["node_modules/tslint-eslint-rules/dist/rules"]
 }

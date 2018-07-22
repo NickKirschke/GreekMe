@@ -7,6 +7,7 @@ import 'firebase/storage';
 import { ComposeThreadPage } from '../composeThread/composeThread';
 import { Observable } from 'rxjs/Observable';
 import { ContentType } from '../../models/contentType';
+import { User } from '../../models/user';
 /**
  * Generated class for the ThreadPage page.
  *
@@ -23,6 +24,7 @@ export class ThreadPage {
   postItems$: Observable<any>;
   post = {} as Post;
   organizationId = '';
+  user = {} as User;
   constructor(public navCtrl: NavController,
               private navParams: NavParams,
               private firebaseService: FirebaseServiceProvider,
@@ -37,6 +39,7 @@ export class ThreadPage {
     const data = this.navParams.data;
     this.post = JSON.parse(data.post);
     this.organizationId = data.organizationId;
+    this.user = JSON.parse(data.user);
 
     if (this.post.contentType === ContentType.Broadcast) {
       this.postItems$ = this.firebaseService

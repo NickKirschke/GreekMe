@@ -14,6 +14,7 @@ import { PopOverComponent } from '../../components/pop-over/pop-over';
 import { EditProfilePage } from '../editProfile/editProfile';
 import * as moment from 'moment';
 import { Subscription } from 'rxjs';
+import * as firebase from 'firebase/app';
 @Component({
   selector: 'page-profile',
   templateUrl: 'profile.html',
@@ -30,6 +31,7 @@ export class ProfilePage {
   userLikeListRef: AngularFireList<any>;
   userLikeItems: Set<string> = new Set<string>();
   userLikeSubscription: Subscription;
+  avatar = '' as string;
 
   constructor(private afAuth: AngularFireAuth,
               public navCtrl: NavController,
@@ -44,6 +46,11 @@ export class ProfilePage {
 
   ionViewWillLoad() {
     this.dataSetup();
+  }
+
+  async ionViewWillEnter() {
+    const path = `${this.user.organizationId}/profilePhotos/${this.user.uid}`;
+    this.avatar = await firebase.storage().ref(path).getDownloadURL();
   }
 
   async dataSetup() {
@@ -114,16 +121,20 @@ export class ProfilePage {
   }
 
   editProfile() {
-    const myModal = this.modal.create(EditProfilePage, { user: JSON.stringify(this.user) });
+    const myModal = this.modal.create(EditProfilePage, {
+      user: JSON.stringify(this.user),
+      avatar: this.avatar,
+    });
     myModal.present();
     myModal.onWillDismiss((userData) => {
       if (userData) {
-        const updatedUser = JSON.parse(userData) as User;
+        const updatedUser = JSON.parse(userData.user) as User;
         Object.keys(this.user).forEach((aProperty) => {
           // If the value of the new user is different, replace it on the previous one
           if (this.user[aProperty] !==  updatedUser[aProperty]) {
             this.user[aProperty] = updatedUser[aProperty];
           }
+          this.avatar = userData.avatar;
         });
       }
     });

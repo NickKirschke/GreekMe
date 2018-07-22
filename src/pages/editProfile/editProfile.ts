@@ -14,7 +14,7 @@ import { Storage } from '@ionic/storage';
 export class EditProfilePage {
   @ViewChild('bio') bio: ElementRef;
   user = {} as User;
-
+  avatar = '' as string;
   constructor(public navCtrl: NavController,
               private navParams: NavParams,
               private view: ViewController,
@@ -24,8 +24,9 @@ export class EditProfilePage {
               public loadingCtrl: LoadingController) {
   }
 
-  ionViewWillEnter() {
-    this.user = JSON.parse(this.navParams.get('user'));
+  async ionViewWillEnter() {
+    this.user = JSON.parse(this.navParams.data.user);
+    this.avatar = this.navParams.data.avatar;
   }
 
   ionViewDidEnter() {
@@ -73,10 +74,9 @@ export class EditProfilePage {
       const result = await this.camera.getPicture(options);
       loader.present();
       const image = `data:image/jpeg;base64,${result}`;
-
-      const pictures = storage().ref(`${this.user.organizationId}/profilePhotos/${this.user.uid}`);
-      const uploadResult = await pictures.putString(image, 'data_url');
-      this.user.avatarUrl = await uploadResult.ref.getDownloadURL();
+      this.avatar = image;
+      // this.user.avatarUrl = await uploadResult.ref.getDownloadURL();
+      // this.avatar = await uploadResult.ref.getDownloadURL();
       loader.dismiss();
     } catch (error) {
       console.log('ERROR', error.code);
@@ -90,10 +90,15 @@ export class EditProfilePage {
 
   async updateProfile() {
     try {
-      const jsonUser = JSON.stringify(this.user);
+      const data = {
+        user: JSON.stringify(this.user),
+        avatar: this.avatar,
+      };
       await firebase.database().ref(`users/${this.user.uid}/`).set(this.user);
-      await this.storage.set('user', jsonUser);
-      this.view.dismiss(jsonUser);
+      const pictures = storage().ref(`${this.user.organizationId}/profilePhotos/${this.user.uid}`);
+      await pictures.putString(this.avatar, 'data_url');
+      await this.storage.set('user', JSON.stringify(this.user));
+      this.view.dismiss(data);
     } catch (error) {
       console.log('ERROR', error.code);
     }
