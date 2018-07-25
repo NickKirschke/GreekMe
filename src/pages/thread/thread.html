@@ -13,14 +13,14 @@
 <ion-content>
   <ion-card>
     <ion-card-header>
-      {{broadcast.name}} said:
+      {{post.name}} said:
     </ion-card-header>
     <ion-card-content>
-      {{broadcast.text}}
+      {{post.text}}
     </ion-card-content>
   </ion-card>
   <ion-list>
-    <broadcast-row text-wrap *ngFor="let item of (broadcastItems$ |  async); let i = index" class="chat-boxes" [broadcast]="item"
-      [showComments]="false" [showLikes]="false" ></broadcast-row>
+    <post-row text-wrap *ngFor="let item of (postItems$ |  async); let i = index" class="chat-boxes" [post]="item"
+      [showComments]="false" [showLikes]="false" [user]="user"></post-row>
   </ion-list>
 </ion-content>

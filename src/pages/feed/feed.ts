@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { NavController, ModalController } from 'ionic-angular';
 import { AngularFireList } from 'angularfire2/database';
-import { FirebaseServiceProvider } from '../../providers/firebase-service/firebase-service';
+import { FirebaseServiceProvider } from '../../providers/firebaseService/firebaseService';
 import { AngularFireAuth } from 'angularfire2/auth/auth';
 import { User } from '../../models/user';
-import { Broadcast } from '../../models/broadcast';
-import { UserServiceProvider } from '../../providers/user-service/user-service';
+import { Post } from '../../models/post';
+import { UserServiceProvider } from '../../providers/userService/userService';
 import 'firebase/storage';
-import { ComposeBroadcastPage } from '../compose-broadcast/compose-broadcast';
+import { ComposePostPage } from '../composePost/composePost';
 import { ContentType } from '../../models/contentType';
 import { Subscription } from 'rxjs';
 
@@ -18,12 +18,11 @@ import { Subscription } from 'rxjs';
 export class FeedPage {
   user = {} as User;
   messageItemRef: AngularFireList<any>;
-  messageItems: Map<string, Broadcast> = new Map<string, Broadcast>();
+  messageItems: Map<string, Post> = new Map<string, Post>();
   messageItemSubscription: Subscription;
   userLikeListRef: AngularFireList<any>;
   userLikeItems: Set<string> = new Set<string>();
   userLikeSubscription: Subscription;
-  contentType: ContentType = ContentType.Message;
 
   constructor(private afAuth: AngularFireAuth,
               public navCtrl: NavController,
@@ -33,7 +32,7 @@ export class FeedPage {
   }
 
   goToComposeFeed() {
-    const myModal = this.modal.create(ComposeBroadcastPage, { contentType: this.contentType });
+    const myModal = this.modal.create(ComposePostPage, { contentType: ContentType.Message });
     myModal.present();
   }
 
@@ -47,7 +46,7 @@ export class FeedPage {
   }
 
   buildSubscriptions() {
-    let message : Broadcast;
+    let message : Post;
     // Subscriptions for handling the user's likes and the broadcasts on the page
     // Data is passed into a Set
     this.userLikeSubscription = this.userLikeListRef.stateChanges().subscribe((action) => {
@@ -69,14 +68,20 @@ export class FeedPage {
         };
         this.messageItems.set(message.key, message);
       } else if (action.type === 'child_changed') {
-        const expectedIconName = this.userLikeItems.has(action.key) ? 'heart-outline' : 'heart';
-        // Construct the replacement message
+        const previousMessage = this.messageItems.get(action.key);
+        const expectedIconName = previousMessage.iconName;
+        // Construct the replacement broadcast
         message = {
           key: action.payload.key,
           ...action.payload.val(),
           iconName: expectedIconName,
         };
-        this.messageItems.set(message.key, message);
+        Object.keys(this.messageItems.get(message.key)).forEach((aProperty) => {
+          // If the value of the new broadcast is different, replace it on the previous one
+          if (previousMessage[aProperty] !==  message[aProperty]) {
+            previousMessage[aProperty] = message[aProperty];
+          }
+        });
       }
     });
   }
@@ -85,7 +90,7 @@ export class FeedPage {
     this.afAuth.auth.signOut();
   }
 
-  trackByFn(index: number, item: Broadcast) {
+  trackByFn(index: number, item: Post) {
     return item.key;
   }
 

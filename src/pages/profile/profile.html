@@ -20,7 +20,7 @@
     <ion-row>
       <ion-col col-12>
         <div class="profile-image">
-          <img id="profilePicture" src="{{user.avatarUrl}}" />
+          <img id="profilePicture" [src]="avatar" />
         </div>
       </ion-col>
     </ion-row>
@@ -49,9 +49,10 @@
     </ion-row>
     <div [ngSwitch]="profileContent">
       <div *ngSwitchCase="'posts'">
-          <h4 *ngIf="!postItems$" class="emptyMessage">You have not posted yet</h4>
+          <h4 *ngIf="postItems.size < 1" class="emptyMessage">You have not posted yet</h4>
       <ion-list class="pepSwitcher">
-        <broadcast-row text-wrap *ngFor="let item of (postItems$ |  async); let i = index" class="chat-boxes" [broadcast]="item" [user]="user"></broadcast-row>
+        <post-row text-wrap *ngFor="let item of postItems | iterable; let i = index; trackBy: trackByFn" class="chat-boxes"
+        [post]="item.key" [user]="user" [userLikeItems]="userLikeItems"></post-row>
       </ion-list>
       </div>
       <div *ngSwitchCase="'eventsAttending'">

@@ -9,27 +9,29 @@ import { TabsControllerPage } from '../pages/tabs-controller/tabs-controller';
 import { LoginPage } from '../pages/login/login';
 import { SignupPage } from '../pages/signup/signup';
 import { ProfilePage } from '../pages/profile/profile';
-import { ComposeBroadcastPage } from '../pages/compose-broadcast/compose-broadcast';
-import { CreateEventPage } from '../pages/create-event/create-event';
-import { EditProfilePage } from '../pages/edit-profile/edit-profile';
+import { ComposePostPage } from '../pages/composePost/composePost';
+import { CreateEventPage } from '../pages/createEvent/createEvent';
+import { EditProfilePage } from '../pages/editProfile/editProfile';
 import { ThreadPage } from '../pages/thread/thread';
-import { ComposeThreadPage } from '../pages/compose-thread/compose-thread';
+import { ComposeThreadPage } from '../pages/composeThread/composeThread';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import { FirebaseServiceProvider } from '../providers/firebase-service/firebase-service';
+import { FirebaseServiceProvider } from '../providers/firebaseService/firebaseService';
 import { HttpModule } from '@angular/http';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireModule } from 'angularfire2';
 import { FIREBASE_CONST } from './app.firebase.config';
 import { AngularFireAuthModule } from 'angularfire2/auth/auth.module';
 import { IonicStorageModule } from '@ionic/storage';
-import { UserServiceProvider } from '../providers/user-service/user-service';
+import { UserServiceProvider } from '../providers/userService/userService';
 import { MomentModule } from 'angular2-moment';
-import { EventViewPage } from '../pages/event-view/event-view';
+import { EventViewPage } from '../pages/eventView/eventView';
 import { NgPipesModule } from 'ngx-pipes';
-import { BroadcastRowComponent } from '../components/broadcast-row/broadcast-row';
+import { PostRowComponent } from '../components/post-row/post-row';
 import { PopOverComponent } from '../components/pop-over/pop-over';
 import { PipesModule } from '../pipes/pipes.module';
+import { Camera } from '@ionic-native/camera';
+import { PhotoLibrary } from '@ionic-native/photo-library';
 
 @NgModule({
   declarations: [
@@ -41,13 +43,13 @@ import { PipesModule } from '../pipes/pipes.module';
     LoginPage,
     SignupPage,
     ProfilePage,
-    ComposeBroadcastPage,
+    ComposePostPage,
     CreateEventPage,
     EditProfilePage,
     ThreadPage,
     EventViewPage,
     ComposeThreadPage,
-    BroadcastRowComponent,
+    PostRowComponent,
     PopOverComponent,
 
   ],
@@ -74,18 +76,20 @@ import { PipesModule } from '../pipes/pipes.module';
     LoginPage,
     SignupPage,
     ProfilePage,
-    ComposeBroadcastPage,
+    ComposePostPage,
     CreateEventPage,
     EditProfilePage,
     ThreadPage,
     EventViewPage,
     ComposeThreadPage,
-    BroadcastRowComponent,
+    PostRowComponent,
     PopOverComponent,
   ],
   providers: [
     StatusBar,
     SplashScreen,
+    Camera,
+    PhotoLibrary,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     FirebaseServiceProvider,
     UserServiceProvider,

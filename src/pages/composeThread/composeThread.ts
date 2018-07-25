@@ -1,25 +1,26 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { NavParams, ViewController } from 'ionic-angular';
-import { FirebaseServiceProvider } from '../../providers/firebase-service/firebase-service';
+import { FirebaseServiceProvider } from '../../providers/firebaseService/firebaseService';
 import { User } from '../../models/user';
-import { Broadcast } from '../../models/broadcast';
-import { UserServiceProvider } from '../../providers/user-service/user-service';
+import { Post } from '../../models/post';
+import { UserServiceProvider } from '../../providers/userService/userService';
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import * as moment from 'moment';
 import { ContentType } from '../../models/contentType';
 
 @Component({
-  selector: 'page-compose-thread',
-  templateUrl: 'compose-thread.html',
+  selector: 'page-composeThread',
+  templateUrl: 'composeThread.html',
 })
 export class ComposeThreadPage {
+  @ViewChild('comment') comment: ElementRef;
   contentType: ContentType;
   firebaseStorage = firebase.storage();
   user = {} as User;
-  tempBroadcast = {} as Broadcast;
+  tempPost = {} as Post;
   error: string = '';
-  broadcastKey: string = '';
+  postKey: string = '';
   constructor(private firebaseService: FirebaseServiceProvider,
               private userService: UserServiceProvider,
               private navParams: NavParams,
@@ -31,8 +32,9 @@ export class ComposeThreadPage {
   }
 
   async dataSetup() {
-    this.broadcastKey = this.navParams.get('key');
-    this.contentType = this.navParams.get('contentType');
+    const data = this.navParams.data;
+    this.postKey = data.key;
+    this.contentType = data.contentType;
     const userGrab = await this.userService.currentUserInfo();
     this.user = userGrab as User;
   }
@@ -40,53 +42,57 @@ export class ComposeThreadPage {
   getNumOfComments() {
     return new Promise((resolve) => {
       const numOfCommentsRef = firebase.database().ref(`/organization/${
-        this.user.organizationId}/${this.contentType}/${this.broadcastKey}/numOfComments/`);
+        this.user.organizationId}/${this.contentType}/${this.postKey}/numOfComments/`);
       numOfCommentsRef.on('value', (snapshot) => {
         resolve(snapshot.val());
       });
     });
   }
 
-  async updateUserPostListAndCommentNumber(tempBroadcast: Broadcast) {
+  async updateUserPostListAndCommentNumber(tempPost: Post) {
     let numOfComments;
     numOfComments = await this.getNumOfComments();
     const updates = {};
-    updates[`/users/${this.user.uid}/postList/${tempBroadcast.key}`] = tempBroadcast;
     updates[`/organization/${this.user.organizationId}/${this.contentType}/${
-      this.broadcastKey}/numOfComments/`] = numOfComments + 1;
+      this.postKey}/numOfComments/`] = numOfComments + 1;
     firebase.database().ref().update(updates).then(() => {
     }).catch((error) => {
       console.log(error);
     });
   }
 
-  composeThread(tempBroadcast: Broadcast) {
-    if (tempBroadcast.text == null || tempBroadcast.text === '') {
+  composeThread(tempPost: Post) {
+    if (tempPost.text == null || tempPost.text === '') {
       this.error = 'Message cannot be blank!';
     } else {
       this.error = '';
-      tempBroadcast.avatarUrl = this.user.avatarUrl;
-      tempBroadcast.uid = this.user.uid;
-      tempBroadcast.name = this.user.name;
-      tempBroadcast.date = moment().toISOString();
-      tempBroadcast.numOfComments = 0;
-      tempBroadcast.numOfLikes = 0;
-      console.log(tempBroadcast.key);
+      tempPost.avatarUrl = this.user.avatarUrl;
+      tempPost.uid = this.user.uid;
+      tempPost.name = this.user.name;
+      tempPost.date = moment().toISOString();
+      tempPost.numOfComments = 0;
+      tempPost.numOfLikes = 0;
+      tempPost.contentType = ContentType.Thread;
       if (this.contentType === ContentType.Broadcast) {
-        tempBroadcast.key = this.firebaseService
-        .addCommentToBroadcast(tempBroadcast, this.user.organizationId, this.broadcastKey);
+        tempPost.key = this.firebaseService
+        .addCommentToBroadcast(tempPost, this.user.organizationId, this.postKey);
       } else if (this.contentType === ContentType.Message) {
-        tempBroadcast.key = this.firebaseService
-        .addCommentToMessage(tempBroadcast, this.user.organizationId, this.broadcastKey);
+        tempPost.key = this.firebaseService
+        .addCommentToMessage(tempPost, this.user.organizationId, this.postKey);
       }
-      if (tempBroadcast.key) {
-        this.updateUserPostListAndCommentNumber(tempBroadcast);
+      if (tempPost.key) {
+        this.updateUserPostListAndCommentNumber(tempPost);
         this.view.dismiss();
       } else {
         // Add logging here
         this.error = 'Key not initialized error with ContentType';
       }
     }
+  }
+
+  resize() {
+    this.comment.nativeElement.style.height = 'auto';
+    this.comment.nativeElement.style.height = this.comment.nativeElement.scrollHeight + 'px';
   }
 
   closeModal() {

@@ -1,15 +1,16 @@
-import { UserLike } from './userLike';
-export interface Broadcast {
+import { ContentType } from './contentType';
+export interface Post {
   avatarUrl: string;
   text: string;
   name: string;
   date: any;
   uid: string;
   key: string;
-  commentList: Broadcast[];
-  likeList: UserLike[];
+  commentList: Post[];
+  likeList: any;
   numOfComments: number;
   numOfLikes: number;
   liked: boolean;
   iconName: string;
+  contentType: ContentType;
 }

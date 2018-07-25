@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
-import { BroadcastRowComponent } from './broadcast-row/broadcast-row';
+import { PostRowComponent } from './post-row/post-row';
 import { PopOverComponent } from './pop-over/pop-over';
+
 @NgModule({
-  declarations: [BroadcastRowComponent,
+  declarations: [PostRowComponent,
     PopOverComponent],
   imports: [],
-  exports: [BroadcastRowComponent,
+  exports: [PostRowComponent,
     PopOverComponent],
 })
 export class ComponentsModule {}

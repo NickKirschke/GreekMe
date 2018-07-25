@@ -17,7 +17,7 @@
 </ion-header>
 <ion-content >
       <ion-list>
-        <broadcast-row text-wrap *ngFor="let item of messageItems | iterable; let i = index; trackBy: trackByFn" class="chat-boxes"
-         [broadcast]="item.key" [user]="user" [userLikeItems]="userLikeItems" [contentType]="contentType"></broadcast-row>
+        <post-row text-wrap *ngFor="let item of messageItems | iterable; let i = index; trackBy: trackByFn" class="chat-boxes"
+         [post]="item.key" [user]="user" [userLikeItems]="userLikeItems"></post-row>
       </ion-list>
   </ion-content>

@@ -1,4 +1,4 @@
-page-edit-profile {
+page-editProfile {
     $TRANSPARENT_BORDER: rgba(255,255,255,0.4);
     .profile-image {
         img {
@@ -16,7 +16,26 @@ page-edit-profile {
         // margin-left: 22px;
         text-align: center;
     }
+    .bio-label {
+        font-size: 17px;
+        margin-left: 12px;
+        overflow: visible;
+    }
+    .profile-picture {
+
+        // margin-left: 22px;
+        text-align: center;
+        color: blue;
+    }
     .bio {
-        height: 200px;
+        width: calc(100% - 10px);
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        min-height: 40px;
+        overflow: hidden;
+        margin-left: 20px;
+        margin-top: 10px;
+        font-size: 17px;
     }
 }
