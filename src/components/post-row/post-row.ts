@@ -1,4 +1,4 @@
-import { Component, Input, SimpleChanges, OnChanges, SimpleChange, } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Post } from '../../models/post';
 import * as firebase from 'firebase/app';
 import { User } from '../../models/user';
@@ -22,7 +22,6 @@ export class PostRowComponent {
   }
 
   ngOnInit() {
-    console.log('ngOnInit');
     this.setupAvatar();
   }
 

@@ -15,6 +15,7 @@ export class EditProfilePage {
   @ViewChild('bio') bio: ElementRef;
   user = {} as User;
   avatar = '' as string;
+  photoChanged: boolean = false;
   constructor(public navCtrl: NavController,
               private navParams: NavParams,
               private view: ViewController,
@@ -75,9 +76,8 @@ export class EditProfilePage {
       loader.present();
       const image = `data:image/jpeg;base64,${result}`;
       this.avatar = image;
-      // this.user.avatarUrl = await uploadResult.ref.getDownloadURL();
-      // this.avatar = await uploadResult.ref.getDownloadURL();
       loader.dismiss();
+      this.photoChanged = true;
     } catch (error) {
       console.log('ERROR', error.code);
     }
@@ -95,8 +95,11 @@ export class EditProfilePage {
         avatar: this.avatar,
       };
       await firebase.database().ref(`users/${this.user.uid}/`).set(this.user);
-      const pictures = storage().ref(`${this.user.organizationId}/profilePhotos/${this.user.uid}`);
-      await pictures.putString(this.avatar, 'data_url');
+      if (this.photoChanged) {
+        const pictures = storage().ref(`${this.user.organizationId}/profilePhotos/${
+          this.user.uid}`);
+        await pictures.putString(this.avatar, 'data_url');
+      }
       await this.storage.set('user', JSON.stringify(this.user));
       this.view.dismiss(data);
     } catch (error) {

@@ -16,8 +16,13 @@ page-editProfile {
         // margin-left: 22px;
         text-align: center;
     }
+    .bio-label {
+        font-size: 17px;
+        margin-left: 12px;
+        overflow: visible;
+    }
     .profile-picture {
-        margin-top: -30px;
+
         // margin-left: 22px;
         text-align: center;
         color: blue;
@@ -29,5 +34,8 @@ page-editProfile {
         background: transparent;
         min-height: 40px;
         overflow: hidden;
+        margin-left: 20px;
+        margin-top: 10px;
+        font-size: 17px;
     }
 }

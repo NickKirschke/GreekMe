@@ -1,6 +1,5 @@
 Currently the data manipulation happens in the greekme view vs the component. Component is dumb
 on hold - push notifications
-Edit profile - Fields in an input list
 transform all updates to async !!! update is deprecated, use set now.
 sanitize all text coming in.
 Settings page for notifications etc
@@ -13,19 +12,8 @@ slight addition in margin on the bottom of the like badge, use rem instead of px
 global accent color, GREY
 Make the load screen better, Show gm page for a second (cordova plugins)
 look at all cordova plugins and remove unnecessary ones
-stacked labels
 Event repeat and alarms
 fix import on firebase
 /// End game
 refactor DB with everyone under school
 Edit Event tab
-
-update all posts of the user to the new photo via cloud function
-Storage link works, however run into an issue with updating when a new picture is put in
-look into angular life cycles
-
-
-
-
-A post doesnt store a user's url, that is retrieved from their "user" spot on the DB
-Because when a user updated their photo they update their avatarURL

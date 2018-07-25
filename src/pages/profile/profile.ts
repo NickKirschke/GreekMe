@@ -31,7 +31,8 @@ export class ProfilePage {
   userLikeListRef: AngularFireList<any>;
   userLikeItems: Set<string> = new Set<string>();
   userLikeSubscription: Subscription;
-  avatar = '' as string;
+  avatar: string = '';
+  notFirstEnter: boolean = false;
 
   constructor(private afAuth: AngularFireAuth,
               public navCtrl: NavController,
@@ -48,35 +49,48 @@ export class ProfilePage {
     this.dataSetup();
   }
 
-  async ionViewWillEnter() {
-    const path = `${this.user.organizationId}/profilePhotos/${this.user.uid}`;
-    this.avatar = await firebase.storage().ref(path).getDownloadURL();
-  }
+  // async ionViewDidEnter() {
+  //   if (this.notFirstEnter) {
+  //     try {
+  //       const path = `${this.user.organizationId}/profilePhotos/${this.user.uid}`;
+  //       this.avatar = await firebase.storage().ref(path).getDownloadURL();
+  //     } catch (error) {
+  //       console.log('Error', error);
+  //     }
+  //   }
+  // }
 
   async dataSetup() {
     const guestUser = this.navParams.get('uid');
-    // Check to see if it is a user navigating through profile pictures, if so hide the options
-    if (guestUser) {
-      this.isUser = false;
-      const guestProfileUserGrab = await this.firebaseService.getUserDetailsProfilePage(guestUser);
-      this.user = guestProfileUserGrab as User;
-    } else {
-      this.isUser = true;
-      const userGrab = await this.userService.currentUserInfo();
-      this.user = userGrab as User;
+    try {
+      // Check to see if it is a user navigating through profile pictures, if so hide the options
+      if (guestUser) {
+        this.isUser = false;
+        const guestProfileUserGrab = await this.firebaseService
+        .getUserDetailsProfilePage(guestUser);
+        this.user = guestProfileUserGrab as User;
+      } else {
+        this.isUser = true;
+        const userGrab = await this.userService.currentUserInfo();
+        this.user = userGrab as User;
+      }
+      this.userLikeListRef = this.firebaseService.getUserLikeList(this.user.uid);
+      this.postItemRef = this.firebaseService.getUserPostList(this.user.uid);
+      this.eventItemsRef = this.firebaseService.getUserEventsAttending(this.user.uid);
+      this.buildSubscriptions();
+      this.eventItems$ = this.eventItemsRef.snapshotChanges().map((action) => {
+        return action.map(c => ({
+          key: c.payload.key, ...c.payload.val(),
+        }));
+      });
+      const avatarPath = `${this.user.organizationId}/profilePhotos/${this.user.uid}`;
+      this.avatar = await firebase.storage().ref(avatarPath).getDownloadURL();
+      this.buildSubscriptions();
+      await this.removeOldEvents();
+      this.notFirstEnter = true;
+    } catch (error) {
+      console.log('Error', error);
     }
-    this.userLikeListRef = this.firebaseService.getUserLikeList(this.user.uid);
-    this.postItemRef = this.firebaseService.getUserPostList(this.user.uid);
-    this.eventItemsRef = this.firebaseService.getUserEventsAttending(this.user.uid);
-    this.buildSubscriptions();
-    this.eventItems$ = this.eventItemsRef.snapshotChanges().map((action) => {
-      return action.map(c => ({
-        key: c.payload.key, ...c.payload.val(),
-      }));
-    });
-
-    this.buildSubscriptions();
-    await this.removeOldEvents();
   }
 
   buildSubscriptions() {
