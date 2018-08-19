@@ -117,6 +117,17 @@ export class GreekMePage {
     return item.key;
   }
 
+  doInfinite(infiniteScroll) {
+    console.log('Begin async operation');
+    setTimeout(() => {
+      // for (let i = 0; i < 30; i += 1) {
+      //   this.items.push( this.items.length );
+      // }
+      console.log('Async operation has ended');
+      infiniteScroll.complete();
+    },         500);
+  }
+
   ionViewWillLoad() {
     this.dataSetup();
   }

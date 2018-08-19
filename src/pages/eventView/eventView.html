@@ -17,7 +17,6 @@
 
 
 <ion-content padding>
-  <!-- <h2>{{(event | async)?.name}}</h2> -->
   <div [ngSwitch]="eventInfo">
     <ion-list *ngSwitchCase="'details'">
       <h2>{{(event$ | async)?.name}}</h2>
@@ -37,11 +36,11 @@
     </ion-list>
 
     <ion-list no-lines *ngSwitchCase="'attendingList'">
-      <ion-item *ngFor="let item of attendingList$ |  async">
+      <ion-item *ngFor="let item of eventAttendingItems | iterable">
         <ion-avatar item-start>
-          <img src="{{item.avatarUrl}}">
+          <img src="{{item.key.avatarUrl}}">
         </ion-avatar>
-        <h4>{{item.name}}</h4>
+        <h4>{{item.key.name}}</h4>
       </ion-item>
     </ion-list>
   </div>

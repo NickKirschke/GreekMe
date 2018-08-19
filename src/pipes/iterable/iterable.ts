@@ -23,9 +23,9 @@ export class IterablePipe implements PipeTransform {
       });
     } else {
     // tslint:disable-next-line:prefer-const
-      for (let key in iterable) {
-        if (iterable.hasOwnProperty(key)) {
-          result.push({ key, value: iterable[key] });
+      for (let aKey in iterable) {
+        if (iterable.hasOwnProperty(aKey)) {
+          result.push({ key: aKey, value: iterable[aKey] });
         }
       }
     }
