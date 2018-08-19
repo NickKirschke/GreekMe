@@ -1,12 +1,10 @@
-Edit Event tab
 push notifications
-transform all updates to async !!! update is deprecated, use set now.
 Settings page for notifications etc
+Correct image size generation with ionic cordova resources
 
 keyboard plugin
 profile image changes size based on picture
 Set a post load limit, aka only 10 of the most recent broadcats appear, 20 for feed
-Make the load screen better, Show gm page for a second (cordova plugins)
 look at all cordova plugins and remove unnecessary ones
 Event repeat and alarms
 fix import on firebase
