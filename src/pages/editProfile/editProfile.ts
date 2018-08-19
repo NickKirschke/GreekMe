@@ -6,6 +6,7 @@ import { Camera, CameraOptions } from '@ionic-native/camera';
 import { storage } from 'firebase';
 import * as firebase from 'firebase/app';
 import { Storage } from '@ionic/storage';
+import * as moment from 'moment';
 
 @Component({
   selector: 'page-editProfile',
@@ -94,12 +95,13 @@ export class EditProfilePage {
         user: JSON.stringify(this.user),
         avatar: this.avatar,
       };
-      await firebase.database().ref(`users/${this.user.uid}/`).set(this.user);
       if (this.photoChanged) {
         const pictures = storage().ref(`${this.user.organizationId}/profilePhotos/${
           this.user.uid}`);
         await pictures.putString(this.avatar, 'data_url');
+        this.user.avatarUrl = moment().toISOString();
       }
+      await firebase.database().ref(`users/${this.user.uid}/`).set(this.user);
       await this.storage.set('user', JSON.stringify(this.user));
       this.view.dismiss(data);
     } catch (error) {

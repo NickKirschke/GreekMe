@@ -11,6 +11,8 @@ import { CreateEventPage } from '../createEvent/createEvent';
 import { EventViewPage } from '../eventView/eventView';
 import * as moment from 'moment';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs';
+import  { Event } from '../../models/event';
 
 @Component({
   selector: 'page-events',
@@ -21,6 +23,8 @@ export class EventsPage {
   user = {} as User;
   eventItems$: Observable<any>;
   eventItemsRef: AngularFireList<any>;
+  eventItemsSubscription: Subscription;
+  eventItems: Map<string, Event> = new Map<string, Event>();
   constructor(private afAuth: AngularFireAuth,
               public navCtrl: NavController,
               public firebaseService: FirebaseServiceProvider,
@@ -40,7 +44,7 @@ export class EventsPage {
         key: c.payload.key, ...c.payload.val(),
       }));
     });
-    this.removeOldEvents();
+    this.buildSubscription();
   }
 
   logout() {
@@ -56,19 +60,44 @@ export class EventsPage {
     };
     this.navCtrl.push(EventViewPage, data);
   }
-  removeOldEvents() {
-    // Removes events that are 1 day old.
-    new Promise((resolve, reject) => {
-      this.eventItems$.subscribe((items) => {
-        // tslint:disable-next-line:prefer-const
-        for (let i of items) {
-          const tempDate = moment(i.date);
-          if (tempDate.diff(moment()) < -86400000) {
-            this.eventItemsRef.remove(i.key);
-          }
+
+  buildSubscription() {
+    let anEvent: Event;
+    this.eventItemsSubscription = this.eventItemsRef.stateChanges()
+    .subscribe((action) => {
+      if (action.type === 'value' || action.type === 'child_added') {
+        anEvent = {
+          key: action.payload.key,
+          ...action.payload.val(),
+        };
+        const eventDate = moment(anEvent.date);
+        if (eventDate.diff(moment()) < -86400000) {
+          this.eventItemsRef.remove(anEvent.key);
+        } else {
+          this.eventItems.set(anEvent.key, anEvent);
         }
-        resolve(false);
-      });
+      } else if (action.type === 'child_changed') {
+        // Construct the replacement event
+        anEvent = {
+          key: action.payload.key,
+          ...action.payload.val(),
+        };
+        const previousEvent = this.eventItems.get(anEvent.key);
+        Object.keys(this.eventItems.get(anEvent.key)).forEach((aProperty) => {
+          // If the value of the new broadcast is different, replace it on the previous one
+          if (previousEvent[aProperty] !==  anEvent[aProperty]) {
+            previousEvent[aProperty] = anEvent[aProperty];
+          }
+        });
+      }
     });
+  }
+
+  destroySubscriptions() {
+    this.eventItemsSubscription.unsubscribe();
+  }
+
+  ionViewWillUnload() {
+    this.destroySubscriptions();
   }
 }

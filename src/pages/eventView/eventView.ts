@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ToastController } from 'ionic-angular';
-import { AngularFireList } from 'angularfire2/database';
+import { NavController, NavParams, ToastController, ModalController } from 'ionic-angular';
+import { AngularFireList, AngularFireObject } from 'angularfire2/database';
 import { FirebaseServiceProvider } from '../../providers/firebaseService/firebaseService';
 import { AngularFireAuth } from 'angularfire2/auth/auth';
 import { User } from '../../models/user';
@@ -10,108 +10,105 @@ import 'firebase/storage';
 import { Event } from '../../models/event';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs';
+import { CreateEventPage } from '../createEvent/createEvent';
 
 @Component({
   selector: 'page-eventView',
   templateUrl: 'eventView.html',
 })
 export class EventViewPage {
-  userAttendingListRef: AngularFireList<any>;
-  firebaseStorage = firebase.storage();
   firebase = firebase.database();
   user = {} as User;
-  event$: Observable<Event>;
+  eventRef: AngularFireObject<any>;
+  eventSubscription: Subscription;
+  anEvent: Event;
   attendingList$: Observable<any[]>;
   eventInfo: string = 'details';
   attendingStatus: boolean = false;
   isCreator: boolean = false;
   eventId: string;
-  event2$: Observable<Event>;
+  userAttendingListRef: AngularFireList<any>;
   userAttendingList$: Observable<any>;
   eventName: string;
-  attendingListRef: AngularFireList<any>;
+  eventAttendingItemsRef: AngularFireList<any>;
   attendingSubscription: Subscription;
+  eventAttendingSubscription: Subscription;
+  eventAttendingItems: Map<string, any> = new Map<string, any>();
 
-  constructor(private afAuth: AngularFireAuth,
-              public navCtrl: NavController,
+  constructor(public navCtrl: NavController,
               public firebaseService: FirebaseServiceProvider,
               private userService: UserServiceProvider,
               public navParams: NavParams,
-              public toastCtrl: ToastController) {
+              public toastCtrl: ToastController,
+              private modalController: ModalController) {
   }
 
   async dataSetup() {
     this.eventId = this.navParams.get('eventId');
     const userGrab = await this.userService.currentUserInfo();
     this.user = userGrab as User;
-    this.event$ = this.firebaseService
-      .getEventInfo(this.eventId, this.user.organizationId).valueChanges();
-    this.attendingListRef = this.firebaseService
+    this.eventRef = this.firebaseService.getEventInfo(this.eventId, this.user.organizationId);
+    this.eventAttendingItemsRef = this.firebaseService
       .getEventAttendingList(this.eventId, this.user.organizationId);
-    this.attendingList$ = this.attendingListRef.snapshotChanges().map((action) => {
-      return action.map(c => ({
-        key: c.payload.key, ...c.payload.val(),
-      }));
-    });
     // this.checkCreator();
-    this.checkAttending();
     this.userAttendingListRef = this.firebaseService.getUserEventList(this.user.uid);
     this.userAttendingList$ = this.userAttendingListRef.snapshotChanges().map((action) => {
       return action.map(c => ({
         key: c.payload.key, ...c.payload.val(),
       }));
     });
+    this.buildSubscriptions();
   }
 
-  logout() {
-    this.afAuth.auth.signOut();
-  }
-
-  checkCreator() {
-    // this.event.subscribe(res =>{
-    //    if (res.creatorUid===this.user.uid) {
-    //     this.isCreator = true;
-    //   }
-    // });
-    // let e = this.event.map(e => e);
-    // e.subscribe(res =>{
-    //      if (res.creatorUid===this.user.uid) {
-    //       this.isCreator = true;
-    //     }
-    //   });
-
-    // 5.0
-    // console.log('checking creator');
-    // try {
-    //   this.event.subscribe(item => {
-    //     if (item.creatorUid === this.user.uid) {
-    //       this.isCreator = true;
-    //     }
-
-    //   });
-    //   this.event.subscribe(console.log);
-    // } catch (e) {
-    //   console.log('Error checking creator');
-    // }
-    // var id = this.event$.subscribe(console.log);
-    // console.log(id);
-    // if(id.take === this.user.uid) {
-    //   this.isCreator = true;
-    // }
-  }
-
-  checkAttending() {
+  async buildSubscriptions() {
     try {
-      this.attendingSubscription = this.attendingList$.subscribe((items) => {
-        // tslint:disable-next-line:prefer-const
-        for (let i of items) {
-          if (i.key === this.user.uid) {
-            this.attendingStatus = true;
+      this.eventAttendingSubscription = this.eventAttendingItemsRef.stateChanges()
+        .subscribe(async (action) => {
+          if (action.type === 'value' || action.type === 'child_added') {
+            const vals = action.payload.val();
+            let avatar;
+            if (vals.avatarUrl === '../../assets/icon/GMIcon.png') {
+              avatar = vals.avatarUrl;
+            } else {
+              const path = `${this.user.organizationId}/profilePhotos/${action.payload.key}`;
+              avatar = await firebase.storage().ref(path).getDownloadURL();
+            }
+            const attendingUser = {
+              name: action.payload.val().name,
+              avatarUrl: avatar,
+            };
+
+            // Check if it is the User
+            if (action.key === this.user.uid) {
+              this.attendingStatus = true;
+            }
+            this.eventAttendingItems.set(action.key, attendingUser);
+          } else if (action.type === 'child_removed') {
+            this.eventAttendingItems.delete(action.key);
           }
+        });
+
+      this.eventSubscription = this.eventRef.snapshotChanges().subscribe((action) => {
+        if (action.type === 'value' || action.type === 'child_added') {
+          this.anEvent = {
+            key: action.payload.key,
+            ...action.payload.val(),
+          };
+          if (this.anEvent.creatorUid === this.user.uid) {
+            this.isCreator = true;
+          }
+        } else if (action.type === 'child_changed') {
+          const tempEvent = action.payload.val();
+          Object.keys(this.anEvent).forEach((aProperty) => {
+            // Updates event values only if changed
+            if (this.anEvent[aProperty] !==  tempEvent[aProperty]) {
+              this.anEvent[aProperty] = tempEvent[aProperty];
+            }
+          });
         }
       });
-    } catch (e) {
-      this.toast('Error when checking attendance');
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -125,28 +122,36 @@ export class EventViewPage {
       let eventObj = {} as Event;
       this.firebase.ref(`/organization/${this.user.organizationId}/event/${
         this.eventId}`).once('value')
-      .then((snapshot) => {
-        eventObj = snapshot.val();
-        updates[`/organization/${this.user.organizationId}/event/${
-          this.eventId}/attendingList/${this.user.uid}`] = nameObj;
-        updates[`/users/${this.user.uid}/eventsAttending/${this.eventId}`] = eventObj;
-        firebase.database().ref().update(updates).then(() => {
-          this.attendingStatus = true;
-          this.toast('You are going to this event!');
-        }).catch(function (error) {
-          this.toast('Error RSVPing.');
+        .then((snapshot) => {
+          eventObj = snapshot.val();
+          updates[`/organization/${this.user.organizationId}/event/${
+            this.eventId}/attendingList/${this.user.uid}`] = nameObj;
+          updates[`/users/${this.user.uid}/eventsAttending/${this.eventId}`] = eventObj;
+          firebase.database().ref().update(updates).then(() => {
+            this.attendingStatus = true;
+            this.toast('You are going to this event!');
+          }).catch(function (error) {
+            this.toast('Error RSVPing.');
+          });
         });
-      });
     }
   }
 
   rsvpNo() {
     if (this.attendingStatus) { // Check to see if the person is able to rsvp no
       this.toast('Removed you from the attending list.');
-      this.attendingListRef.remove(this.user.uid);
+      this.eventAttendingItemsRef.remove(this.user.uid);
       this.userAttendingListRef.remove(this.eventId);
       this.attendingStatus = false;
     }
+  }
+
+  editEvent() {
+    const myModal = this.modalController.create(CreateEventPage, {
+      event: JSON.stringify(this.anEvent),
+      editMode: true,
+    });
+    myModal.present();
   }
 
   toast(text) {
@@ -162,7 +167,12 @@ export class EventViewPage {
     this.dataSetup();
   }
 
+  destroySubscriptions() {
+    this.eventAttendingSubscription.unsubscribe();
+    this.eventSubscription.unsubscribe();
+  }
+
   ionViewWillLeave() {
-    this.attendingSubscription.unsubscribe();
+    this.destroySubscriptions();
   }
 }

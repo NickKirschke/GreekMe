@@ -2,6 +2,11 @@
 
   <ion-navbar no-border-bottom>
     <ion-title>Event Details</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only *ngIf="isCreator" (click)="editEvent()">
+        <ion-icon name="settings" ></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
   <ion-toolbar no-border-top>
     <ion-segment [(ngModel)]="eventInfo">
@@ -17,31 +22,29 @@
 
 
 <ion-content padding>
-  <!-- <h2>{{(event | async)?.name}}</h2> -->
   <div [ngSwitch]="eventInfo">
     <ion-list *ngSwitchCase="'details'">
-      <h2>{{(event$ | async)?.name}}</h2>
-      <p>On {{(event$ | async )?.date | amDateFormat: 'LL'}}</p>
-      <p>At {{(event$ | async)?.location}}</p>
-      <p>Made by: {{(event$ | async)?.creator}}
+      <h2>{{ anEvent?.name }}</h2>
+      <p>On {{ anEvent?.date | amDateFormat: 'LL' }}</p>
+      <p>At {{ anEvent?.location }}</p>
+      <p>Made by: {{ anEvent?.creator }}
         <hr/>
         <h6> Details:</h6>
-        <p> {{ (event$ | async)?.info}}</p>
+        <p> {{ anEvent?.info }}</p>
         <div>
           <label>RSVP:</label>
           <button ion-button small id="yesButton" [outline]="!attendingStatus" (click)="rsvpYes()" style="margin-bottom:14px;">Going!</button>
           <button ion-button small id="noButton" [outline]="attendingStatus" (click)="rsvpNo()" style="margin-bottom:14px;">Can't Go</button>
-          <button ion-button small *ngIf="isCreator" (click)="editEvent()">Edit Event</button>
         </div>
 
     </ion-list>
 
     <ion-list no-lines *ngSwitchCase="'attendingList'">
-      <ion-item *ngFor="let item of attendingList$ |  async">
+      <ion-item *ngFor="let item of eventAttendingItems | iterable">
         <ion-avatar item-start>
-          <img src="{{item.avatarUrl}}">
+          <img src="{{item.key.avatarUrl}}">
         </ion-avatar>
-        <h4>{{item.name}}</h4>
+        <h4>{{item.key.name}}</h4>
       </ion-item>
     </ion-list>
   </div>

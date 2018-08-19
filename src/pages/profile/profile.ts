@@ -15,6 +15,7 @@ import { EditProfilePage } from '../editProfile/editProfile';
 import * as moment from 'moment';
 import { Subscription } from 'rxjs';
 import * as firebase from 'firebase/app';
+import { Event } from '../../models/event';
 @Component({
   selector: 'page-profile',
   templateUrl: 'profile.html',
@@ -26,7 +27,9 @@ export class ProfilePage {
   postItemRef: AngularFireList<any>;
   postItemSubscription: Subscription;
   eventItems$: Observable<any>;
+  eventItems: Map<string, Event> = new Map<string, Event>();
   eventItemsRef: AngularFireList<any>;
+  eventItemsSubscription: Subscription;
   profileContent: string = 'posts';
   userLikeListRef: AngularFireList<any>;
   userLikeItems: Set<string> = new Set<string>();
@@ -83,11 +86,14 @@ export class ProfilePage {
           key: c.payload.key, ...c.payload.val(),
         }));
       });
-      const avatarPath = `${this.user.organizationId}/profilePhotos/${this.user.uid}`;
-      this.avatar = await firebase.storage().ref(avatarPath).getDownloadURL();
+      if (this.user.avatarUrl === '../../assets/icon/GMIcon.png') {
+        this.avatar = this.user.avatarUrl;
+      } else {
+        const avatarPath = `${this.user.organizationId}/profilePhotos/${this.user.uid}`;
+        this.avatar = await firebase.storage().ref(avatarPath).getDownloadURL();
+      }
       this.buildSubscriptions();
-      await this.removeOldEvents();
-      this.notFirstEnter = true;
+      // this.notFirstEnter = true;
     } catch (error) {
       console.log('Error', error);
     }
@@ -95,6 +101,7 @@ export class ProfilePage {
 
   buildSubscriptions() {
     let broadcast : Post;
+    let anEvent: Event;
     // Subscriptions for handling the user's posts
     // Broadcast data is stored in a Map
 
@@ -128,6 +135,35 @@ export class ProfilePage {
           // If the value of the new broadcast is different, replace it on the previous one
           if (previousBroadcast[aProperty] !==  broadcast[aProperty]) {
             previousBroadcast[aProperty] = broadcast[aProperty];
+          }
+        });
+      }
+    });
+
+    this.eventItemsSubscription = this.eventItemsRef.stateChanges()
+    .subscribe((action) => {
+      if (action.type === 'value' || action.type === 'child_added') {
+        anEvent = {
+          key: action.payload.key,
+          ...action.payload.val(),
+        };
+        const eventDate = moment(anEvent.date);
+        if (eventDate.diff(moment()) < -86400000) {
+          this.eventItemsRef.remove(anEvent.key);
+        } else {
+          this.eventItems.set(anEvent.key, anEvent);
+        }
+      } else if (action.type === 'child_changed') {
+        // Construct the replacement event
+        anEvent = {
+          key: action.payload.key,
+          ...action.payload.val(),
+        };
+        const previousEvent = this.eventItems.get(anEvent.key);
+        Object.keys(this.eventItems.get(anEvent.key)).forEach((aProperty) => {
+          // If the value of the new broadcast is different, replace it on the previous one
+          if (previousEvent[aProperty] !==  anEvent[aProperty]) {
+            previousEvent[aProperty] = anEvent[aProperty];
           }
         });
       }
@@ -177,23 +213,10 @@ export class ProfilePage {
     });
   }
 
-  removeOldEvents() {
-    new Promise((resolve, reject) => {
-      this.eventItems$.subscribe((items) => {
-        for (const i of items) {
-          const tempDate = moment(i.date);
-          if (tempDate.diff(moment()) < -86400000) {
-            this.eventItemsRef.remove(i.key);
-          }
-        }
-        resolve(false);
-      });
-    });
-  }
-
   destroySubscriptions() {
     this.userLikeSubscription.unsubscribe();
     this.postItemSubscription.unsubscribe();
+    this.eventItemsSubscription.unsubscribe();
   }
 
   ionViewWillUnload() {

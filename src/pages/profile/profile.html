@@ -10,7 +10,7 @@
     </ion-title>
     <ion-buttons end>
       <button *ngIf="isUser" ion-button icon-only (click)="presentPopover($event)">
-        <ion-icon name="cog" outline></ion-icon>
+        <ion-icon name="settings" outline></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>
@@ -49,22 +49,27 @@
     </ion-row>
     <div [ngSwitch]="profileContent">
       <div *ngSwitchCase="'posts'">
-          <h4 *ngIf="postItems.size < 1" class="emptyMessage">You have not posted yet</h4>
-      <ion-list class="pepSwitcher">
-        <post-row text-wrap *ngFor="let item of postItems | iterable; let i = index; trackBy: trackByFn" class="chat-boxes"
-        [post]="item.key" [user]="user" [userLikeItems]="userLikeItems"></post-row>
-      </ion-list>
+        <p *ngIf="postItems.size < 1" class="emptyMessage">
+          You have not posted yet!
+        </p>
+        <ion-list class="pepSwitcher">
+          <post-row text-wrap *ngFor="let item of postItems | iterable; let i = index; trackBy: trackByFn" class="chat-boxes" [post]="item.key"
+            [user]="user" [userLikeItems]="userLikeItems"></post-row>
+        </ion-list>
       </div>
       <div *ngSwitchCase="'eventsAttending'">
-          <h4 *ngIf="!eventItems$" class="emptyMessage">You are not attending any events</h4>
-      <ion-list no-lines  class="pepSwitcher">
-        <button ion-item text-wrap *ngFor="let item of eventItems$ |  async | orderBy: 'date'" (click)="goToEvent(item.key)">
-          <h2>{{item.name}}</h2>
-          <h3>Happening on: {{item.date | amDateFormat: 'LL'}}</h3>
-        </button>
-      </ion-list>
-    </div>
-      <h4 *ngSwitchCase="'photos'"  class="emptyMessage">There are no posted photos</h4>
+        <p *ngIf="eventItems.size < 1" class="emptyMessage">
+          You are not attending any events yet!
+        </p>
+
+        <ion-list no-lines class="pepSwitcher">
+          <button ion-item text-wrap *ngFor="let item of eventItems |  iterable" (click)="goToEvent(item.key.key)">
+            <h2>{{item.key.name}}</h2>
+            <h3>Happening on: {{item.key.date | amDateFormat: 'LL'}}</h3>
+          </button>
+        </ion-list>
+      </div>
+      <p *ngSwitchCase="'photos'" class="emptyMessage">There are no posted photos</p>
     </div>
   </ion-grid>
 </ion-content>

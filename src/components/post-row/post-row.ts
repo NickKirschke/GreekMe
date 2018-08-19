@@ -6,6 +6,7 @@ import { UserLike } from '../../models/userLike';
 import { NavController } from 'ionic-angular';
 import { ProfilePage } from '../../pages/profile/profile';
 import { ThreadPage } from '../../pages/thread/thread';
+import { FirebaseServiceProvider } from '../../providers/firebaseService/firebaseService';
 
 @Component({
   selector: 'post-row',
@@ -17,17 +18,36 @@ export class PostRowComponent {
   @Input('userLikeItems') userLikeItems: Set<string> = new Set<string>();
   @Input('showComments') showComments : boolean = true;
   @Input('showLikes') showLikes : boolean = true;
-  avatar = '' as string;
-  constructor(public navCtrl: NavController) {
+  avatar: string = '';
+  firstLoad: boolean = true;
+  constructor(public navCtrl: NavController,
+              private firebaseService: FirebaseServiceProvider) {
   }
 
   ngOnInit() {
     this.setupAvatar();
+    this.avatarWatch();
   }
 
   async setupAvatar() {
-    const path = `${this.user.organizationId}/profilePhotos/${this.post.uid}`;
-    this.avatar = await firebase.storage().ref(path).getDownloadURL();
+    // Avatar url === default, use it, otherwise fetch it from storage
+    if (this.post.avatarUrl === '../../assets/icon/GMIcon.png') {
+      this.avatar = this.post.avatarUrl;
+    } else {
+      const path = `${this.user.organizationId}/profilePhotos/${this.post.uid}`;
+      this.avatar = await firebase.storage().ref(path).getDownloadURL();
+    }
+  }
+
+  avatarWatch() {
+    // References the avatarUrl of the post's creator, any changes it will refetch the downloadlink
+    const postAvatarRef = this.firebaseService.getUserAvatar(this.post.uid);
+    postAvatarRef.snapshotChanges().subscribe((action) => {
+      if (action.type === 'value' && !this.firstLoad) {
+        this.setupAvatar();
+      }
+    });
+    this.firstLoad = false;
   }
 
   goToProfile() {

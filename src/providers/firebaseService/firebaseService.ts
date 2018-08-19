@@ -63,6 +63,11 @@ export class FirebaseServiceProvider {
     return this.afDB.list(`/organization/${organizationId}/broadcast/`);
   }
 
+  // Allows watching of a user's avatar to update when appropriate
+  getUserAvatar(uid: string) {
+    return this.afDB.object(`/users/${uid}/avatarUrl`);
+  }
+
   addToBroadcastList(broadcast: Post, organizationId: string) {
     // console.log(broadcast);
     return this.afDB.list(`/organization/${organizationId}/broadcast/`).push(broadcast).key;
@@ -129,25 +134,25 @@ export class FirebaseServiceProvider {
 
   // 5.0
   getUserDetails(uid: string) {
-    return new Promise((resolve) => {
-      this.firebaseDb.ref(`/users/${uid}`).once('value').then((snapshot) => {
-        const user = JSON.stringify(snapshot.val());
+    return new Promise(async (resolve) => {
+      this.firebaseDb.ref(`/users/${uid}`).once('value').then(async (snapshot) => {
         // Store user details locally
-        this.storage.set('user', user).then(() => {
-          resolve(true);
-        });
+        const user = snapshot.val();
+        await this.storage.set('user', JSON.stringify(snapshot.val()));
+        resolve(true);
       });
     });
   }
 
   // Add new user details to firebase storage
   addUserDetails(userDetails: User) {
-    return new Promise((resolve) => {
+    return new Promise(async (resolve) => {
       userDetails.bio = 'A sample bio: Lorem ipsum dolor sit amet, consectetur adipiscing elit.' +
       'Sed placerat nulla sit amet tempor viverra.';
       userDetails.avatarUrl = '../../assets/icon/GMIcon.png';
       this.afDB.object(`/users/${userDetails.uid}`).set(userDetails);
-      this.storage.set('user', JSON.stringify(userDetails)).then(() => resolve(true));
+      await this.storage.set('user', JSON.stringify(userDetails));
+      resolve(true);
     });
   }
 }

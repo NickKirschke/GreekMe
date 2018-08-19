@@ -7,4 +7,5 @@ export interface Event {
   location: string;
   info: string;
   attendingList: AngularFireList<any[]>;
+  key: string;
 }
