@@ -10,7 +10,7 @@
     </ion-title>
     <ion-buttons end>
       <button *ngIf="isUser" ion-button icon-only (click)="presentPopover($event)">
-        <ion-icon name="cog" outline></ion-icon>
+        <ion-icon name="settings" outline></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>
@@ -50,7 +50,7 @@
     <div [ngSwitch]="profileContent">
       <div *ngSwitchCase="'posts'">
         <p *ngIf="postItems.size < 1" class="emptyMessage">
-          <b>You have not posted yet!</b>
+          You have not posted yet!
         </p>
         <ion-list class="pepSwitcher">
           <post-row text-wrap *ngFor="let item of postItems | iterable; let i = index; trackBy: trackByFn" class="chat-boxes" [post]="item.key"
@@ -59,7 +59,7 @@
       </div>
       <div *ngSwitchCase="'eventsAttending'">
         <p *ngIf="eventItems.size < 1" class="emptyMessage">
-          <b>You are not attending any events yet!</b>
+          You are not attending any events yet!
         </p>
 
         <ion-list no-lines class="pepSwitcher">
@@ -69,7 +69,7 @@
           </button>
         </ion-list>
       </div>
-      <p *ngSwitchCase="'photos'" class="emptyMessage"><b>There are no posted photos</b></p>
+      <p *ngSwitchCase="'photos'" class="emptyMessage">There are no posted photos</p>
     </div>
   </ion-grid>
 </ion-content>
