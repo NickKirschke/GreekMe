@@ -34,7 +34,13 @@ export class EventViewPage {
   attendingSubscription: Subscription;
   eventAttendingSubscription: Subscription;
   eventAttendingItems: Map<string, any> = new Map<string, any>();
-
+  repeatLines = {
+    Never: 'An event',
+    Daily: 'A daily event',
+    Weekly: 'A weekly event',
+    Monthly: 'A monthly event',
+    Yearly: 'A yearly event',
+  };
   constructor(public navCtrl: NavController,
               public firebaseService: FirebaseServiceProvider,
               private userService: UserServiceProvider,

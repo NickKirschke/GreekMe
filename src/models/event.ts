@@ -1,5 +1,6 @@
 import { AngularFireList } from 'angularfire2/database';
 export interface Event {
+  key: string;
   creator: string;
   creatorUid: string;
   name: string;
@@ -7,5 +8,13 @@ export interface Event {
   location: string;
   info: string;
   attendingList: AngularFireList<any[]>;
-  key: string;
+  repeat: Repeat;
+}
+export enum Repeat {
+    Never = 'Never',
+    Daily = 'Daily',
+    Weekly = 'Weekly',
+    Biweekly = 'Biweekly',
+    Monthly = 'Monthly',
+    Yearly = 'Yearly',
 }

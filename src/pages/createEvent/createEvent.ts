@@ -8,7 +8,7 @@ import { UserServiceProvider } from '../../providers/userService/userService';
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import * as moment from 'moment';
-import { Event } from '../../models/event';
+import { Event, Repeat } from '../../models/event';
 import { Observable } from 'rxjs/Observable';
 import { AngularFireList } from '../../../node_modules/angularfire2/database';
 
@@ -23,6 +23,13 @@ export class CreateEventPage {
   event = {} as Event;
   editMode: boolean = false;
   eventItemsRef: AngularFireList<any>;
+  repeatOptions = [
+    Repeat.Never,
+    Repeat.Daily,
+    Repeat.Weekly,
+    Repeat.Monthly,
+    Repeat.Yearly,
+  ];
   constructor(private afAuth: AngularFireAuth,
               public navCtrl: NavController,
               public firebaseService: FirebaseServiceProvider,
@@ -36,6 +43,7 @@ export class CreateEventPage {
   }
 
   async dataSetup() {
+    this.event.repeat = Repeat.Never;
     this.event.date = moment().format();
     const userGrab = await this.userService.currentUserInfo();
     if (this.navParams.get('editMode')) {
@@ -76,6 +84,7 @@ export class CreateEventPage {
   closeModal() {
     this.view.dismiss();
   }
+
   async updateEvent() {
     try {
       this.eventItemsRef.update(this.event.key, this.event);

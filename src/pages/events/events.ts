@@ -12,7 +12,7 @@ import { EventViewPage } from '../eventView/eventView';
 import * as moment from 'moment';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs';
-import  { Event } from '../../models/event';
+import  { Event, Repeat } from '../../models/event';
 
 @Component({
   selector: 'page-events',
@@ -71,8 +71,38 @@ export class EventsPage {
           ...action.payload.val(),
         };
         const eventDate = moment(anEvent.date);
+        // Checks to see if the event is a day old, if so remove or update it.
         if (eventDate.diff(moment()) < -86400000) {
-          this.eventItemsRef.remove(anEvent.key);
+          switch (anEvent.repeat) {
+            case Repeat.Never:
+              this.eventItemsRef.remove(anEvent.key);
+              break;
+            case Repeat.Daily:
+              anEvent.date = moment(anEvent.date).add(1, 'd').format();
+              this.eventItems.set(anEvent.key, anEvent);
+              this.eventItemsRef.update(anEvent.key, anEvent);
+              break;
+            case Repeat.Weekly:
+              anEvent.date = moment(anEvent.date).add(7, 'd').format();
+              this.eventItems.set(anEvent.key, anEvent);
+              this.eventItemsRef.update(anEvent.key, anEvent);
+              break;
+            case Repeat.Biweekly:
+              anEvent.date = moment(anEvent.date).add(14, 'd').format();
+              this.eventItems.set(anEvent.key, anEvent);
+              this.eventItemsRef.update(anEvent.key, anEvent);
+              break;
+            case Repeat.Monthly:
+              anEvent.date = moment(anEvent.date).add(1, 'M').format();
+              this.eventItems.set(anEvent.key, anEvent);
+              this.eventItemsRef.update(anEvent.key, anEvent);
+              break;
+            case Repeat.Yearly:
+              anEvent.date = moment(anEvent.date).add(1, 'y').format();
+              this.eventItems.set(anEvent.key, anEvent);
+              this.eventItemsRef.update(anEvent.key, anEvent);
+              break;
+          }
         } else {
           this.eventItems.set(anEvent.key, anEvent);
         }

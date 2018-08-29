@@ -1,6 +1,7 @@
 push notifications
 Settings page for notifications etc
 Correct image size generation with ionic cordova resources
+update the date strings to handle the formatting in the js rather than on the html and add 'at'
 
 keyboard plugin
 profile image changes size based on picture
