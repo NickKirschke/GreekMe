@@ -4,7 +4,6 @@ Correct image size generation with ionic cordova resources
 event alarms
 
 Entries are not sorted prior to adding to the map. Need to get all, sort by date, then display.
-profile image changes size based on picture
 look at all cordova plugins and remove unnecessary ones
 
 fix import on firebase
