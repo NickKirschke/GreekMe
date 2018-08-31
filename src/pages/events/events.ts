@@ -78,32 +78,34 @@ export class EventsPage {
               this.eventItemsRef.remove(anEvent.key);
               break;
             case Repeat.Daily:
-              anEvent.date = moment(anEvent.date).add(1, 'd').format();
+              anEvent.date = moment(anEvent.date).add(1, 'd');
               this.eventItems.set(anEvent.key, anEvent);
               this.eventItemsRef.update(anEvent.key, anEvent);
               break;
             case Repeat.Weekly:
-              anEvent.date = moment(anEvent.date).add(7, 'd').format();
+              anEvent.date = moment(anEvent.date).add(7, 'd');
               this.eventItems.set(anEvent.key, anEvent);
               this.eventItemsRef.update(anEvent.key, anEvent);
               break;
             case Repeat.Biweekly:
-              anEvent.date = moment(anEvent.date).add(14, 'd').format();
+              anEvent.date = moment(anEvent.date).add(14, 'd');
               this.eventItems.set(anEvent.key, anEvent);
               this.eventItemsRef.update(anEvent.key, anEvent);
               break;
             case Repeat.Monthly:
-              anEvent.date = moment(anEvent.date).add(1, 'M').format();
+              anEvent.date = moment(anEvent.date).add(1, 'M');
               this.eventItems.set(anEvent.key, anEvent);
               this.eventItemsRef.update(anEvent.key, anEvent);
               break;
             case Repeat.Yearly:
-              anEvent.date = moment(anEvent.date).add(1, 'y').format();
+              anEvent.date = moment(anEvent.date).add(1, 'y');
               this.eventItems.set(anEvent.key, anEvent);
               this.eventItemsRef.update(anEvent.key, anEvent);
               break;
           }
+          anEvent.date = moment(anEvent.date).format('dddd, MMMM Do YYYY [at] h:mm a');
         } else {
+          anEvent.date = moment(anEvent.date).format('dddd, MMMM Do YYYY [at] h:mm a');
           this.eventItems.set(anEvent.key, anEvent);
         }
       } else if (action.type === 'child_changed') {
@@ -116,9 +118,16 @@ export class EventsPage {
         Object.keys(this.eventItems.get(anEvent.key)).forEach((aProperty) => {
           // If the value of the new broadcast is different, replace it on the previous one
           if (previousEvent[aProperty] !==  anEvent[aProperty]) {
-            previousEvent[aProperty] = anEvent[aProperty];
+            if (aProperty === 'date') {
+              previousEvent[aProperty] = moment(anEvent[aProperty])
+                .format('dddd, MMMM Do YYYY [at] h:mm a');
+            } else {
+              previousEvent[aProperty] = anEvent[aProperty];
+            }
           }
         });
+      } else if (action.type === 'child_removed') {
+        this.eventItems.delete(action.payload.key);
       }
     });
   }

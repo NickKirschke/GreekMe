@@ -21,8 +21,8 @@
   </p>
   <ion-list no-lines>
     <button ion-item text-wrap *ngFor="let item of eventItems | iterable" (click)="goToEvent(item.key.key)">
-      <h2>{{item.key.name}}</h2>
-      <h3>Happening on: {{item.key.date | amDateFormat: 'dddd LL'}}</h3>
+      <h2>{{ item.key.name }}</h2>
+      <h3>{{ item.key.date }}</h3>
       </button>
   </ion-list>
 </ion-content>

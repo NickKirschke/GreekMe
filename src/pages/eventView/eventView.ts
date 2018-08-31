@@ -11,6 +11,7 @@ import { Event } from '../../models/event';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs';
 import { CreateEventPage } from '../createEvent/createEvent';
+import * as moment from 'moment';
 
 @Component({
   selector: 'page-eventView',
@@ -112,6 +113,7 @@ export class EventViewPage {
             }
           });
         }
+        this.anEvent.date = moment(this.anEvent.date).format('dddd, MMMM Do YYYY [at] h:mm a');
       });
     } catch (error) {
       console.log(error);

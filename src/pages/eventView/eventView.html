@@ -25,7 +25,7 @@
   <div [ngSwitch]="eventInfo">
     <ion-list *ngSwitchCase="'details'">
       <h2>{{ anEvent?.name }}</h2>
-      <p>{{repeatLines[anEvent?.repeat]}} on {{ anEvent?.date | amDateFormat: 'dddd LLL' }}</p>
+      <p>{{repeatLines[anEvent?.repeat]}} on {{anEvent?.date}}</p>
       <p>At {{ anEvent?.location }}</p>
       <p>Made by: {{ anEvent?.creator }}
         <hr/>
