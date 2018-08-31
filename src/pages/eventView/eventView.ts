@@ -11,6 +11,7 @@ import { Event } from '../../models/event';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs';
 import { CreateEventPage } from '../createEvent/createEvent';
+import * as moment from 'moment';
 
 @Component({
   selector: 'page-eventView',
@@ -34,7 +35,13 @@ export class EventViewPage {
   attendingSubscription: Subscription;
   eventAttendingSubscription: Subscription;
   eventAttendingItems: Map<string, any> = new Map<string, any>();
-
+  repeatLines = {
+    Never: 'An event',
+    Daily: 'A daily event',
+    Weekly: 'A weekly event',
+    Monthly: 'A monthly event',
+    Yearly: 'A yearly event',
+  };
   constructor(public navCtrl: NavController,
               public firebaseService: FirebaseServiceProvider,
               private userService: UserServiceProvider,
@@ -106,6 +113,7 @@ export class EventViewPage {
             }
           });
         }
+        this.anEvent.date = moment(this.anEvent.date).format('dddd, MMMM Do YYYY [at] h:mm a');
       });
     } catch (error) {
       console.log(error);

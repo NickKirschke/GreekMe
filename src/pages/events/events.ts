@@ -12,7 +12,7 @@ import { EventViewPage } from '../eventView/eventView';
 import * as moment from 'moment';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs';
-import  { Event } from '../../models/event';
+import  { Event, Repeat } from '../../models/event';
 
 @Component({
   selector: 'page-events',
@@ -71,9 +71,41 @@ export class EventsPage {
           ...action.payload.val(),
         };
         const eventDate = moment(anEvent.date);
+        // Checks to see if the event is a day old, if so remove or update it.
         if (eventDate.diff(moment()) < -86400000) {
-          this.eventItemsRef.remove(anEvent.key);
+          switch (anEvent.repeat) {
+            case Repeat.Never:
+              this.eventItemsRef.remove(anEvent.key);
+              break;
+            case Repeat.Daily:
+              anEvent.date = moment(anEvent.date).add(1, 'd');
+              this.eventItems.set(anEvent.key, anEvent);
+              this.eventItemsRef.update(anEvent.key, anEvent);
+              break;
+            case Repeat.Weekly:
+              anEvent.date = moment(anEvent.date).add(7, 'd');
+              this.eventItems.set(anEvent.key, anEvent);
+              this.eventItemsRef.update(anEvent.key, anEvent);
+              break;
+            case Repeat.Biweekly:
+              anEvent.date = moment(anEvent.date).add(14, 'd');
+              this.eventItems.set(anEvent.key, anEvent);
+              this.eventItemsRef.update(anEvent.key, anEvent);
+              break;
+            case Repeat.Monthly:
+              anEvent.date = moment(anEvent.date).add(1, 'M');
+              this.eventItems.set(anEvent.key, anEvent);
+              this.eventItemsRef.update(anEvent.key, anEvent);
+              break;
+            case Repeat.Yearly:
+              anEvent.date = moment(anEvent.date).add(1, 'y');
+              this.eventItems.set(anEvent.key, anEvent);
+              this.eventItemsRef.update(anEvent.key, anEvent);
+              break;
+          }
+          anEvent.date = moment(anEvent.date).format('dddd, MMMM Do YYYY [at] h:mm a');
         } else {
+          anEvent.date = moment(anEvent.date).format('dddd, MMMM Do YYYY [at] h:mm a');
           this.eventItems.set(anEvent.key, anEvent);
         }
       } else if (action.type === 'child_changed') {
@@ -86,9 +118,16 @@ export class EventsPage {
         Object.keys(this.eventItems.get(anEvent.key)).forEach((aProperty) => {
           // If the value of the new broadcast is different, replace it on the previous one
           if (previousEvent[aProperty] !==  anEvent[aProperty]) {
-            previousEvent[aProperty] = anEvent[aProperty];
+            if (aProperty === 'date') {
+              previousEvent[aProperty] = moment(anEvent[aProperty])
+                .format('dddd, MMMM Do YYYY [at] h:mm a');
+            } else {
+              previousEvent[aProperty] = anEvent[aProperty];
+            }
           }
         });
+      } else if (action.type === 'child_removed') {
+        this.eventItems.delete(action.payload.key);
       }
     });
   }

@@ -1,12 +1,12 @@
 push notifications
 Settings page for notifications etc
 Correct image size generation with ionic cordova resources
+event alarms
 
-keyboard plugin
+Entries are not sorted prior to adding to the map. Need to get all, sort by date, then display.
 profile image changes size based on picture
-Set a post load limit, aka only 10 of the most recent broadcats appear, 20 for feed
 look at all cordova plugins and remove unnecessary ones
-Event repeat and alarms
+
 fix import on firebase
 /// End game
 refactor DB with everyone under school

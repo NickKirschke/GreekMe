@@ -16,13 +16,15 @@ import { ContentType } from '../../models/contentType';
 })
 export class GreekMePage {
   user = {} as User;
-  validRole: boolean = false;
+  validRole = false;
   image: string;
+  loadCap = 5;
+  reserveBroadcasts =  [];
   broadcastItemRef: AngularFireList<any>;
-  broadcastItems: Map<string, Post> = new Map<string, Post>();
+  broadcastItems = new Map<string, Post>();
   broadcastItemSubscription: Subscription;
   userLikeListRef: AngularFireList<any>;
-  userLikeItems: Set<string> = new Set<string>();
+  userLikeItems = new Set<string>();
   userLikeSubscription: Subscription;
 
   constructor(public navCtrl: NavController,
@@ -64,6 +66,7 @@ export class GreekMePage {
 
   buildSubscriptions() {
     let broadcast : Post;
+    let broadcastCounter = 0;
     // Subscriptions for handling the user's likes and the broadcasts on the page
     // Data is passed into a Set
     this.userLikeSubscription = this.userLikeListRef.stateChanges().subscribe((action) => {
@@ -83,7 +86,12 @@ export class GreekMePage {
           ...action.payload.val(),
           iconName: this.userLikeItems.has(action.key) ? 'heart' : 'heart-outline',
         };
-        this.broadcastItems.set(broadcast.key, broadcast);
+        if (broadcastCounter < this.loadCap) {
+          this.broadcastItems.set(broadcast.key, broadcast);
+        } else {
+          this.reserveBroadcasts.push(broadcast);
+        }
+        broadcastCounter += 1;
       } else if (action.type === 'child_changed') {
         const previousBroadcast = this.broadcastItems.get(action.key);
         const expectedIconName = previousBroadcast.iconName;
@@ -101,6 +109,7 @@ export class GreekMePage {
         });
       }
     });
+    console.log(this.reserveBroadcasts);
   }
 
   destroySubscriptions() {
@@ -120,9 +129,11 @@ export class GreekMePage {
   doInfinite(infiniteScroll) {
     console.log('Begin async operation');
     setTimeout(() => {
-      // for (let i = 0; i < 30; i += 1) {
-      //   this.items.push( this.items.length );
-      // }
+      while (this.reserveBroadcasts.length > 0) {
+        const tempBroadcast = this.reserveBroadcasts.shift();
+        console.log(tempBroadcast);
+        this.broadcastItems.set(tempBroadcast.key, tempBroadcast);
+      }
       console.log('Async operation has ended');
       infiniteScroll.complete();
     },         500);
