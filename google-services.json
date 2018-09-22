@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "50593623850",
+    "firebase_url": "https://greekme-7475a.firebaseio.com",
+    "project_id": "greekme-7475a",
+    "storage_bucket": "greekme-7475a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:50593623850:android:54b06dc07d5ff968",
+        "android_client_info": {
+          "package_name": "com.metech.greekme"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "50593623850-ho3c1a4uesro54pvde7o62u7jcvp1dkt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZwJ1xjdpF4YxqRg5s-Bl4P-XedfWAVqs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

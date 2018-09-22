@@ -39,8 +39,9 @@ export class SignupPage {
       email: this.signupForm.value.email,
       organizationId: this.signupForm.value.organizationId,
       role: this.signupForm.value.role,
+      broadcastNotifications: true,
+      feedNotifications: true,
     } as User;
-    console.log(user);
     const loader = this.loadingCtrl.create({
       content: 'Registering...',
       dismissOnPageChange: true,

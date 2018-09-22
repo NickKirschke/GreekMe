@@ -75,7 +75,8 @@ export class EventViewPage {
             const vals = action.payload.val();
             let avatar;
             if (vals.avatarUrl === '../../assets/icon/GMIcon.png') {
-              avatar = vals.avatarUrl;
+              avatar = `https://firebasestorage.googleapis.com/v0/b/greekme-7475a.appspot.com/o/GM_
+              Default.png?alt=media&token=6bc30d40-17a2-40bb-9af7-edff78112780`;
             } else {
               const path = `${this.user.organizationId}/profilePhotos/${action.payload.key}`;
               avatar = await firebase.storage().ref(path).getDownloadURL();

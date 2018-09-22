@@ -3,7 +3,8 @@ import { Firebase } from '@ionic-native/firebase';
 import { Platform } from 'ionic-angular';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { AngularFireAuth } from 'angularfire2/auth/auth';
-import * as firebase from 'firebase/app';
+import { UserServiceProvider } from '../userService/userService';
+import { User } from '../../models/user';
 
 /*
   Generated class for the FcmProvider provider.
@@ -19,8 +20,7 @@ export class FcmProvider {
     public afs: AngularFirestore,
     public platform: Platform,
     private afAuth: AngularFireAuth,
-
-  ) {
+    private userService: UserServiceProvider) {
   }
 
   async getToken() {
@@ -33,38 +33,24 @@ export class FcmProvider {
     if (this.platform.is('ios')) {
       console.log('ios');
       token = await this.firebaseNative.getToken();
-      console.log(token);
-      const perm = await this.firebaseNative.grantPermission();
+      await this.firebaseNative.grantPermission();
     }
 
-    // Is not cordova == web PWA
-    if (!this.platform.is('cordova')) {
-      console.log('web');
-      const messaging = firebase.messaging();
-      messaging.usePublicVapidKey(`BBcOFXaauOSn8E1CC0vRGNlqiHuu5x0B5tTV5orJb2ndQ
-      1qWOy40pnuo_MX0peLuubWTc-u5m6pwWgWp86O28g`);
-      messaging.requestPermission()
-      .then(async () => {
-        console.log('Notification permission granted.');
-        token = await messaging.getToken();
-        console.log(token);
-      })
-      .catch((err) => {
-        console.log('Unable to get permission to notify.', err);
-      });
-    }
     console.log(`Token: ${token}`);
     return this.saveTokenToFirestore(token);
   }
 
-  private saveTokenToFirestore(token) {
+  private async saveTokenToFirestore(token) {
     if (!token) return;
-    const devicesRef = this.afs.collection('devices');
-    console.log('tokenID', this.afAuth.idToken);
+    const userGrab = await this.userService.currentUserInfo();
+    const user = userGrab as User;
+    const devicesRef = this.afs.collection(user.organizationId);
 
     const docData = {
       token,
-      userId: 'testUser',
+      userId: user.uid,
+      broadcastNotifications: user.broadcastNotifications,
+      feedNotifications: user.feedNotifications,
     };
     return devicesRef.doc(token).set(docData);
   }

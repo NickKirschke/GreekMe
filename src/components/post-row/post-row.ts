@@ -1,12 +1,12 @@
 import { Component, Input } from '@angular/core';
 import { Post } from '../../models/post';
-import * as firebase from 'firebase/app';
 import { User } from '../../models/user';
 import { UserLike } from '../../models/userLike';
 import { NavController } from 'ionic-angular';
 import { ProfilePage } from '../../pages/profile/profile';
 import { ThreadPage } from '../../pages/thread/thread';
 import { FirebaseServiceProvider } from '../../providers/firebaseService/firebaseService';
+import app from 'firebase/app';
 
 @Component({
   selector: 'post-row',
@@ -32,10 +32,11 @@ export class PostRowComponent {
   async setupAvatar() {
     // Avatar url === default, use it, otherwise fetch it from storage
     if (this.post.avatarUrl === '../../assets/icon/GMIcon.png') {
-      this.avatar = this.post.avatarUrl;
+      this.avatar = `https://firebasestorage.googleapis.com/v0/b/greekme-7475a.appspot.com/o/GM_Def
+      ault.png?alt=media&token=6bc30d40-17a2-40bb-9af7-edff78112780`;
     } else {
       const path = `${this.user.organizationId}/profilePhotos/${this.post.uid}`;
-      this.avatar = await firebase.storage().ref(path).getDownloadURL();
+      this.avatar = await app.storage().ref(path).getDownloadURL();
     }
   }
 
@@ -95,7 +96,7 @@ export class PostRowComponent {
       updates[numOfLikePath] = this.post.numOfLikes;
     }
     // TODO updates[ownerPostPath] = this.post;
-    firebase.database().ref().update(updates).then(() => {
+    app.database().ref().update(updates).then(() => {
       if (isLiked) {
         console.log('Did unlike');
       } else {

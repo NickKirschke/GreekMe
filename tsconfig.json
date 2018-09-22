@@ -6,12 +6,12 @@
     "experimentalDecorators": true,
     "lib": [
       "dom",
-      "es2015"
+      "es6"
     ],
-    "module": "es2015",
+    "module": "es6",
     "moduleResolution": "node",
     "sourceMap": true,
-    "target": "es5"
+    "target": "es6"
   },
   "include": [
     "src/**/*.ts"
@@ -20,6 +20,8 @@
     "node_modules",
     "www",
     ".vscode",
+    "plugins",
+    "platforms",
   ],
   "compileOnSave": false,
   "atom": {

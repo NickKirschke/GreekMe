@@ -32,6 +32,9 @@ import { PopOverComponent } from '../components/pop-over/pop-over';
 import { PipesModule } from '../pipes/pipes.module';
 import { Camera } from '@ionic-native/camera';
 import { PhotoLibrary } from '@ionic-native/photo-library';
+import { FcmProvider } from '../providers/fcm/fcm';
+import { Firebase } from '@ionic-native/firebase';
+import { AngularFirestoreModule } from 'angularfire2/firestore';
 
 @NgModule({
   declarations: [
@@ -58,6 +61,7 @@ import { PhotoLibrary } from '@ionic-native/photo-library';
     HttpModule,
     AngularFireDatabaseModule,
     AngularFireAuthModule,
+    AngularFirestoreModule,
     AngularFireModule.initializeApp(FIREBASE_CONST),
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot(),
@@ -90,6 +94,8 @@ import { PhotoLibrary } from '@ionic-native/photo-library';
     SplashScreen,
     Camera,
     PhotoLibrary,
+    Firebase,
+    FcmProvider,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     FirebaseServiceProvider,
     UserServiceProvider,

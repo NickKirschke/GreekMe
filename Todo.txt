@@ -1,11 +1,21 @@
+Problem with having the fcm hook in app component as there might not be a user yet when the app starts up.
 push notifications
-Settings page for notifications etc
+    Notification drop down
+        Change notification icon color if there is > 0 notifications?
+        No notification messages when tapping (auto close at 0?)
+        Notification has X which removes from a user's notifications
+        Sender Name, Broadcast or Feed, message
+    Settings page for notifications etc
+        User setting for notifications regarding Broadcasts, Messages, and Events
 Correct image size generation with ionic cordova resources
 event alarms
+infinite scroll messed up
 
 Entries are not sorted prior to adding to the map. Need to get all, sort by date, then display.
 look at all cordova plugins and remove unnecessary ones
 
 fix import on firebase
 /// End game
+Groups within feed
 refactor DB with everyone under school
+Drivers for new members

@@ -52,17 +52,6 @@ export class ProfilePage {
     this.dataSetup();
   }
 
-  // async ionViewDidEnter() {
-  //   if (this.notFirstEnter) {
-  //     try {
-  //       const path = `${this.user.organizationId}/profilePhotos/${this.user.uid}`;
-  //       this.avatar = await firebase.storage().ref(path).getDownloadURL();
-  //     } catch (error) {
-  //       console.log('Error', error);
-  //     }
-  //   }
-  // }
-
   async dataSetup() {
     const guestUser = this.navParams.get('uid');
     try {
@@ -87,7 +76,8 @@ export class ProfilePage {
         }));
       });
       if (this.user.avatarUrl === '../../assets/icon/GMIcon.png') {
-        this.avatar = this.user.avatarUrl;
+        this.avatar = `https://firebasestorage.googleapis.com/v0/b/greekme-7475a.appspot.com/o/GM_
+        Default.png?alt=media&token=6bc30d40-17a2-40bb-9af7-edff78112780`;
       } else {
         const avatarPath = `${this.user.organizationId}/profilePhotos/${this.user.uid}`;
         this.avatar = await firebase.storage().ref(avatarPath).getDownloadURL();
@@ -104,7 +94,6 @@ export class ProfilePage {
     let anEvent: Event;
     // Subscriptions for handling the user's posts
     // Broadcast data is stored in a Map
-
     this.userLikeSubscription = this.userLikeListRef.stateChanges().subscribe((action) => {
       if (action.type === 'value' || action.type === 'child_added') {
         this.userLikeItems.add(action.key);
@@ -170,7 +159,7 @@ export class ProfilePage {
     });
   }
 
-  editProfile() {
+  editProfile(): void {
     const myModal = this.modal.create(EditProfilePage, {
       user: JSON.stringify(this.user),
       avatar: this.avatar,
@@ -190,14 +179,14 @@ export class ProfilePage {
     });
   }
 
-  goToEvent(key: string) {
+  goToEvent(key: string): void {
     const paramObj = {
       eventId: key,
     };
     this.navCtrl.push(EventViewPage, paramObj);
   }
 
-  presentPopover(popOverEvent) {
+  presentPopover(popOverEvent): void {
     const popover = this.popoverCtrl.create(PopOverComponent, {
       items: [{ name: 'Edit Profile' }, { name: 'Settings' }, { name: 'Log Out' }],
     });
@@ -208,8 +197,29 @@ export class ProfilePage {
           this.logout();
         } else if (data.name === 'Edit Profile') {
           this.editProfile();
+        } else if (data.name === 'Settings') {
+          this.editSettings();
         }
       }
+    });
+  }
+  editSettings(): any {
+    const myModal = this.modal.create(EditProfilePage, {
+      user: JSON.stringify(this.user),
+      avatar: this.avatar,
+    });
+    myModal.present();
+    myModal.onWillDismiss((userData) => {
+      // if (userData) {
+      //   const updatedUser = JSON.parse(userData.user) as User;
+      //   Object.keys(this.user).forEach((aProperty) => {
+      //     // If the value of the new user is different, replace it on the previous one
+      //     if (this.user[aProperty] !==  updatedUser[aProperty]) {
+      //       this.user[aProperty] = updatedUser[aProperty];
+      //     }
+      //     this.avatar = userData.avatar;
+      //   });
+      // }
     });
   }
 
@@ -223,11 +233,11 @@ export class ProfilePage {
     this.destroySubscriptions();
   }
 
-  trackByFn(index: number, item: Post) {
+  trackByFn(index: number, item: Post): string {
     return item.key;
   }
 
-  logout() {
+  logout(): void {
     this.afAuth.auth.signOut().then(() => {
       this.app.getRootNavs()[0].setRoot(LoginPage);
       this.storage.remove('user');

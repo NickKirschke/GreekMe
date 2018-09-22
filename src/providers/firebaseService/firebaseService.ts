@@ -4,7 +4,7 @@ import { AngularFireDatabase } from 'angularfire2/database/database';
 import { Storage } from '@ionic/storage';
 import { User } from '../../models/user';
 import { AngularFireObject } from 'angularfire2/database';
-import * as firebase from 'firebase/app';
+import app from 'firebase/app';
 import 'firebase/storage';
 import { Post } from '../../models/post';
 import { Event } from '../../models/event';
@@ -15,8 +15,8 @@ import { Observable } from '@firebase/util';
 export class FirebaseServiceProvider {
   user: Observable<any>;
   userData: AngularFireObject<User>;
-  firebaseStorage = firebase.storage();
-  firebaseDb = firebase.database();
+  firebaseStorage = app.storage();
+  firebaseDb = app.database();
   constructor(private afDB: AngularFireDatabase,
               private storage: Storage) {
 
