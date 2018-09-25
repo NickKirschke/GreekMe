@@ -5,19 +5,17 @@ import { AngularFireAuth } from 'angularfire2/auth/auth';
 import { EventsPage } from '../events/events';
 import { User } from '../../models/user';
 import { UserServiceProvider } from '../../providers/userService/userService';
-import * as firebase from 'firebase/app';
-import 'firebase/storage';
 import * as moment from 'moment';
 import { Event, Repeat } from '../../models/event';
 import { Observable } from 'rxjs/Observable';
 import { AngularFireList } from '../../../node_modules/angularfire2/database';
+import app from 'firebase/app';
 
 @Component({
   selector: 'page-createEvent',
   templateUrl: 'createEvent.html',
 })
 export class CreateEventPage {
-  firebaseStorage = firebase.storage();
   user = {} as User;
   attendingItems$: Observable<any[]>;
   event = {} as Event;
@@ -72,7 +70,7 @@ export class CreateEventPage {
     updates[`/organization/${this.user.organizationId}/event/${
       newEventKey}/attendingList/${this.user.uid}`] = nameObj;
     updates[`/users/${this.user.uid}/eventsAttending/${newEventKey}`] = this.event;
-    firebase.database().ref().update(updates).then(() => {
+    app.database().ref().update(updates).then(() => {
       console.log('Event Added!');
     }).catch((error) => {
       console.log(error);

@@ -1,15 +1,16 @@
 import { Component } from '@angular/core';
-import { NavController, ModalController } from 'ionic-angular';
+import { NavController, ModalController, Platform, ToastController } from 'ionic-angular';
 import { AngularFireList } from 'angularfire2/database';
 import { FirebaseServiceProvider } from '../../providers/firebaseService/firebaseService';
 import { User } from '../../models/user';
 import { Post } from '../../models/post';
 import { UserServiceProvider } from '../../providers/userService/userService';
-import 'firebase/storage';
 import { ComposePostPage } from '../composePost/composePost';
 import { Subscription } from 'rxjs';
 import { ContentType } from '../../models/contentType';
-
+import { FcmProvider } from '../../providers/fcm/fcm';
+import { tap } from 'rxjs/operators';
+import { MyApp } from '../../app/app.component';
 @Component({
   selector: 'page-greekme',
   templateUrl: 'greekme.html',
@@ -18,7 +19,7 @@ export class GreekMePage {
   user = {} as User;
   validRole = false;
   image: string;
-  loadCap = 5;
+  loadCap = 10;
   reserveBroadcasts =  [];
   broadcastItemRef: AngularFireList<any>;
   broadcastItems = new Map<string, Post>();
@@ -26,11 +27,13 @@ export class GreekMePage {
   userLikeListRef: AngularFireList<any>;
   userLikeItems = new Set<string>();
   userLikeSubscription: Subscription;
+  notificationsSubscriptions: Subscription;
 
   constructor(public navCtrl: NavController,
               public firebaseService: FirebaseServiceProvider,
               private userService: UserServiceProvider,
-              private modal: ModalController) {
+              private modal: ModalController,
+              private fcm: FcmProvider) {
   }
 
   async dataSetup() {
@@ -53,6 +56,7 @@ export class GreekMePage {
           this.image = 'assets/img/8d9YHCdTlOXCBqO65zNP_GM_Master01.png';
         });
       this.buildSubscriptions();
+      this.fcm.getToken();
     } catch (e) {
       console.log(e);
     }
@@ -86,11 +90,11 @@ export class GreekMePage {
           ...action.payload.val(),
           iconName: this.userLikeItems.has(action.key) ? 'heart' : 'heart-outline',
         };
-        if (broadcastCounter < this.loadCap) {
-          this.broadcastItems.set(broadcast.key, broadcast);
-        } else {
-          this.reserveBroadcasts.push(broadcast);
-        }
+        // if (broadcastCounter < this.loadCap) {
+        this.broadcastItems.set(broadcast.key, broadcast);
+        // } else {
+        //   this.reserveBroadcasts.push(broadcast);
+        // }
         broadcastCounter += 1;
       } else if (action.type === 'child_changed') {
         const previousBroadcast = this.broadcastItems.get(action.key);
@@ -109,12 +113,12 @@ export class GreekMePage {
         });
       }
     });
-    console.log(this.reserveBroadcasts);
   }
 
   destroySubscriptions() {
     this.userLikeSubscription.unsubscribe();
     this.broadcastItemSubscription.unsubscribe();
+    // this.notificationsSubscriptions.unsubscribe();
   }
 
   goToComposeBroadcast() {

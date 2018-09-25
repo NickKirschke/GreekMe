@@ -11,4 +11,6 @@ export interface User {
   eventsAttending?: AngularFireList<any[]>;
   likeList?: UserLike[];
   bio?: any;
+  broadcastNotifications: boolean;
+  feedNotifications: boolean;
 }

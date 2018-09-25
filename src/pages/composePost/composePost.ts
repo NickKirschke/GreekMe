@@ -4,10 +4,10 @@ import { FirebaseServiceProvider } from '../../providers/firebaseService/firebas
 import { User } from '../../models/user';
 import { Post } from '../../models/post';
 import { UserServiceProvider } from '../../providers/userService/userService';
-import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import * as moment from 'moment';
 import { ContentType } from '../../models/contentType';
+import app from 'firebase/app';
 
 @Component({
   selector: 'page-composePost',
@@ -16,7 +16,6 @@ import { ContentType } from '../../models/contentType';
 export class ComposePostPage {
   @ViewChild('post') post: ElementRef;
   contentType: ContentType;
-  firebaseStorage = firebase.storage();
   user = {} as User;
   tempPost = {} as Post;
   error = '';
@@ -42,7 +41,7 @@ export class ComposePostPage {
   updatePostList(tempPost: Post) {
     const updates = {};
     updates[`/users/${this.user.uid}/postList/${tempPost.key}`] = tempPost;
-    firebase.database().ref().update(updates).then(() => {
+    app.database().ref().update(updates).then(() => {
     }).catch((error) => {
       console.log(error);
     });

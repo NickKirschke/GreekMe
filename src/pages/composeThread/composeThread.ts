@@ -4,10 +4,10 @@ import { FirebaseServiceProvider } from '../../providers/firebaseService/firebas
 import { User } from '../../models/user';
 import { Post } from '../../models/post';
 import { UserServiceProvider } from '../../providers/userService/userService';
-import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import * as moment from 'moment';
 import { ContentType } from '../../models/contentType';
+import app from 'firebase/app';
 
 @Component({
   selector: 'page-composeThread',
@@ -16,7 +16,6 @@ import { ContentType } from '../../models/contentType';
 export class ComposeThreadPage {
   @ViewChild('comment') comment: ElementRef;
   contentType: ContentType;
-  firebaseStorage = firebase.storage();
   user = {} as User;
   tempPost = {} as Post;
   error: string = '';
@@ -41,7 +40,7 @@ export class ComposeThreadPage {
 
   getNumOfComments() {
     return new Promise((resolve) => {
-      const numOfCommentsRef = firebase.database().ref(`/organization/${
+      const numOfCommentsRef = app.database().ref(`/organization/${
         this.user.organizationId}/${this.contentType}/${this.postKey}/numOfComments/`);
       numOfCommentsRef.on('value', (snapshot) => {
         resolve(snapshot.val());
@@ -55,7 +54,7 @@ export class ComposeThreadPage {
     const updates = {};
     updates[`/organization/${this.user.organizationId}/${this.contentType}/${
       this.postKey}/numOfComments/`] = numOfComments + 1;
-    firebase.database().ref().update(updates).then(() => {
+    app.database().ref().update(updates).then(() => {
     }).catch((error) => {
       console.log(error);
     });
