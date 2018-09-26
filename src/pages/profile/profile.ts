@@ -76,8 +76,8 @@ export class ProfilePage {
         }));
       });
       if (this.user.avatarUrl === '../../assets/icon/GMIcon.png') {
-        this.avatar = `https://firebasestorage.googleapis.com/v0/b/greekme-7475a.appspot.com/o/GM_
-        Default.png?alt=media&token=6bc30d40-17a2-40bb-9af7-edff78112780`;
+        this.avatar = 'https://firebasestorage.googleapis.com/v0/b/greekme-7475a.appspot.com/o/' +
+        'GM_Default.png?alt=media&token=6bc30d40-17a2-40bb-9af7-edff78112780';
       } else {
         const avatarPath = `${this.user.organizationId}/profilePhotos/${this.user.uid}`;
         this.avatar = await firebase.storage().ref(avatarPath).getDownloadURL();
@@ -209,18 +209,6 @@ export class ProfilePage {
       avatar: this.avatar,
     });
     myModal.present();
-    myModal.onWillDismiss((userData) => {
-      // if (userData) {
-      //   const updatedUser = JSON.parse(userData.user) as User;
-      //   Object.keys(this.user).forEach((aProperty) => {
-      //     // If the value of the new user is different, replace it on the previous one
-      //     if (this.user[aProperty] !==  updatedUser[aProperty]) {
-      //       this.user[aProperty] = updatedUser[aProperty];
-      //     }
-      //     this.avatar = userData.avatar;
-      //   });
-      // }
-    });
   }
 
   destroySubscriptions() {

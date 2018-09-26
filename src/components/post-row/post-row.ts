@@ -32,8 +32,8 @@ export class PostRowComponent {
   async setupAvatar() {
     // Avatar url === default, use it, otherwise fetch it from storage
     if (this.post.avatarUrl === '../../assets/icon/GMIcon.png') {
-      this.avatar = `https://firebasestorage.googleapis.com/v0/b/greekme-7475a.appspot.com/o/GM_Def
-      ault.png?alt=media&token=6bc30d40-17a2-40bb-9af7-edff78112780`;
+      this.avatar = 'https://firebasestorage.googleapis.com/v0/b/greekme-7475a.appspot.com/o/' +
+        'GM_Default.png?alt=media&token=6bc30d40-17a2-40bb-9af7-edff78112780';
     } else {
       const path = `${this.user.organizationId}/profilePhotos/${this.post.uid}`;
       this.avatar = await app.storage().ref(path).getDownloadURL();

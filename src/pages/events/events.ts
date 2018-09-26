@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, ModalController } from 'ionic-angular';
 import { AngularFireList } from 'angularfire2/database';
 import { FirebaseServiceProvider } from '../../providers/firebaseService/firebaseService';
 import { AngularFireAuth } from 'angularfire2/auth/auth';
@@ -28,7 +28,8 @@ export class EventsPage {
   constructor(private afAuth: AngularFireAuth,
               public navCtrl: NavController,
               public firebaseService: FirebaseServiceProvider,
-              private userService: UserServiceProvider) {
+              private userService: UserServiceProvider,
+              private modalController: ModalController) {
   }
 
   ionViewDidLoad() {
@@ -52,7 +53,8 @@ export class EventsPage {
   }
 
   goToCreateEvent() {
-    this.navCtrl.push(CreateEventPage);
+    const myModal = this.modalController.create(CreateEventPage);
+    myModal.present();
   }
   goToEvent(key: string) {
     const data = {

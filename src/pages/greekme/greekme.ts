@@ -9,7 +9,6 @@ import { ComposePostPage } from '../composePost/composePost';
 import { Subscription } from 'rxjs';
 import { ContentType } from '../../models/contentType';
 import { FcmProvider } from '../../providers/fcm/fcm';
-import { tap } from 'rxjs/operators';
 import { MyApp } from '../../app/app.component';
 @Component({
   selector: 'page-greekme',
@@ -32,7 +31,7 @@ export class GreekMePage {
   constructor(public navCtrl: NavController,
               public firebaseService: FirebaseServiceProvider,
               private userService: UserServiceProvider,
-              private modal: ModalController,
+              private modalController: ModalController,
               private fcm: FcmProvider) {
   }
 
@@ -56,7 +55,6 @@ export class GreekMePage {
           this.image = 'assets/img/8d9YHCdTlOXCBqO65zNP_GM_Master01.png';
         });
       this.buildSubscriptions();
-      this.fcm.getToken();
     } catch (e) {
       console.log(e);
     }
@@ -118,11 +116,11 @@ export class GreekMePage {
   destroySubscriptions() {
     this.userLikeSubscription.unsubscribe();
     this.broadcastItemSubscription.unsubscribe();
-    // this.notificationsSubscriptions.unsubscribe();
   }
 
   goToComposeBroadcast() {
-    const myModal = this.modal.create(ComposePostPage, { contentType: ContentType.Broadcast });
+    const myModal = this.modalController
+      .create(ComposePostPage, { contentType: ContentType.Broadcast });
     myModal.present();
   }
 
