@@ -16,6 +16,7 @@ import * as moment from 'moment';
 import { Subscription } from 'rxjs';
 import * as firebase from 'firebase/app';
 import { Event } from '../../models/event';
+import { SettingsPage } from '../settings/settings';
 @Component({
   selector: 'page-profile',
   templateUrl: 'profile.html',
@@ -203,12 +204,23 @@ export class ProfilePage {
       }
     });
   }
+
   editSettings(): any {
-    const myModal = this.modal.create(EditProfilePage, {
+    const myModal = this.modal.create(SettingsPage, {
       user: JSON.stringify(this.user),
-      avatar: this.avatar,
     });
     myModal.present();
+    myModal.onWillDismiss((userData) => {
+      if (userData) {
+        const updatedUser = JSON.parse(userData.user) as User;
+        Object.keys(this.user).forEach((aProperty) => {
+          // If the value of the new user is different, replace it on the previous one
+          if (this.user[aProperty] !==  updatedUser[aProperty]) {
+            this.user[aProperty] = updatedUser[aProperty];
+          }
+        });
+      }
+    });
   }
 
   destroySubscriptions() {

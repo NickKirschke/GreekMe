@@ -1,4 +1,3 @@
-Problem with having the fcm hook in app component as there might not be a user yet when the app starts up.
 push notifications
     Notification drop down
         Change notification icon color if there is > 0 notifications?

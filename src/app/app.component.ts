@@ -1,5 +1,5 @@
 import { Component, Injectable, ViewChild } from '@angular/core';
-import { Platform, ToastController, Nav } from 'ionic-angular';
+import { Platform, Nav } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { LoginPage } from '../pages/login/login';
@@ -19,7 +19,6 @@ export class MyApp {
               statusBar: StatusBar,
               splashScreen: SplashScreen,
               private fcm: FcmProvider,
-              private toastCtrl: ToastController,
               afAuth: AngularFireAuth,
               firebaseService: FirebaseServiceProvider) {
     platform.ready().then(() => {
@@ -38,12 +37,7 @@ export class MyApp {
                   this.fcm.listenToNotifications().pipe(
                   tap((msg) => {
                     // show a toast
-                    const toast = this.toastCtrl.create({
-                      message: msg.body,
-                      duration: 3000,
-                      position: 'top',
-                    });
-                    toast.present();
+                    console.log(msg);
                   }),
                   )
                   .subscribe();
