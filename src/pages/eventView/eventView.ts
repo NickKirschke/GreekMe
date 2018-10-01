@@ -172,7 +172,7 @@ export class EventViewPage {
     toast.present();
   }
 
-  ionViewDidLoad() {
+  ionViewWillLoad() {
     this.dataSetup();
   }
 

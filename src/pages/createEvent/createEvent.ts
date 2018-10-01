@@ -36,7 +36,7 @@ export class CreateEventPage {
               private view: ViewController) {
   }
 
-  ionViewDidLoad() {
+  ionViewWillEnter() {
     this.dataSetup();
   }
 

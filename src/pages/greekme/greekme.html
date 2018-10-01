@@ -1,7 +1,7 @@
 <ion-header>
   <ion-navbar>
     <ion-buttons start>
-      <button ion-button icon-only>
+      <button ion-button icon-only (click)="goToNotifications()">
         <ion-icon name="notifications-outline" id="notifications"></ion-icon>
       </button>
     </ion-buttons>
@@ -15,6 +15,7 @@
     </ion-buttons>
   </ion-navbar>
 </ion-header>
+
 <ion-content>
   <div>
     <img class="headerPicture" [src]="image" />

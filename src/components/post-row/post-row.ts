@@ -110,11 +110,9 @@ export class PostRowComponent {
 
   itemSelected() {
     const aPost = JSON.stringify(this.post);
-    const aUser = JSON.stringify(this.user);
     const data = {
       organizationId: this.user.organizationId,
       post: aPost,
-      user: aUser,
     };
     this.navCtrl.push(ThreadPage, data);
   }

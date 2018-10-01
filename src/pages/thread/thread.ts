@@ -8,6 +8,7 @@ import { ComposeThreadPage } from '../composeThread/composeThread';
 import { Observable } from 'rxjs/Observable';
 import { ContentType } from '../../models/contentType';
 import { User } from '../../models/user';
+import { UserServiceProvider } from '../../providers/userService/userService';
 /**
  * Generated class for the ThreadPage page.
  *
@@ -28,10 +29,11 @@ export class ThreadPage {
   constructor(public navCtrl: NavController,
               private navParams: NavParams,
               private firebaseService: FirebaseServiceProvider,
-              private modal: ModalController) {
+              private modal: ModalController,
+              private userService: UserServiceProvider) {
   }
 
-  ionViewDidLoad() {
+  ionViewWillLoad() {
     this.dataSetup();
   }
 
@@ -39,7 +41,8 @@ export class ThreadPage {
     const data = this.navParams.data;
     this.post = JSON.parse(data.post);
     this.organizationId = data.organizationId;
-    this.user = JSON.parse(data.user);
+    const userGrab = await this.userService.currentUserInfo();
+    this.user = userGrab as User;
 
     if (this.post.contentType === ContentType.Broadcast) {
       this.postItems$ = this.firebaseService

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, ModalController, Platform, ToastController } from 'ionic-angular';
+import { NavController, ModalController } from 'ionic-angular';
 import { AngularFireList } from 'angularfire2/database';
 import { FirebaseServiceProvider } from '../../providers/firebaseService/firebaseService';
 import { User } from '../../models/user';
@@ -9,7 +9,7 @@ import { ComposePostPage } from '../composePost/composePost';
 import { Subscription } from 'rxjs';
 import { ContentType } from '../../models/contentType';
 import { FcmProvider } from '../../providers/fcm/fcm';
-import { MyApp } from '../../app/app.component';
+import { NotificationsPage } from '../notifications/notifications';
 @Component({
   selector: 'page-greekme',
   templateUrl: 'greekme.html',
@@ -27,7 +27,7 @@ export class GreekMePage {
   userLikeItems = new Set<string>();
   userLikeSubscription: Subscription;
   notificationsSubscriptions: Subscription;
-
+  notificationIcon = 'notifications-outline';
   constructor(public navCtrl: NavController,
               public firebaseService: FirebaseServiceProvider,
               private userService: UserServiceProvider,
@@ -121,6 +121,12 @@ export class GreekMePage {
   goToComposeBroadcast() {
     const myModal = this.modalController
       .create(ComposePostPage, { contentType: ContentType.Broadcast });
+    myModal.present();
+  }
+
+  goToNotifications() {
+    const myModal = this.modalController
+      .create(NotificationsPage);
     myModal.present();
   }
 

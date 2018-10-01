@@ -1,0 +1,14 @@
+<ion-item-sliding>
+  <ion-item text-wrap class="chat-boxes" (click)="itemSelected()">
+    <ion-avatar item-start>
+      <img [src]="avatar">
+    </ion-avatar>
+    <h2 style="margin-left: -1px;">{{this.notification.name}}</h2>
+    <p class="width:auto" style="color:black">{{this.notification.text}}</p>
+    <ion-note style="position: absolute;top:0;">{{this.notification.date | amTimeAgo}}</ion-note>
+  </ion-item>
+  <ion-item-options side="right">
+    <button ion-button (click)="deleteNotification()" color="danger">
+        <ion-icon name="trash"></ion-icon>Delete</button>
+  </ion-item-options>
+</ion-item-sliding>

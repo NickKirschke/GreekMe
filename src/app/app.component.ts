@@ -8,6 +8,8 @@ import { tap } from 'rxjs/operators';
 import { AngularFireAuth } from 'angularfire2/auth/auth';
 import { FirebaseServiceProvider } from '../providers/firebaseService/firebaseService';
 import { TabsControllerPage } from '../pages/tabs-controller/tabs-controller';
+import { UserServiceProvider } from '../providers/userService/userService';
+import { Post } from '../models/post';
 @Injectable()
 @Component({
   templateUrl: 'app.html',
@@ -20,7 +22,8 @@ export class MyApp {
               splashScreen: SplashScreen,
               private fcm: FcmProvider,
               afAuth: AngularFireAuth,
-              firebaseService: FirebaseServiceProvider) {
+              firebaseService: FirebaseServiceProvider,
+              userService: UserServiceProvider) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
@@ -35,9 +38,20 @@ export class MyApp {
                 if (this.platform.is('cordova')) {
                   await this.fcm.getToken();
                   this.fcm.listenToNotifications().pipe(
-                  tap((msg) => {
-                    // show a toast
-                    console.log(msg);
+                  tap((notification) => {
+                    console.log(notification);
+                    const match = /(?<=from ).+/.exec(notification.title);
+                    console.log(match);
+                    const aNotification = {
+                      name: match[0],
+                      key: notification.key,
+                      contentType: notification.contentType,
+                      date: notification.date,
+                      text: notification.body,
+                      avatarUrl: notification.avatarUrl,
+                      uid: notification.uid,
+                    } as Post;
+                    userService.notifications.set(notification.key, aNotification);
                   }),
                   )
                   .subscribe();

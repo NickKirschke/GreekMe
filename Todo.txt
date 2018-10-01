@@ -4,13 +4,11 @@ push notifications
         No notification messages when tapping (auto close at 0?)
         Notification has X which removes from a user's notifications
         Sender Name, Broadcast or Feed, message
-    Settings page for notifications etc
-        User setting for notifications regarding Broadcasts, Messages, and Events
-Correct image size generation with ionic cordova resources
+ Variable on user page that signifies the ntoifnications, set up observables on it.
 event alarms
 infinite scroll messed up
-
-Entries are not sorted prior to adding to the map. Need to get all, sort by date, then display.
+Entries are
+ not sorted prior to adding to the map. Need to get all, sort by date, then display.
 look at all cordova plugins and remove unnecessary ones
 
 DOCUMENTATION:

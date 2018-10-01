@@ -32,7 +32,7 @@ export class EventsPage {
               private modalController: ModalController) {
   }
 
-  ionViewDidLoad() {
+  ionViewWillLoad() {
     this.dataSetup();
   }
 

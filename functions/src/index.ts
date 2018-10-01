@@ -12,6 +12,13 @@ exports.broadcastPostNotification = functions.database
             notification: {
                 title: `Broadcast from ${broadcastData.name}`,
                 body: `${broadcastData.text}`,
+            },
+            data: {
+                contentType: broadcastData.contentType,
+                key: snapshot.key,
+                date: broadcastData.date,
+                avatarUrl: broadcastData.avatarUrl,
+                uid: broadcastData.uid,
             }
         };
         const db = admin.firestore();
@@ -42,6 +49,13 @@ exports.feedPostNotification = functions.database
             notification: {
                 title: `Message from ${messageData.name}`,
                 body: `${messageData.text}`,
+            },
+            data: {
+                contentType: messageData.contentType,
+                key: snapshot.key,
+                date: messageData.date,
+                avatarUrl: messageData.avatarUrl,
+                uid: messageData.uid,
             }
         };
         const db = admin.firestore();

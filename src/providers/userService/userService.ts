@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { User } from '../../models/user';
+import { Post } from '../../models/post';
 /**
  * Created by nicholaskirschke on 8/3/17.
  */
 @Injectable()
 export class UserServiceProvider {
+  notifications = new Map<string, Post>();
   constructor(private storage: Storage) {
   }
 
