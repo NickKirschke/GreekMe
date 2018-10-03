@@ -10,8 +10,15 @@ exports.broadcastPostNotification = functions.database
         // Notification content possibly add user face making the broadcast?
         const payload = {
             notification: {
-                title: `${broadcastData.name}`,
+                title: `Broadcast from ${broadcastData.name}`,
                 body: `${broadcastData.text}`,
+            },
+            data: {
+                contentType: broadcastData.contentType,
+                key: snapshot.key,
+                date: broadcastData.date,
+                avatarUrl: broadcastData.avatarUrl,
+                uid: broadcastData.uid,
             }
         };
         const db = admin.firestore();
@@ -23,8 +30,6 @@ exports.broadcastPostNotification = functions.database
         // send a notification to each device token
         devices.forEach(result => {
             const token = result.data().token;
-            console.log(result.data().userId);
-            console.log(broadcastData.uid);
             if(result.data().userId !== broadcastData.uid) {
                 tokens.push(token);
             }
@@ -42,8 +47,15 @@ exports.feedPostNotification = functions.database
         // Notification content possibly add user face making the broadcast?
         const payload = {
             notification: {
-                title: `${messageData.name}`,
+                title: `Message from ${messageData.name}`,
                 body: `${messageData.text}`,
+            },
+            data: {
+                contentType: messageData.contentType,
+                key: snapshot.key,
+                date: messageData.date,
+                avatarUrl: messageData.avatarUrl,
+                uid: messageData.uid,
             }
         };
         const db = admin.firestore();

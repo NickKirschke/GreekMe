@@ -25,14 +25,6 @@ export class LoginPage {
   }
 
   ionViewWillLoad() {
-    // If user is logged in retrieve uid then access user info from db..
-    this.userCheck = this.afAuth.authState.subscribe((data) => {
-      if (data) {
-        this.firebaseService.getUserDetails(data.uid)
-        .then(() => this.navCtrl.setRoot(TabsControllerPage));
-      }
-    });
-
     this.loginForm = this.formBuilder.group({
       email: [''],
       password: [''],
@@ -64,13 +56,5 @@ export class LoginPage {
     } finally {
       loader.dismiss();
     }
-  }
-
-  ionViewWillLeave() {
-    this.userCheck.unsubscribe();
-  }
-
-  ionViewWillUnload() {
-    this.userCheck.unsubscribe();
   }
 }

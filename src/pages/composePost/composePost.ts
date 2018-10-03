@@ -26,7 +26,7 @@ export class ComposePostPage {
               private view: ViewController) {
   }
 
-  ionViewDidLoad() {
+  ionViewWillEnter() {
     this.dataSetup();
   }
 

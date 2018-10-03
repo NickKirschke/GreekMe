@@ -10,6 +10,7 @@ import 'firebase/storage';
 import { ComposePostPage } from '../composePost/composePost';
 import { ContentType } from '../../models/contentType';
 import { Subscription } from 'rxjs';
+import { NotificationsPage } from '../notifications/notifications';
 
 @Component({
   selector: 'page-feed',
@@ -28,11 +29,12 @@ export class FeedPage {
               public navCtrl: NavController,
               public firebaseService: FirebaseServiceProvider,
               private userService: UserServiceProvider,
-              private modal: ModalController) {
+              private modalController: ModalController) {
   }
 
   goToComposeFeed() {
-    const myModal = this.modal.create(ComposePostPage, { contentType: ContentType.Message });
+    const myModal = this.modalController
+    .create(ComposePostPage, { contentType: ContentType.Message });
     myModal.present();
   }
 
@@ -103,7 +105,13 @@ export class FeedPage {
     this.destroySubscriptions();
   }
 
-  ionViewDidLoad() {
+  goToNotifications() {
+    const myModal = this.modalController
+      .create(NotificationsPage);
+    myModal.present();
+  }
+
+  ionViewWillLoad() {
     this.dataSetup();
   }
 }

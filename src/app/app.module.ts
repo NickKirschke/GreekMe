@@ -35,7 +35,9 @@ import { PhotoLibrary } from '@ionic-native/photo-library';
 import { FcmProvider } from '../providers/fcm/fcm';
 import { Firebase } from '@ionic-native/firebase';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
-
+import { SettingsPage } from '../pages/settings/settings';
+import { NotificationsPage } from '../pages/notifications/notifications';
+import { NotificationRowComponent } from '../components/notification-row/notification-row';
 @NgModule({
   declarations: [
     MyApp,
@@ -54,7 +56,9 @@ import { AngularFirestoreModule } from 'angularfire2/firestore';
     ComposeThreadPage,
     PostRowComponent,
     PopOverComponent,
-
+    SettingsPage,
+    NotificationsPage,
+    NotificationRowComponent,
   ],
   imports: [
     BrowserModule,
@@ -88,6 +92,9 @@ import { AngularFirestoreModule } from 'angularfire2/firestore';
     ComposeThreadPage,
     PostRowComponent,
     PopOverComponent,
+    SettingsPage,
+    NotificationsPage,
+    NotificationRowComponent,
   ],
   providers: [
     StatusBar,

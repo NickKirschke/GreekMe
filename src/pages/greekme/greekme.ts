@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, ModalController, Platform, ToastController } from 'ionic-angular';
+import { NavController, ModalController } from 'ionic-angular';
 import { AngularFireList } from 'angularfire2/database';
 import { FirebaseServiceProvider } from '../../providers/firebaseService/firebaseService';
 import { User } from '../../models/user';
@@ -9,8 +9,7 @@ import { ComposePostPage } from '../composePost/composePost';
 import { Subscription } from 'rxjs';
 import { ContentType } from '../../models/contentType';
 import { FcmProvider } from '../../providers/fcm/fcm';
-import { tap } from 'rxjs/operators';
-import { MyApp } from '../../app/app.component';
+import { NotificationsPage } from '../notifications/notifications';
 @Component({
   selector: 'page-greekme',
   templateUrl: 'greekme.html',
@@ -28,11 +27,11 @@ export class GreekMePage {
   userLikeItems = new Set<string>();
   userLikeSubscription: Subscription;
   notificationsSubscriptions: Subscription;
-
+  notificationIcon = 'notifications-outline';
   constructor(public navCtrl: NavController,
               public firebaseService: FirebaseServiceProvider,
               private userService: UserServiceProvider,
-              private modal: ModalController,
+              private modalController: ModalController,
               private fcm: FcmProvider) {
   }
 
@@ -56,7 +55,6 @@ export class GreekMePage {
           this.image = 'assets/img/8d9YHCdTlOXCBqO65zNP_GM_Master01.png';
         });
       this.buildSubscriptions();
-      this.fcm.getToken();
     } catch (e) {
       console.log(e);
     }
@@ -118,11 +116,17 @@ export class GreekMePage {
   destroySubscriptions() {
     this.userLikeSubscription.unsubscribe();
     this.broadcastItemSubscription.unsubscribe();
-    // this.notificationsSubscriptions.unsubscribe();
   }
 
   goToComposeBroadcast() {
-    const myModal = this.modal.create(ComposePostPage, { contentType: ContentType.Broadcast });
+    const myModal = this.modalController
+      .create(ComposePostPage, { contentType: ContentType.Broadcast });
+    myModal.present();
+  }
+
+  goToNotifications() {
+    const myModal = this.modalController
+      .create(NotificationsPage);
     myModal.present();
   }
 

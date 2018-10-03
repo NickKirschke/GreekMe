@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Firebase } from '@ionic-native/firebase';
 import { Platform } from 'ionic-angular';
 import { AngularFirestore } from 'angularfire2/firestore';
-import { AngularFireAuth } from 'angularfire2/auth/auth';
 import { UserServiceProvider } from '../userService/userService';
 import { User } from '../../models/user';
 
@@ -19,7 +18,6 @@ export class FcmProvider {
     public firebaseNative: Firebase,
     public afs: AngularFirestore,
     public platform: Platform,
-    private afAuth: AngularFireAuth,
     private userService: UserServiceProvider) {
   }
 
