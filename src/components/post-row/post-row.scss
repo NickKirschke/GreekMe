@@ -1,67 +1,77 @@
 post-row {
-    .chat-boxes {
-        ion-note {
-          font-size: 12px;
-          align-self: flex-start;
-          margin-top: 10px;
-          position: absolute;
-          top:0;
-          right:0;
-          margin-right:14px;
-        }
-        .avatar {
-          width: 60px;
-          height: 60px;
-          -webkit-border-radius: 60px;
-          -webkit-background-clip: padding-box;
-          -moz-border-radius: 60px;
-          -moz-background-clip: padding;
-          border-radius: 60px;
-          background-clip: padding-box;
-          margin: 7px 0 0 5px;
-          float: left;
-          background-size: cover;
-          background-position: center center;
-        }
-        ion-avatar {
-            align-self: flex-start;
-            img {
-              object-fit: cover;
-            }
-        }
-        .comments {
-          display: inline-block;
-          margin-top: 8px;
-          font-size: 12px;
-          align-self: flex-start;
-          label {
-            margin-right: 8px;
-            margin-left: -4px;
-          }
-          .comment-badge {
-            background-color: lightgray;
-            margin-left: -6px;
-            margin-right: -21px;
-            margin-top: -2.5px;
-          }
-          .like-badge {
-            background-color: lightgray;
-            margin-left: 2px;
-            margin-right: -6px;
-            margin-top: -2.5px;
-          }
-          .like-icon {
-            margin-left: 15px;
-          }
-
-          .comment-group {
-            width: 25%;
-          }
-          
-          .like-group {
-            width: 25%;
-          }
-          
-        }
+  .redHeart {
+    color: rgb(245, 111, 107);
+    transition:
+      font-size 3s cubic-bezier(0.61,-0.19, 0.7,-0.11),
+      flex 3s cubic-bezier(0.61,-0.19, 0.7,-0.11),
+      background 3s;
+  }
+  .chat-boxes {
+      ion-note {
+        font-size: 12px;
+        align-self: flex-start;
+        margin-top: 10px;
+        position: absolute;
+        top:0;
+        right:0;
+        margin-right:14px;
       }
+      .avatar {
+        width: 60px;
+        height: 60px;
+        -webkit-border-radius: 60px;
+        -webkit-background-clip: padding-box;
+        -moz-border-radius: 60px;
+        -moz-background-clip: padding;
+        border-radius: 60px;
+        background-clip: padding-box;
+        margin: 7px 0 0 5px;
+        float: left;
+        background-size: cover;
+        background-position: center center;
+      }
+      ion-avatar {
+          align-self: flex-start;
+          img {
+            object-fit: cover;
+          }
+      }
+      .comments {
+        display: inline-block;
+        margin-top: 8px;
+        font-size: 12px;
+        align-self: flex-start;
+        label {
+          margin-right: 8px;
+          margin-left: -4px;
+        }
+        .comment-badge {
+          background-color: white;
+          margin-left: -6px;
+          margin-right: -21px;
+          margin-top: -2.5px;
+        }
+        .like-badge {
+          background-color: white;
+          margin-left: 2px;
+          margin-right: -6px;
+          margin-top: -2.5px;
+        }
+        .like-icon {
+          margin-left: 15px;
+        }
+        .like-icon:hover {
+          color: rgb(245, 111, 107);
+        }
+
+        .comment-group {
+          width: 25%;
+        }
+        
+        .like-group {
+          width: 25%;
+        }
+        
+      }
+    }
 }

@@ -1,10 +1,5 @@
-push notifications
-    Notification drop down
-        Change notification icon color if there is > 0 notifications?
-        No notification messages when tapping (auto close at 0?)
-        Notification has X which removes from a user's notifications
-        Sender Name, Broadcast or Feed, message
- Variable on user page that signifies the ntoifnications, set up observables on it.
+
+Variable on user page that signifies the ntoifnications, set up observables on it.
 event alarms
 infinite scroll messed up
 Entries are

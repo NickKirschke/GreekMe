@@ -11,7 +11,7 @@
       <ion-badge *ngIf="this.post.numOfComments > 0" class="comment-badge">{{this.post.numOfComments}}</ion-badge>
     </ion-col>
     <ion-col col-4>
-      <ion-icon *ngIf="showLikes" [name]="this.post.iconName" (click)="doLike()" class="like-icon"></ion-icon>
+      <ion-icon *ngIf="showLikes" [name]="this.post.iconName" [ngClass]="{'redHeart' : this.post.iconName === 'heart'}" (click)="doLike()" class="like-icon"></ion-icon>
       <ion-badge *ngIf="this.post.numOfLikes > 0" class="like-badge">{{this.post.numOfLikes}} </ion-badge>
     </ion-col>
   </ion-row>
