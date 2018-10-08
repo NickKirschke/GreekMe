@@ -2,7 +2,7 @@
   <ion-navbar>
     <ion-title>Thread</ion-title>
     <ion-buttons end>
-      <button ion-button icon-only (click)="goToComposeThread()">
+      <button ion-button icon-only (click)="goToComposeThread()" id="compose-thread">
         <ion-icon name="add"></ion-icon>
       </button>
     </ion-buttons>
@@ -12,10 +12,10 @@
 
 <ion-content>
   <ion-card>
-    <ion-card-header>
+    <ion-card-header id="post-name">
       {{post.name}} said:
     </ion-card-header>
-    <ion-card-content>
+    <ion-card-content id="post-text">
       {{post.text}}
     </ion-card-content>
   </ion-card>

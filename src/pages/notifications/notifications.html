@@ -1,18 +1,15 @@
 <ion-header>
-
   <ion-navbar>
       <ion-buttons start>
-          <button ion-button (click)="closeModal()">Close</button>
+          <button ion-button (click)="closeModal()" id="close-notifications">Close</button>
         </ion-buttons>
     <ion-title>Notifications</ion-title>
   </ion-navbar>
-
 </ion-header>
 
 
 <ion-content padding>
-
-  <h3 *ngIf="notifications.size < 1" class="emptyMessage">You do not have any notifications.</h3>
+  <h3 *ngIf="notifications.size < 1" class="emptyMessage" id="empty-notifications">You do not have any notifications.</h3>
   <ion-list>
     <notification-row *ngFor="let item of notifications | iterable; let i = index; trackBy: trackByFn" class="chat-boxes"
       [notification]="item.key" [user]="user">

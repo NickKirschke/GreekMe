@@ -1,28 +1,27 @@
 <ion-header>
 </ion-header>
-<ion-content padding style="background:url(assets/img/8d9YHCdTlOXCBqO65zNP_GM_Master01.png) no-repeat center;background-size:cover;"
-  id="page6">
-  <div id="signup-markdown1" *ngIf="error" class="show-list-numbers-and-dots error-box">
-    <p style="color:#000000;">
+<ion-content padding style="background:url(assets/img/8d9YHCdTlOXCBqO65zNP_GM_Master01.png) no-repeat center;background-size:cover;">
+  <div *ngIf="error" class="show-list-numbers-and-dots error-box">
+    <p class="error">
       {{error}}
     </p>
   </div>
   
-    <ion-list id="signup-list2" class="center-form">
-      <form class="input-form" (ngSubmit)="register()" [formGroup]="signupForm">
-      <ion-item id="signup-input3" class="ion-item-top">
+    <ion-list id="signup-list" class="center-form">
+      <form class="input-form" (ngSubmit)="register()" [formGroup]="signupForm" id="signup-form">
+      <ion-item id="signup-name" class="ion-item-top">
         <ion-label>
           Name
         </ion-label>
         <ion-input type="text" name="user-name" formControlName="name" required></ion-input>
       </ion-item>
-      <ion-item id="signup-input4" class="ion-item-middle">
+      <ion-item id="signup-email" class="ion-item-middle">
         <ion-label>
           Email
         </ion-label>
         <ion-input type="email" name="user-email" formControlName="email" required></ion-input>
       </ion-item>
-      <ion-item id="signup-input7" class="ion-item-middle">
+      <ion-item id="signup-organization-id" class="ion-item-middle">
         <ion-label>
           Organization ID
         </ion-label>
@@ -30,26 +29,26 @@
       </ion-item>
       <ion-item class="ion-item-middle">
         <ion-label>Role</ion-label>
-        <ion-select name="user role" class="select-role"formControlName="role" required>
+        <ion-select name="user role" class="select-role"formControlName="role" required id="signup-role">
           <ion-option value="President">President</ion-option>
           <ion-option value="Vice President">Vice President</ion-option>
           <ion-option value="Chair Member">Chair Member</ion-option>
           <ion-option value="Member">Member</ion-option>
         </ion-select>
       </ion-item>
-      <ion-item id="signup-input5" class="ion-item-bottom">
+      <ion-item class="ion-item-bottom">
         <ion-label>
           Password
         </ion-label>
-        <ion-input type="password" name="user-password" formControlName="password" required></ion-input>
+        <ion-input type="password" name="user-password" formControlName="password" required id="signup-password"></ion-input>
       </ion-item>
 
-      <div class="spacer" style="width:300px;height:47px;" id="signup-spacer2"></div>
-      <button id="signup-button3" ion-button class="button-positive"  block [disabled]="!signupForm.valid" [ngClass]="{'button-disabled': !signupForm.valid, 'button-enabled': signupForm.valid}">
+      <div class="spacer"></div>
+      <button id="signup" ion-button class="button-positive"  block [disabled]="!signupForm.valid" [ngClass]="{'button-disabled': !signupForm.valid, 'button-enabled': signupForm.valid}">
       Sign up
       </button>
     </form>
-    <button id="signup-button4" ion-button clear block style="color:goldenrod" (click)="goToLogin()">
+    <button id="login-button" ion-button clear block class="login-button" (click)="goToLogin()">
         Already have an account?
       </button>
     </ion-list>

@@ -1,19 +1,18 @@
 <ion-header>
-
   <ion-navbar no-border-bottom>
     <ion-title>Event Details</ion-title>
     <ion-buttons end>
-      <button ion-button icon-only *ngIf="isCreator" (click)="editEvent()">
+      <button ion-button icon-only *ngIf="isCreator" (click)="editEvent()" id="edit-event">
         <ion-icon name="settings" ></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>
   <ion-toolbar no-border-top>
     <ion-segment [(ngModel)]="eventInfo">
-      <ion-segment-button value="details">
+      <ion-segment-button value="details" id="event-details">
         Details
       </ion-segment-button>
-      <ion-segment-button value="attendingList">
+      <ion-segment-button value="attendingList" id="event-attendance">
         Who's Going?
       </ion-segment-button>
     </ion-segment>
@@ -24,17 +23,17 @@
 <ion-content padding>
   <div [ngSwitch]="eventInfo">
     <ion-list *ngSwitchCase="'details'">
-      <h2>{{ anEvent?.name }}</h2>
-      <p>{{repeatLines[anEvent?.repeat]}} on {{anEvent?.date}}</p>
-      <p>At {{ anEvent?.location }}</p>
-      <p>Made by: {{ anEvent?.creator }}
+      <h2 id="event-name">{{ anEvent?.name }}</h2>
+      <p id="event-occurence">{{repeatLines[anEvent?.repeat]}} on {{anEvent?.date}}</p>
+      <p id="event-location">At {{ anEvent?.location }}</p>
+      <p id="event-creator">Made by: {{ anEvent?.creator }}
         <hr/>
         <h6> Details:</h6>
-        <p> {{ anEvent?.info }}</p>
+        <p id="event-info"> {{ anEvent?.info }}</p>
         <div>
           <label>RSVP:</label>
-          <button ion-button small id="yesButton" [outline]="!attendingStatus" (click)="rsvpYes()" style="margin-bottom:14px;">Going!</button>
-          <button ion-button small id="noButton" [outline]="attendingStatus" (click)="rsvpNo()" style="margin-bottom:14px;">Can't Go</button>
+          <button ion-button small id="yesButton" [outline]="!attendingStatus" (click)="rsvpYes()" class="attendance-buttons">Going!</button>
+          <button ion-button small id="noButton" [outline]="attendingStatus" (click)="rsvpNo()" class="attendance-buttons">Can't Go</button>
         </div>
 
     </ion-list>

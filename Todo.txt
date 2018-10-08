@@ -1,10 +1,6 @@
-
-Variable on user page that signifies the ntoifnications, set up observables on it.
 event alarms
-infinite scroll messed up
-Entries are
- not sorted prior to adding to the map. Need to get all, sort by date, then display.
-look at all cordova plugins and remove unnecessary ones
+Notification icon swap
+notifications on profile and events
 
 DOCUMENTATION:
 Create a db diagram

@@ -6,49 +6,49 @@
   </ion-navbar>
   <ion-navbar *ngIf="editMode">
     <ion-buttons start>
-      <button ion-button (click)="closeModal()">Close</button>
+      <button ion-button (click)="closeModal()" id="close-create-event">Close</button>
     </ion-buttons>
     <ion-title>
       Edit Event
     </ion-title>
     <ion-buttons end>
-      <button ion-button (click)="updateEvent()">Done</button>
+      <button ion-button (click)="updateEvent()" id="create-event">Done</button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
-<ion-content padding id="page11">
+<ion-content padding>
   <ion-list>
     <ion-item>
       <ion-label>Event Name</ion-label>
-      <ion-input [(ngModel)]="event.name" autocomplete="on" autocorrect="on"></ion-input>
+      <ion-input [(ngModel)]="event.name" autocomplete="on" autocorrect="on" id="event-name"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label>Location</ion-label>
-      <ion-input [(ngModel)]="event.location" autocomplete="on" autocorrect="on"></ion-input>
+      <ion-input [(ngModel)]="event.location" autocomplete="on" autocorrect="on" id="event-location"></ion-input>
     </ion-item>
   </ion-list>
 
   <ion-list>
     <ion-item>
       <ion-label>Date</ion-label>
-      <ion-datetime displayFormat="DDDD MMM DD YYYY" [(ngModel)]="event.date" min="2018" max="2020-12-31"></ion-datetime>
+      <ion-datetime displayFormat="DDDD MMM DD YYYY" [(ngModel)]="event.date" min="2018" max="2020-12-31" id="event-date"></ion-datetime>
     </ion-item>
 
     <ion-item>
       <ion-label>Time</ion-label>
-      <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A" [(ngModel)]="event.date"></ion-datetime>
+      <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A" [(ngModel)]="event.date" id="event-time"></ion-datetime>
     </ion-item>
 
     <ion-item>
       <ion-label>Repeat</ion-label>
       <ion-select name="event repeat" [(ngModel)]="event.repeat">
-        <ion-option *ngFor="let option of repeatOptions" [value]="option">{{option}}</ion-option>
+        <ion-option *ngFor="let option of repeatOptions" [value]="option" id="event-repeat">{{option}}</ion-option>
       </ion-select>
     </ion-item>
 
     <ion-item>
       <ion-label>Details</ion-label>
-      <ion-textarea [(ngModel)]="event.info" autocomplete="on" autocorrect="on">
+      <ion-textarea [(ngModel)]="event.info" autocomplete="on" autocorrect="on" id="event-details">
       </ion-textarea>
     </ion-item>
 
@@ -61,5 +61,5 @@
           <ion-note item-end>None</ion-note>
         </button>-->
   <!-- </ion-list>  -->
-  <button ion-button block style="margin-bottom: 10px" (click)="createEvent()" *ngIf="!editMode">Create Event!</button>
+  <button ion-button block class="create-event" (click)="createEvent()" *ngIf="!editMode">Create Event!</button>
 </ion-content>

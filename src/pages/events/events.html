@@ -2,21 +2,21 @@
   <ion-navbar>
     <ion-buttons start>
       <button ion-button icon-only>
-            <ion-icon name="notifications-outline"></ion-icon>
+            <ion-icon name="notifications-outline" id="notifications"></ion-icon>
           </button>
     </ion-buttons>
     <ion-title>
       Upcoming Events
     </ion-title>
     <ion-buttons end>
-      <button ion-button icon-only (click)="goToCreateEvent()">
+      <button ion-button icon-only (click)="goToCreateEvent()" id="create-event">
           <ion-icon name="add"></ion-icon>
         </button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
-<ion-content id="page4">
-  <p *ngIf="eventItems.size < 1" class="emptyMessage">
+<ion-content>
+  <p *ngIf="eventItems.size < 1" class="emptyMessage" id="no-events-message">
     <b>You are not attending any events yet!</b>
   </p>
   <ion-list no-lines>

@@ -1,13 +1,13 @@
 <ion-header>
   <ion-navbar>
     <ion-buttons start>
-      <button ion-button (click)="closeModal()">Close</button>
+      <button ion-button (click)="closeModal()" id="close-edit-profile">Close</button>
     </ion-buttons>
     <ion-title>
       Edit Profile
     </ion-title>
     <ion-buttons end>
-      <button ion-button (click)="updateProfile()">Done</button>
+      <button ion-button (click)="updateProfile()" id="update-profile">Done</button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
@@ -21,12 +21,12 @@
       </ion-col>
     </ion-row>
     <ion-row>
-      <h6 class="profile-picture" col-12 (click)="photoMenu()">Change Profile Picture</h6>
+      <h6 class="profile-picture" col-12 (click)="photoMenu()" id="edit-profile-picture">Change Profile Picture</h6>
     </ion-row>
 
     <ion-item>
       <ion-label>Name</ion-label>
-      <ion-input type="text" [(ngModel)]="user.name" name="name"></ion-input>
+      <ion-input type="text" [(ngModel)]="user.name" name="name" id="edit-name"></ion-input>
     </ion-item>
     <ion-row>
       <ion-col col-2>
@@ -34,7 +34,7 @@
       </ion-col>
       <ion-col col-10>
         <textarea #bio id="bio" class="bio" autocomplete="on" autocorrect="on" placeholder="Tell everyone a little about yourself!"
-          [(ngModel)]="user.bio" name="bio" rows="1" (keydown)="resize()" maxlength="150"> </textarea>
+          [(ngModel)]="user.bio" name="bio" rows="1" (keydown)="resize()" maxlength="150" id="edit-bio"> </textarea>
       </ion-col>
     </ion-row>
   </ion-grid>
