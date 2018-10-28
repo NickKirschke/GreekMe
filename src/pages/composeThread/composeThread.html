@@ -1,22 +1,22 @@
 <ion-header>
   <ion-navbar>
     <ion-buttons start>
-      <button ion-button (click)="closeModal()">Close</button>
+      <button ion-button (click)="closeModal()" id="close-compose-thread">Close</button>
     </ion-buttons>
     <ion-title>
       Compose Comment
     </ion-title>
     <ion-buttons end>
-      <button ion-button (click)="composeThread(tempPost)">Post</button>
+      <button ion-button (click)="composeThread(tempPost)" id="compose-thread">Post</button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
 <ion-content padding>
-  <div id="composeThread-markdown1" *ngIf="error" class="show-list-numbers-and-dots error-box">
+  <div id="compose-thread-error" *ngIf="error" class="show-list-numbers-and-dots error-box">
     <p>{{error}}</p>
   </div>
-  <form id="composeThread-form3" (ngSubmit)="composeThread(tempPost)">
-    <ion-item id="composeThread-input9">
+  <form id="compose-thread-form" (ngSubmit)="composeThread(tempPost)">
+    <ion-item>
       <textarea #comment id="comment" type="text" class="comment" placeholder="Respond with?" name="comment" 
         [(ngModel)]="tempPost.text" autocomplete="on" autocorrect="on" (keyup)="resize()"></textarea>
     </ion-item>

@@ -26,7 +26,6 @@ export class GreekMePage {
   userLikeListRef: AngularFireList<any>;
   userLikeItems = new Set<string>();
   userLikeSubscription: Subscription;
-  notificationsSubscriptions: Subscription;
   notificationIcon = 'notifications-outline';
   constructor(public navCtrl: NavController,
               public firebaseService: FirebaseServiceProvider,
@@ -88,11 +87,7 @@ export class GreekMePage {
           ...action.payload.val(),
           iconName: this.userLikeItems.has(action.key) ? 'heart' : 'heart-outline',
         };
-        // if (broadcastCounter < this.loadCap) {
         this.broadcastItems.set(broadcast.key, broadcast);
-        // } else {
-        //   this.reserveBroadcasts.push(broadcast);
-        // }
         broadcastCounter += 1;
       } else if (action.type === 'child_changed') {
         const previousBroadcast = this.broadcastItems.get(action.key);

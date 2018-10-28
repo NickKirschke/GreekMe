@@ -1,15 +1,15 @@
 <ion-header>
   <ion-navbar>
     <ion-buttons start>
-      <button ion-button icon-only (click)="goToNotifications()">
-        <ion-icon name="notifications-outline" id="notifications"></ion-icon>
+      <button ion-button icon-only (click)="goToNotifications()" id="notifications">
+        <ion-icon [name]="notificationsCount.size > 0 ? notifications : notifications-outline" id="notifications"></ion-icon>
       </button>
     </ion-buttons>
     <ion-title>
       GreekMe
     </ion-title>
     <ion-buttons end>
-      <button ion-button icon-only *ngIf="validRole" (click)="goToComposeBroadcast()">
+      <button ion-button icon-only *ngIf="validRole" (click)="goToComposeBroadcast()" id="compose-post">
         <ion-icon name="add"></ion-icon>
       </button>
     </ion-buttons>
@@ -18,7 +18,7 @@
 
 <ion-content>
   <div>
-    <img class="headerPicture" [src]="image" />
+    <img class="headerPicture" [src]="image" id="organization-image"/>
   </div>
   <ion-list>
     <post-row text-wrap *ngFor="let item of broadcastItems | iterable; let i = index; trackBy: trackByFn" class="chat-boxes"

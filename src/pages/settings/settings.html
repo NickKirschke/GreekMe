@@ -7,13 +7,13 @@
 <ion-header>
   <ion-navbar>
     <ion-buttons start>
-      <button ion-button (click)="closeModal()">Close</button>
+      <button ion-button (click)="closeModal()" id="close-settings">Close</button>
     </ion-buttons>
     <ion-title>
       Edit Settings
     </ion-title>
     <ion-buttons end>
-      <button ion-button (click)="updateSettings()">Done</button>
+      <button ion-button (click)="updateSettings()" id="update-settings">Done</button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
@@ -22,12 +22,12 @@
 <ion-content padding>
   <ion-item>
     <ion-label>Broadcast Notifications</ion-label>
-    <ion-toggle [(ngModel)]="user.broadcastNotifications"></ion-toggle>
+    <ion-toggle [(ngModel)]="user.broadcastNotifications" id="broadcast-notifications"></ion-toggle>
   </ion-item>
 
   <ion-item>
     <ion-label>Feed Notifications</ion-label>
-    <ion-toggle [(ngModel)]="user.feedNotifications"></ion-toggle>
+    <ion-toggle [(ngModel)]="user.feedNotifications" id="feed-notifications"></ion-toggle>
   </ion-item>
 
 </ion-content>

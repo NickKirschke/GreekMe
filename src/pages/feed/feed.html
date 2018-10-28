@@ -1,7 +1,7 @@
 <ion-header>
   <ion-navbar>
     <ion-buttons start>
-      <button ion-button icon-only (click)="goToNotifications()">
+      <button ion-button icon-only (click)="goToNotifications()" id="notifications">
         <ion-icon [name]="notifications-outline"></ion-icon>
       </button>
     </ion-buttons>
@@ -9,7 +9,7 @@
       Feed
     </ion-title>
     <ion-buttons end>
-      <button ion-button icon-only (click)="goToComposeFeed()">
+      <button ion-button icon-only (click)="goToComposeFeed()" id="create-feed">
         <ion-icon name="add"></ion-icon>
       </button>
     </ion-buttons>

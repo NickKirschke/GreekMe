@@ -1,28 +1,29 @@
 <ion-header>
 </ion-header>
 <ion-content padding style="background:url(assets/img/8d9YHCdTlOXCBqO65zNP_GM_Master01.png) no-repeat center;background-size:cover;"
-  id="page5">
-  <div id="login-markdown1" *ngIf="error" class="show-list-numbers-and-dots error-box">
+  id="login-page">
+  <div id="login-error" *ngIf="error" class="show-list-numbers-and-dots error-box">
     <p style="color:#000000;">{{error}}</p>
   </div>
 
-  <ion-list class="center-form" id="login-list1">
-    <form class="input-form" (ngSubmit)="login(user)" [formGroup]="loginForm">
+  <ion-list class="center-form" id="login-list">
+    <form class="input-form" (ngSubmit)="login(user)" [formGroup]="loginForm" id="login-form">
       <ion-item id="login-input1" class="ion-item-top">
         <ion-label>Email</ion-label>
-        <ion-input type="email" name="user email" formControlName="email" required></ion-input>
+        <ion-input type="email" name="user email" formControlName="email" required id="email-input"></ion-input>
       </ion-item>
       <ion-item id="login-input2" class="ion-item-bottom">
         <ion-label>
           Password
         </ion-label>
-        <ion-input type="password" name="user password" formControlName="password" required></ion-input>
+        <ion-input type="password" name="user password" formControlName="password" required id="password-input"></ion-input>
       </ion-item>
       <div class="spacer" style="height:40px;" id="login-spacer1"></div>
-      <button id="login-button1" ion-button block [ngClass]="{'button-disabled': !loginForm.valid, 'button-enabled': loginForm.valid}" type="submit" [disabled]="!loginForm.valid">
+      <button id="login" ion-button block [ngClass]="{'button-disabled': !loginForm.valid, 'button-enabled': loginForm.valid}"
+        type="submit" [disabled]="!loginForm.valid">
         Log in
       </button>
     </form>
-    <button id="login-button2" ion-button clear style="color:#daa520;" block (click)="goToSignup()">Register</button>
+    <button id="register" ion-button clear class="register" block (click)="goToSignup()">Register</button>
   </ion-list>
 </ion-content>

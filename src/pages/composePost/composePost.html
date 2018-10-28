@@ -1,22 +1,22 @@
 <ion-header>
   <ion-navbar>
     <ion-buttons start>
-      <button ion-button (click)="closeModal()">Close</button>
+      <button ion-button (click)="closeModal()" id="close-compose-post">Close</button>
     </ion-buttons>
     <ion-title>
       {{contentMessage}}
     </ion-title>
     <ion-buttons end>
-        <button ion-button (click)="composePost(tempPost)">Post</button>
+        <button ion-button (click)="composePost(tempPost)" id="compose-post">Post</button>
       </ion-buttons>
   </ion-navbar>
 </ion-header>
 <ion-content padding>
-    <div id="composePost-markdown1" *ngIf="error" class="show-list-numbers-and-dots error-box">
+    <div id="compose-post-error" *ngIf="error" class="show-list-numbers-and-dots error-box">
     <p>{{error}}</p>
   </div>
-  <form id="composePost-form3" (ngSubmit)="composePost(tempPost)">
-    <ion-item text-wrap id="composePost-input9">
+  <form id="compose-post-form" (ngSubmit)="composePost(tempPost)">
+    <ion-item text-wrap>
       <textarea #post id="post" class="post" type="text" placeholder="Update everyone about?" name="post" 
        [(ngModel)]="tempPost.text" autocomplete="on" autocorrect="on" (keyup)="resize()"></textarea>
     </ion-item>
