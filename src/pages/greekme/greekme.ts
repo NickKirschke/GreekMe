@@ -117,7 +117,6 @@ export class GreekMePage {
         } else {
           this.notificationsIcon = 'notifications-outline';
         }
-        console.log(size);
       },
     });
   }
