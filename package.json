@@ -21,6 +21,7 @@
     "@angular/http": "6.1.6",
     "@angular/platform-browser": "6.1.6",
     "@angular/platform-browser-dynamic": "6.1.6",
+    "@google-cloud/storage": "^2.3.0",
     "@ionic-native/camera": "^4.17.0",
     "@ionic-native/core": "4.9.0",
     "@ionic-native/file": "^4.17.0",
@@ -35,6 +36,7 @@
     "angular2-moment": "^1.9.0",
     "angularfire2": "^5.1.0",
     "cordova-android": "6.3.0",
+    "cordova-ios": "4.5.5",
     "cordova-plugin-add-swift-support": "^1.7.2",
     "cordova-plugin-camera": "^4.0.3",
     "cordova-plugin-console": "1.0.5",
@@ -62,8 +64,7 @@
     "rxjs-compat": "^6.3.3",
     "sw-toolbox": "3.6.0",
     "tslint-config-airbnb": "^5.11.0",
-    "zone.js": "0.8.26",
-    "cordova-ios": "4.5.5"
+    "zone.js": "0.8.26"
   },
   "devDependencies": {
     "@angular/cli": "^6.2.7",
