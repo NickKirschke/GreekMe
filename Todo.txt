@@ -1,6 +1,5 @@
+splash screen youtube video to get rid of white screen
 event alarms
-Notification icon swap
-notifications on profile and events
 
 DOCUMENTATION:
 Create a db diagram

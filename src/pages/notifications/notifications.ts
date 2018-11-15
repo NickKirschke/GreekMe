@@ -23,6 +23,7 @@ export class NotificationsPage {
 
   ionViewWillLoad() {
     this.notifications = this.userService.notifications;
+    console.log(this.notifications);
   }
 
   async dataSetup() {

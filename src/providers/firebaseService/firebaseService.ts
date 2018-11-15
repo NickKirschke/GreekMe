@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
-import { AngularFireDatabase } from 'angularfire2/database/database';
+import { AngularFireDatabase } from 'angularfire2/database';
 import { Storage } from '@ionic/storage';
 import { User } from '../../models/user';
-import { AngularFireObject } from 'angularfire2/database';
 import app from 'firebase/app';
 import 'firebase/storage';
 import { Post } from '../../models/post';
@@ -14,7 +13,6 @@ import { Observable } from '@firebase/util';
 @Injectable()
 export class FirebaseServiceProvider {
   user: Observable<any>;
-  userData: AngularFireObject<User>;
   firebaseStorage = app.storage();
   firebaseDb = app.database();
   constructor(private afDB: AngularFireDatabase,

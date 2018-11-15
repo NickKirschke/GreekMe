@@ -19,6 +19,8 @@ exports.broadcastPostNotification = functions.database
                 date: broadcastData.date,
                 avatarUrl: broadcastData.avatarUrl,
                 uid: broadcastData.uid,
+                name: broadcastData.name,
+                message: broadcastData.text,
             }
         };
         const db = admin.firestore();
@@ -56,6 +58,8 @@ exports.feedPostNotification = functions.database
                 date: messageData.date,
                 avatarUrl: messageData.avatarUrl,
                 uid: messageData.uid,
+                name: messageData.name,
+                message: messageData.text,
             }
         };
         const db = admin.firestore();

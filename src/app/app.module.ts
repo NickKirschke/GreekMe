@@ -21,7 +21,7 @@ import { HttpModule } from '@angular/http';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireModule } from 'angularfire2';
 import { FIREBASE_CONST } from './app.firebase.config';
-import { AngularFireAuthModule } from 'angularfire2/auth/auth.module';
+import { AngularFireAuthModule } from 'angularfire2/auth';
 import { IonicStorageModule } from '@ionic/storage';
 import { UserServiceProvider } from '../providers/userService/userService';
 import { MomentModule } from 'angular2-moment';
