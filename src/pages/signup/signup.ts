@@ -48,7 +48,7 @@ export class SignupPage {
     });
     try {
       loader.present();
-      firebase.database().ref('organization/' + user.organizationId)
+      firebase.database().ref(`organization/${user.organizationId}`)
       .once('value').then((snapshot) => {
         if (snapshot.val()) {
           this.afAuth.auth

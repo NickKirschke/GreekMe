@@ -148,7 +148,6 @@ export class GreekMePage {
     setTimeout(() => {
       while (this.reserveBroadcasts.length > 0) {
         const tempBroadcast = this.reserveBroadcasts.shift();
-        console.log(tempBroadcast);
         this.broadcastItems.set(tempBroadcast.key, tempBroadcast);
       }
       console.log('Async operation has ended');
