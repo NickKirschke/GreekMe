@@ -6,10 +6,12 @@ import { User } from '../../models/user';
 import { Post } from '../../models/post';
 import { UserServiceProvider } from '../../providers/userService/userService';
 import { ComposePostPage } from '../composePost/composePost';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { ContentType } from '../../models/contentType';
 import { FcmProvider } from '../../providers/fcm/fcm';
 import { NotificationsPage } from '../notifications/notifications';
+import * as Rx from 'rxjs/Rx';
+
 @Component({
   selector: 'page-greekme',
   templateUrl: 'greekme.html',
@@ -17,7 +19,7 @@ import { NotificationsPage } from '../notifications/notifications';
 export class GreekMePage {
   user = {} as User;
   validRole = false;
-  image: string;
+  image = '../../assets/img/8d9YHCdTlOXCBqO65zNP_GM_Master01.png';
   loadCap = 10;
   reserveBroadcasts =  [];
   broadcastItemRef: AngularFireList<any>;
@@ -26,7 +28,9 @@ export class GreekMePage {
   userLikeListRef: AngularFireList<any>;
   userLikeItems = new Set<string>();
   userLikeSubscription: Subscription;
-  notificationIcon = 'notifications-outline';
+  notificationsSubscription: Subscription;
+  notificationsIcon = 'notifications-outline';
+  notificationCount = 0;
   constructor(public navCtrl: NavController,
               public firebaseService: FirebaseServiceProvider,
               private userService: UserServiceProvider,
@@ -106,11 +110,21 @@ export class GreekMePage {
         });
       }
     });
+    this.notificationsSubscription = this.userService.notificationSizeSubject.subscribe({
+      next: (size) => {
+        if (size > 0) {
+          this.notificationsIcon = 'notifications';
+        } else {
+          this.notificationsIcon = 'notifications-outline';
+        }
+      },
+    });
   }
 
   destroySubscriptions() {
     this.userLikeSubscription.unsubscribe();
     this.broadcastItemSubscription.unsubscribe();
+    this.notificationsSubscription.unsubscribe();
   }
 
   goToComposeBroadcast() {

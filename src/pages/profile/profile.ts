@@ -37,6 +37,8 @@ export class ProfilePage {
   userLikeSubscription: Subscription;
   avatar: string = '';
   notFirstEnter: boolean = false;
+  notificationsIcon = 'notifications-outline';
+  notificationsSubscription: Subscription;
 
   constructor(private afAuth: AngularFireAuth,
               public navCtrl: NavController,
@@ -158,6 +160,16 @@ export class ProfilePage {
         });
       }
     });
+    this.notificationsSubscription = this.userService.notificationSizeSubject.subscribe({
+      next: (size) => {
+        if (size > 0) {
+          this.notificationsIcon = 'notifications';
+        } else {
+          this.notificationsIcon = 'notifications-outline';
+        }
+        console.log(size);
+      },
+    });
   }
 
   editProfile(): void {
@@ -227,6 +239,7 @@ export class ProfilePage {
     this.userLikeSubscription.unsubscribe();
     this.postItemSubscription.unsubscribe();
     this.eventItemsSubscription.unsubscribe();
+    this.notificationsSubscription.unsubscribe();
   }
 
   ionViewWillUnload() {

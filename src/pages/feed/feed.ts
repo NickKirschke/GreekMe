@@ -24,6 +24,8 @@ export class FeedPage {
   userLikeListRef: AngularFireList<any>;
   userLikeItems: Set<string> = new Set<string>();
   userLikeSubscription: Subscription;
+  notificationsSubscription: Subscription;
+  notificationsIcon = 'notifications-outline';
 
   constructor(private afAuth: AngularFireAuth,
               public navCtrl: NavController,
@@ -86,6 +88,16 @@ export class FeedPage {
         });
       }
     });
+    this.notificationsSubscription = this.userService.notificationSizeSubject.subscribe({
+      next: (size) => {
+        if (size > 0) {
+          this.notificationsIcon = 'notifications';
+        } else {
+          this.notificationsIcon = 'notifications-outline';
+        }
+        console.log(size);
+      },
+    });
   }
 
   logout() {
@@ -99,6 +111,7 @@ export class FeedPage {
   destroySubscriptions() {
     this.userLikeSubscription.unsubscribe();
     this.messageItemSubscription.unsubscribe();
+    this.notificationsSubscription.unsubscribe();
   }
 
   ionViewWillUnload() {

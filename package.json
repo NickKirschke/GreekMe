@@ -47,8 +47,8 @@
     "cordova-plugin-firebase": "^2.0.5",
     "cordova-plugin-photo-library": "^2.1.1",
     "cordova-plugin-splashscreen": "^5.0.2",
-    "cordova-plugin-statusbar": "2.4.2",
-    "cordova-plugin-whitelist": "1.3.3",
+    "cordova-plugin-statusbar": "^2.4.2",
+    "cordova-plugin-whitelist": "^1.3.3",
     "cordova-sqlite-storage": "~2.4.0",
     "firebase": "^5.5.9",
     "firebase-admin": "^6.2.0",
@@ -82,13 +82,14 @@
       "cordova-sqlite-storage": {},
       "ionic-plugin-keyboard": {},
       "cordova-plugin-camera": {},
-      "cordova-plugin-photo-library": {
-        "PHOTO_LIBRARY_USAGE_DESCRIPTION": "To choose photos"
-      },
       "cordova-plugin-filepath": {},
       "cordova-plugin-file": {},
       "cordova-plugin-firebase": {},
-      "cordova-plugin-console": {}
+      "cordova-plugin-console": {},
+      "phonegap-plugin-push": {},
+      "cordova-plugin-photo-library": {
+        "PHOTO_LIBRARY_USAGE_DESCRIPTION": "To choose photos"
+      }
     },
     "platforms": [
       "ios",

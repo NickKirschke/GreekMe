@@ -13,7 +13,6 @@ import { Observable } from '@firebase/util';
 @Injectable()
 export class FirebaseServiceProvider {
   user: Observable<any>;
-  userData: AngularFireObject<User>;
   firebaseStorage = app.storage();
   firebaseDb = app.database();
   constructor(private afDB: AngularFireDatabase,

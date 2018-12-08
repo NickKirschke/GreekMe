@@ -25,6 +25,8 @@ export class EventsPage {
   eventItemsRef: AngularFireList<any>;
   eventItemsSubscription: Subscription;
   eventItems: Map<string, Event> = new Map<string, Event>();
+  notificationsIcon = 'notifications-outline';
+  notificationsSubscription: Subscription;
   constructor(private afAuth: AngularFireAuth,
               public navCtrl: NavController,
               public firebaseService: FirebaseServiceProvider,
@@ -132,10 +134,21 @@ export class EventsPage {
         this.eventItems.delete(action.payload.key);
       }
     });
+    this.notificationsSubscription = this.userService.notificationSizeSubject.subscribe({
+      next: (size) => {
+        if (size > 0) {
+          this.notificationsIcon = 'notifications';
+        } else {
+          this.notificationsIcon = 'notifications-outline';
+        }
+        console.log(size);
+      },
+    });
   }
 
   destroySubscriptions() {
     this.eventItemsSubscription.unsubscribe();
+    this.notificationsSubscription.unsubscribe();
   }
 
   ionViewWillUnload() {
