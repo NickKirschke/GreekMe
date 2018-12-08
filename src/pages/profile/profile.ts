@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { NavController, App, PopoverController, NavParams, ModalController } from 'ionic-angular';
-import { AngularFireAuth } from 'angularfire2/auth/auth';
+import { AngularFireAuth } from 'angularfire2/auth';
 import { FirebaseServiceProvider } from '../../providers/firebaseService/firebaseService';
 import { LoginPage } from '../login/login';
 import { User } from '../../models/user';

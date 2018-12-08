@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, LoadingController } from 'ionic-angular';
 import { LoginPage } from '../login/login';
 import { User } from '../../models/user';
-import { AngularFireAuth } from 'angularfire2/auth/auth';
+import { AngularFireAuth } from 'angularfire2/auth';
 import { FirebaseServiceProvider } from '../../providers/firebaseService/firebaseService';
 import { TabsControllerPage } from '../tabs-controller/tabs-controller';
 import * as firebase from 'firebase/app';
@@ -48,7 +48,7 @@ export class SignupPage {
     });
     try {
       loader.present();
-      firebase.database().ref('organization/' + user.organizationId)
+      firebase.database().ref(`organization/${user.organizationId}`)
       .once('value').then((snapshot) => {
         if (snapshot.val()) {
           this.afAuth.auth

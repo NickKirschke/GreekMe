@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, ModalController } from 'ionic-angular';
 import { AngularFireList } from 'angularfire2/database';
 import { FirebaseServiceProvider } from '../../providers/firebaseService/firebaseService';
-import { AngularFireAuth } from 'angularfire2/auth/auth';
+import { AngularFireAuth } from 'angularfire2/auth';
 import { User } from '../../models/user';
 import { Post } from '../../models/post';
 import { UserServiceProvider } from '../../providers/userService/userService';

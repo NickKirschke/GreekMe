@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, ViewController } from 'ionic-angular';
 import { FirebaseServiceProvider } from '../../providers/firebaseService/firebaseService';
-import { AngularFireAuth } from 'angularfire2/auth/auth';
+import { AngularFireAuth } from 'angularfire2/auth';
 import { EventsPage } from '../events/events';
 import { User } from '../../models/user';
 import { UserServiceProvider } from '../../providers/userService/userService';
