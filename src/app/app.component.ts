@@ -69,7 +69,6 @@ export class MyApp {
           if (this.platform.is('cordova')) {
             this.notificationSubscription.unsubscribe();
           }
-          console.log('logged out');
         }
       });
     });
