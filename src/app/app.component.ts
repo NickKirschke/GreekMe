@@ -5,7 +5,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { LoginPage } from '../pages/login/login';
 import { FcmProvider } from '../providers/fcm/fcm';
 import { tap } from 'rxjs/operators';
-import { AngularFireAuth } from 'angularfire2/auth/auth';
+import { AngularFireAuth } from 'angularfire2/auth';
 import { FirebaseServiceProvider } from '../providers/firebaseService/firebaseService';
 import { TabsControllerPage } from '../pages/tabs-controller/tabs-controller';
 import { UserServiceProvider } from '../providers/userService/userService';
