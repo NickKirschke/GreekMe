@@ -64,7 +64,8 @@
     "rxjs-compat": "^6.3.3",
     "sw-toolbox": "3.6.0",
     "tslint-config-airbnb": "^5.11.1",
-    "zone.js": "0.8.26"
+    "zone.js": "0.8.26",
+    "cordova-android-play-services-gradle-release": "^2.0.0"
   },
   "devDependencies": {
     "@angular/cli": "^7.1.0",
