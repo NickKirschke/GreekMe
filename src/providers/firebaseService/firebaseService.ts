@@ -15,13 +15,13 @@ export class FirebaseServiceProvider {
   user: Observable<any>;
   firebaseStorage = app.storage();
   firebaseDb = app.database();
-  constructor(private afDB: AngularFireDatabase,
-              private storage: Storage) {
-
-  }
+  constructor(private afDB: AngularFireDatabase, private storage: Storage) {}
   // Get organization's image
   getGreetingImage(organizationId: string) {
-    return this.firebaseStorage.ref().child(`${organizationId}/logo.png`).getDownloadURL();
+    return this.firebaseStorage
+      .ref()
+      .child(`${organizationId}/logo.png`)
+      .getDownloadURL();
   }
 
   // Adds an event to the event list for the organization
@@ -74,15 +74,17 @@ export class FirebaseServiceProvider {
   // Adds a comment to a broadcast commentList
   addCommentToBroadcast(broadcast: Post, organizationId: string, key: string) {
     // console.log(broadcast);
-    return this.afDB.list(`/organization/${organizationId}/broadcast/${
-      key}/commentList/`).push(broadcast).key;
+    return this.afDB
+      .list(`/organization/${organizationId}/broadcast/${key}/commentList/`)
+      .push(broadcast).key;
   }
 
   // Adds a comment to a message commentList
   addCommentToMessage(broadcast: Post, organizationId: string, key: string) {
     // console.log(broadcast);
-    return this.afDB.list(`/organization/${organizationId}/message/${
-      key}/commentList/`).push(broadcast).key;
+    return this.afDB
+      .list(`/organization/${organizationId}/message/${key}/commentList/`)
+      .push(broadcast).key;
   }
 
   // Returns the feed list for the organization
@@ -98,8 +100,7 @@ export class FirebaseServiceProvider {
 
   // Returns the comments for the broadcast
   getCommentListBroadcast(organizationId: string, broadcastId: string) {
-    return this.afDB.list(`/organization/${organizationId}/broadcast/${
-      broadcastId}/commentList/`);
+    return this.afDB.list(`/organization/${organizationId}/broadcast/${broadcastId}/commentList/`);
   }
 
   // Returns the comments for the message
@@ -123,30 +124,37 @@ export class FirebaseServiceProvider {
   }
 
   getUserDetailsProfilePage(uid: string) {
-    return new Promise((resolve) => {
-      this.firebaseDb.ref(`/users/${uid}`).once('value').then((snapshot) => {
-        resolve(snapshot.val());
-      });
+    return new Promise(resolve => {
+      this.firebaseDb
+        .ref(`/users/${uid}`)
+        .once('value')
+        .then(snapshot => {
+          resolve(snapshot.val());
+        });
     });
   }
 
   // 5.0
   getUserDetails(uid: string) {
-    return new Promise(async (resolve) => {
-      this.firebaseDb.ref(`/users/${uid}`).once('value').then(async (snapshot) => {
-        // Store user details locally
-        const user = snapshot.val();
-        await this.storage.set('user', JSON.stringify(snapshot.val()));
-        resolve(true);
-      });
+    return new Promise(async resolve => {
+      this.firebaseDb
+        .ref(`/users/${uid}`)
+        .once('value')
+        .then(async snapshot => {
+          // Store user details locally
+          const user = snapshot.val();
+          await this.storage.set('user', JSON.stringify(snapshot.val()));
+          resolve(true);
+        });
     });
   }
 
   // Add new user details to firebase storage
   addUserDetails(userDetails: User) {
-    return new Promise(async (resolve) => {
-      userDetails.bio = 'A sample bio: Lorem ipsum dolor sit amet, consectetur adipiscing elit.' +
-      'Sed placerat nulla sit amet tempor viverra.';
+    return new Promise(async resolve => {
+      userDetails.bio =
+        'A sample bio: Lorem ipsum dolor sit amet, consectetur adipiscing elit.' +
+        'Sed placerat nulla sit amet tempor viverra.';
       userDetails.avatarUrl = '../../assets/icon/GMIcon.png';
       this.afDB.object(`/users/${userDetails.uid}`).set(userDetails);
       await this.storage.set('user', JSON.stringify(userDetails));

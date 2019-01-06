@@ -10,8 +10,7 @@ export class UserServiceProvider {
   notifications = new Map<string, Post>();
   notificationSizeSubject = new Rx.Subject();
   notificationsIcon = 'notifications-outline';
-  constructor(private storage: Storage) {
-  }
+  constructor(private storage: Storage) {}
 
   updateNotifications(key, notification) {
     this.notifications.set(key, notification);
@@ -25,7 +24,7 @@ export class UserServiceProvider {
 
   currentUserInfo() {
     // Retrieve user information from local storage and return
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this.storage.get('user').then(res => resolve(JSON.parse(res)));
     });
   }

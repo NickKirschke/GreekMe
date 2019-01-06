@@ -1,6 +1,11 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { NavController, NavParams, ViewController, ActionSheetController,
-  LoadingController } from 'ionic-angular';
+import {
+  NavController,
+  NavParams,
+  ViewController,
+  ActionSheetController,
+  LoadingController,
+} from 'ionic-angular';
 import { User } from '../../models/user';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { storage } from 'firebase';
@@ -17,14 +22,15 @@ export class EditProfilePage {
   user = {} as User;
   avatar = '' as string;
   photoChanged: boolean = false;
-  constructor(public navCtrl: NavController,
-              private navParams: NavParams,
-              private view: ViewController,
-              private camera: Camera,
-              private storage: Storage,
-              public actionSheetCtrl: ActionSheetController,
-              public loadingCtrl: LoadingController) {
-  }
+  constructor(
+    public navCtrl: NavController,
+    private navParams: NavParams,
+    private view: ViewController,
+    private camera: Camera,
+    private storage: Storage,
+    public actionSheetCtrl: ActionSheetController,
+    public loadingCtrl: LoadingController,
+  ) {}
 
   async ionViewWillEnter() {
     this.user = JSON.parse(this.navParams.data.user);
@@ -44,12 +50,14 @@ export class EditProfilePage {
           handler: () => {
             this.choosePhoto(1);
           },
-        }, {
+        },
+        {
           text: 'Camera Roll',
           handler: () => {
             this.choosePhoto(0);
           },
-        }, {
+        },
+        {
           text: 'Cancel',
           role: 'cancel',
         },
@@ -86,7 +94,7 @@ export class EditProfilePage {
 
   resize() {
     this.bio.nativeElement.style.height = 'auto';
-    this.bio.nativeElement.style.height = this.bio.nativeElement.scrollHeight + 'px';
+    this.bio.nativeElement.style.height = `${this.bio.nativeElement.scrollHeight}px`;
   }
 
   async updateProfile() {
@@ -96,12 +104,16 @@ export class EditProfilePage {
         avatar: this.avatar,
       };
       if (this.photoChanged) {
-        const pictures = storage().ref(`${this.user.organizationId}/profilePhotos/${
-          this.user.uid}`);
+        const pictures = storage().ref(
+          `${this.user.organizationId}/profilePhotos/${this.user.uid}`,
+        );
         await pictures.putString(this.avatar, 'data_url');
         this.user.avatarUrl = moment().toISOString();
       }
-      await firebase.database().ref(`users/${this.user.uid}/`).set(this.user);
+      await firebase
+        .database()
+        .ref(`users/${this.user.uid}/`)
+        .set(this.user);
       await this.storage.set('user', JSON.stringify(this.user));
       this.view.dismiss(data);
     } catch (error) {

@@ -1,17 +1,13 @@
 {
   "extends": "tslint-config-airbnb",
   "linterOptions": {
-    "exclude": [
-        "www",
-        "node_modules",
-        ".vscode",
-        "platforms",
-        "plugins"
-    ]
+    "exclude": ["www", "node_modules", ".vscode", "platforms", "plugins"]
   },
   "rules": {
     "no-duplicate-variable": true,
-    "no-unused-variable": [true]
+    "no-unused-variable": [true],
+    "max-line-length": [true, 100],
+    "ter-arrow-parens": [true, "as-needed"]
   },
   "rulesDirectory": ["node_modules/tslint-eslint-rules/dist/rules"]
 }

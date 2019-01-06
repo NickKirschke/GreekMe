@@ -12,7 +12,7 @@ import { EventViewPage } from '../eventView/eventView';
 import * as moment from 'moment';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs';
-import  { Event, Repeat } from '../../models/event';
+import { Event, Repeat } from '../../models/event';
 
 @Component({
   selector: 'page-events',
@@ -27,12 +27,13 @@ export class EventsPage {
   eventItems: Map<string, Event> = new Map<string, Event>();
   notificationsIcon = 'notifications-outline';
   notificationsSubscription: Subscription;
-  constructor(private afAuth: AngularFireAuth,
-              public navCtrl: NavController,
-              public firebaseService: FirebaseServiceProvider,
-              private userService: UserServiceProvider,
-              private modalController: ModalController) {
-  }
+  constructor(
+    private afAuth: AngularFireAuth,
+    public navCtrl: NavController,
+    public firebaseService: FirebaseServiceProvider,
+    private userService: UserServiceProvider,
+    private modalController: ModalController,
+  ) {}
 
   ionViewWillLoad() {
     this.dataSetup();
@@ -42,9 +43,11 @@ export class EventsPage {
     const userGrab = await this.userService.currentUserInfo();
     this.user = userGrab as User;
     this.eventItemsRef = this.firebaseService.getOrgEventList(this.user.organizationId);
-    this.eventItems$ = this.eventItemsRef.snapshotChanges().map((action) => {
+    this.eventItems$ = this.eventItemsRef.snapshotChanges().map(action => {
+      // tslint:disable-next-line:ter-arrow-parens
       return action.map(c => ({
-        key: c.payload.key, ...c.payload.val(),
+        key: c.payload.key,
+        ...c.payload.val(),
       }));
     });
     this.buildSubscription();
@@ -67,8 +70,7 @@ export class EventsPage {
 
   buildSubscription() {
     let anEvent: Event;
-    this.eventItemsSubscription = this.eventItemsRef.stateChanges()
-    .subscribe((action) => {
+    this.eventItemsSubscription = this.eventItemsRef.stateChanges().subscribe(action => {
       if (action.type === 'value' || action.type === 'child_added') {
         anEvent = {
           key: action.payload.key,
@@ -82,29 +84,19 @@ export class EventsPage {
               this.eventItemsRef.remove(anEvent.key);
               break;
             case Repeat.Daily:
-              anEvent.date = moment(anEvent.date).add(1, 'd');
-              this.eventItems.set(anEvent.key, anEvent);
-              this.eventItemsRef.update(anEvent.key, anEvent);
+              this.updateEventItems(anEvent, 1, 'd');
               break;
             case Repeat.Weekly:
-              anEvent.date = moment(anEvent.date).add(7, 'd');
-              this.eventItems.set(anEvent.key, anEvent);
-              this.eventItemsRef.update(anEvent.key, anEvent);
+              this.updateEventItems(anEvent, 7, 'd');
               break;
             case Repeat.Biweekly:
-              anEvent.date = moment(anEvent.date).add(14, 'd');
-              this.eventItems.set(anEvent.key, anEvent);
-              this.eventItemsRef.update(anEvent.key, anEvent);
+              this.updateEventItems(anEvent, 14, 'd');
               break;
             case Repeat.Monthly:
-              anEvent.date = moment(anEvent.date).add(1, 'M');
-              this.eventItems.set(anEvent.key, anEvent);
-              this.eventItemsRef.update(anEvent.key, anEvent);
+              this.updateEventItems(anEvent, 1, 'M');
               break;
             case Repeat.Yearly:
-              anEvent.date = moment(anEvent.date).add(1, 'y');
-              this.eventItems.set(anEvent.key, anEvent);
-              this.eventItemsRef.update(anEvent.key, anEvent);
+              this.updateEventItems(anEvent, 1, 'y');
               break;
           }
           anEvent.date = moment(anEvent.date).format('dddd, MMMM Do YYYY [at] h:mm a');
@@ -119,12 +111,13 @@ export class EventsPage {
           ...action.payload.val(),
         };
         const previousEvent = this.eventItems.get(anEvent.key);
-        Object.keys(this.eventItems.get(anEvent.key)).forEach((aProperty) => {
+        Object.keys(this.eventItems.get(anEvent.key)).forEach(aProperty => {
           // If the value of the new broadcast is different, replace it on the previous one
-          if (previousEvent[aProperty] !==  anEvent[aProperty]) {
+          if (previousEvent[aProperty] !== anEvent[aProperty]) {
             if (aProperty === 'date') {
-              previousEvent[aProperty] = moment(anEvent[aProperty])
-                .format('dddd, MMMM Do YYYY [at] h:mm a');
+              previousEvent[aProperty] = moment(anEvent[aProperty]).format(
+                'dddd, MMMM Do YYYY [at] h:mm a',
+              );
             } else {
               previousEvent[aProperty] = anEvent[aProperty];
             }
@@ -135,7 +128,7 @@ export class EventsPage {
       }
     });
     this.notificationsSubscription = this.userService.notificationSizeSubject.subscribe({
-      next: (size) => {
+      next: size => {
         if (size > 0) {
           this.notificationsIcon = 'notifications';
         } else {
@@ -144,6 +137,11 @@ export class EventsPage {
         console.log(size);
       },
     });
+  }
+  updateEventItems(anEvent: Event, timeAddition: any, timeType: string) {
+    anEvent.date = moment(anEvent.date).add(timeAddition, timeType);
+    this.eventItems.set(anEvent.key, anEvent);
+    this.eventItemsRef.update(anEvent.key, anEvent);
   }
 
   destroySubscriptions() {

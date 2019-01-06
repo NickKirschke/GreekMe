@@ -17,12 +17,13 @@ export class LoginPage {
   user = {} as User;
   error = '';
   userCheck: Subscription;
-  constructor(private afAuth: AngularFireAuth,
-              public navCtrl: NavController,
-              public firebaseService: FirebaseServiceProvider,
-              public loadingCtrl: LoadingController,
-              private formBuilder: FormBuilder) {
-  }
+  constructor(
+    private afAuth: AngularFireAuth,
+    public navCtrl: NavController,
+    public firebaseService: FirebaseServiceProvider,
+    public loadingCtrl: LoadingController,
+    private formBuilder: FormBuilder,
+  ) {}
 
   ionViewWillLoad() {
     this.loginForm = this.formBuilder.group({
@@ -44,8 +45,10 @@ export class LoginPage {
     });
     try {
       loader.present();
-      await this.afAuth.auth
-        .signInWithEmailAndPassword(this.loginForm.value.email, this.loginForm.value.password);
+      await this.afAuth.auth.signInWithEmailAndPassword(
+        this.loginForm.value.email,
+        this.loginForm.value.password,
+      );
     } catch (e) {
       const trimmedMessage = /^.*:\s*(.*)$/.exec(e.message);
       if (trimmedMessage == null) {

@@ -20,11 +20,12 @@ export class ComposePostPage {
   tempPost = {} as Post;
   error = '';
   contentMessage = '' as string;
-  constructor(public firebaseService: FirebaseServiceProvider,
-              private userService: UserServiceProvider,
-              private navParams: NavParams,
-              private view: ViewController) {
-  }
+  constructor(
+    public firebaseService: FirebaseServiceProvider,
+    private userService: UserServiceProvider,
+    private navParams: NavParams,
+    private view: ViewController,
+  ) {}
 
   ionViewWillEnter() {
     this.dataSetup();
@@ -32,8 +33,8 @@ export class ComposePostPage {
 
   async dataSetup() {
     this.contentType = this.navParams.get('contentType');
-    this.contentMessage = this.contentType === ContentType.Broadcast ?
-     'Compose a broadcast' : 'Compose a message';
+    this.contentMessage =
+      this.contentType === ContentType.Broadcast ? 'Compose a broadcast' : 'Compose a message';
     const userGrab = await this.userService.currentUserInfo();
     this.user = userGrab as User;
   }
@@ -41,10 +42,12 @@ export class ComposePostPage {
   updatePostList(tempPost: Post) {
     const updates = {};
     updates[`/users/${this.user.uid}/postList/${tempPost.key}`] = tempPost;
-    app.database().ref().update(updates).then(() => {
-    }).catch((error) => {
-      console.log(error);
-    });
+    app
+      .database()
+      .ref()
+      .update(updates)
+      .then(() => {})
+      .catch(error => console.log(error));
   }
 
   composePost(tempPost: Post) {
@@ -61,11 +64,9 @@ export class ComposePostPage {
       tempPost.contentType = this.contentType;
       if (this.contentType === ContentType.Broadcast) {
         // Need to still update user commentList, need to get the broadcast ID
-        tempPost.key = this.firebaseService
-        .addToBroadcastList(tempPost, this.user.organizationId);
+        tempPost.key = this.firebaseService.addToBroadcastList(tempPost, this.user.organizationId);
       } else if (this.contentType === ContentType.Message) {
-        tempPost.key = this.firebaseService
-        .addToFeedList(tempPost, this.user.organizationId);
+        tempPost.key = this.firebaseService.addToFeedList(tempPost, this.user.organizationId);
       }
       if (tempPost.key) {
         this.updatePostList(tempPost);
@@ -79,7 +80,7 @@ export class ComposePostPage {
 
   resize() {
     this.post.nativeElement.style.height = 'auto';
-    this.post.nativeElement.style.height = this.post.nativeElement.scrollHeight + 'px';
+    this.post.nativeElement.style.height = `${this.post.nativeElement.scrollHeight}px`;
   }
 
   closeModal() {

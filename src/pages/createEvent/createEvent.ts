@@ -21,20 +21,15 @@ export class CreateEventPage {
   event = {} as Event;
   editMode: boolean = false;
   eventItemsRef: AngularFireList<any>;
-  repeatOptions = [
-    Repeat.Never,
-    Repeat.Daily,
-    Repeat.Weekly,
-    Repeat.Monthly,
-    Repeat.Yearly,
-  ];
-  constructor(private afAuth: AngularFireAuth,
-              public navCtrl: NavController,
-              public firebaseService: FirebaseServiceProvider,
-              private userService: UserServiceProvider,
-              public navParams: NavParams,
-              private view: ViewController) {
-  }
+  repeatOptions = [Repeat.Never, Repeat.Daily, Repeat.Weekly, Repeat.Monthly, Repeat.Yearly];
+  constructor(
+    private afAuth: AngularFireAuth,
+    public navCtrl: NavController,
+    public firebaseService: FirebaseServiceProvider,
+    private userService: UserServiceProvider,
+    public navParams: NavParams,
+    private view: ViewController,
+  ) {}
 
   ionViewWillEnter() {
     this.dataSetup();
@@ -67,14 +62,20 @@ export class CreateEventPage {
       name: this.user.name,
       avatarUrl: this.user.avatarUrl,
     };
-    updates[`/organization/${this.user.organizationId}/event/${
-      newEventKey}/attendingList/${this.user.uid}`] = nameObj;
-    updates[`/users/${this.user.uid}/eventsAttending/${newEventKey}`] = this.event;
-    app.database().ref().update(updates).then(() => {
-      console.log('Event Added!');
-    }).catch((error) => {
-      console.log(error);
-    });
+    const attendingListPath = `/organization/${
+      this.user.organizationId
+    }/event/${newEventKey}/attendingList/${this.user.uid}`;
+    const userAttendingPath = `/users/${this.user.uid}/eventsAttending/${newEventKey}`;
+    updates[attendingListPath] = nameObj;
+    updates[userAttendingPath] = this.event;
+    app
+      .database()
+      .ref()
+      .update(updates)
+      .then(() => {
+        console.log('Event Added!');
+      })
+      .catch(error => console.log(error));
     this.navCtrl.setRoot(EventsPage);
   }
 

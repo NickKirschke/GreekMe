@@ -42,35 +42,42 @@ export class EventViewPage {
     Monthly: 'A monthly event',
     Yearly: 'A yearly event',
   };
-  constructor(public navCtrl: NavController,
-              public firebaseService: FirebaseServiceProvider,
-              private userService: UserServiceProvider,
-              public navParams: NavParams,
-              public toastCtrl: ToastController,
-              private modalController: ModalController) {
-  }
+  constructor(
+    public navCtrl: NavController,
+    public firebaseService: FirebaseServiceProvider,
+    private userService: UserServiceProvider,
+    public navParams: NavParams,
+    public toastCtrl: ToastController,
+    private modalController: ModalController,
+  ) {}
 
   async dataSetup() {
     this.eventId = this.navParams.get('eventId');
     const userGrab = await this.userService.currentUserInfo();
     this.user = userGrab as User;
     this.eventRef = this.firebaseService.getEventInfo(this.eventId, this.user.organizationId);
-    this.eventAttendingItemsRef = this.firebaseService
-      .getEventAttendingList(this.eventId, this.user.organizationId);
+    this.eventAttendingItemsRef = this.firebaseService.getEventAttendingList(
+      this.eventId,
+      this.user.organizationId,
+    );
     // this.checkCreator();
     this.userAttendingListRef = this.firebaseService.getUserEventList(this.user.uid);
-    this.userAttendingList$ = this.userAttendingListRef.snapshotChanges().map((action) => {
-      return action.map(c => ({
-        key: c.payload.key, ...c.payload.val(),
-      }));
+    this.userAttendingList$ = this.userAttendingListRef.snapshotChanges().map(action => {
+      return action.map(c => {
+        return {
+          key: c.payload.key,
+          ...c.payload.val(),
+        };
+      });
     });
     this.buildSubscriptions();
   }
 
   async buildSubscriptions() {
     try {
-      this.eventAttendingSubscription = this.eventAttendingItemsRef.stateChanges()
-        .subscribe(async (action) => {
+      this.eventAttendingSubscription = this.eventAttendingItemsRef
+        .stateChanges()
+        .subscribe(async action => {
           if (action.type === 'value' || action.type === 'child_added') {
             const vals = action.payload.val();
             let avatar;
@@ -79,7 +86,10 @@ export class EventViewPage {
               Default.png?alt=media&token=6bc30d40-17a2-40bb-9af7-edff78112780`;
             } else {
               const path = `${this.user.organizationId}/profilePhotos/${action.payload.key}`;
-              avatar = await firebase.storage().ref(path).getDownloadURL();
+              avatar = await firebase
+                .storage()
+                .ref(path)
+                .getDownloadURL();
             }
             const attendingUser = {
               name: action.payload.val().name,
@@ -96,7 +106,7 @@ export class EventViewPage {
           }
         });
 
-      this.eventSubscription = this.eventRef.snapshotChanges().subscribe((action) => {
+      this.eventSubscription = this.eventRef.snapshotChanges().subscribe(action => {
         if (action.type === 'value' || action.type === 'child_added') {
           this.anEvent = {
             key: action.payload.key,
@@ -107,9 +117,9 @@ export class EventViewPage {
           }
         } else if (action.type === 'child_changed') {
           const tempEvent = action.payload.val();
-          Object.keys(this.anEvent).forEach((aProperty) => {
+          Object.keys(this.anEvent).forEach(aProperty => {
             // Updates event values only if changed
-            if (this.anEvent[aProperty] !==  tempEvent[aProperty]) {
+            if (this.anEvent[aProperty] !== tempEvent[aProperty]) {
               this.anEvent[aProperty] = tempEvent[aProperty];
             }
           });
@@ -122,32 +132,43 @@ export class EventViewPage {
   }
 
   rsvpYes() {
-    if (!this.attendingStatus) { // Check to see if the person is able to rsvp yes
+    if (!this.attendingStatus) {
+      // Check to see if the person is able to rsvp yes
       const updates = {};
       const nameObj = {
         name: this.user.name,
         avatarUrl: this.user.avatarUrl,
       };
       let eventObj = {} as Event;
-      this.firebase.ref(`/organization/${this.user.organizationId}/event/${
-        this.eventId}`).once('value')
-        .then((snapshot) => {
+      this.firebase
+        .ref(`/organization/${this.user.organizationId}/event/${this.eventId}`)
+        .once('value')
+        .then(snapshot => {
           eventObj = snapshot.val();
-          updates[`/organization/${this.user.organizationId}/event/${
-            this.eventId}/attendingList/${this.user.uid}`] = nameObj;
+          const eventAttendingPath = `/organization/${this.user.organizationId}/event/${
+            this.eventId
+          }/attendingList/${this.user.uid}`;
+          const userAttendingPath = `/users/${this.user.uid}/eventsAttending/${this.eventId}`;
+          updates[eventAttendingPath] = nameObj;
           updates[`/users/${this.user.uid}/eventsAttending/${this.eventId}`] = eventObj;
-          firebase.database().ref().update(updates).then(() => {
-            this.attendingStatus = true;
-            this.toast('You are going to this event!');
-          }).catch(function (error) {
-            this.toast('Error RSVPing.');
-          });
+          firebase
+            .database()
+            .ref()
+            .update(updates)
+            .then(() => {
+              this.attendingStatus = true;
+              this.toast('You are going to this event!');
+            })
+            .catch(error => {
+              this.toast('Error RSVPing.');
+            });
         });
     }
   }
 
   rsvpNo() {
-    if (this.attendingStatus) { // Check to see if the person is able to rsvp no
+    if (this.attendingStatus) {
+      // Check to see if the person is able to rsvp no
       this.toast('Removed you from the attending list.');
       this.eventAttendingItemsRef.remove(this.user.uid);
       this.userAttendingListRef.remove(this.eventId);

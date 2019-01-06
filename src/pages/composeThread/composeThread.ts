@@ -20,11 +20,12 @@ export class ComposeThreadPage {
   tempPost = {} as Post;
   error: string = '';
   postKey: string = '';
-  constructor(private firebaseService: FirebaseServiceProvider,
-              private userService: UserServiceProvider,
-              private navParams: NavParams,
-              private view: ViewController) {
-  }
+  constructor(
+    private firebaseService: FirebaseServiceProvider,
+    private userService: UserServiceProvider,
+    private navParams: NavParams,
+    private view: ViewController,
+  ) {}
 
   ionViewWillEnter() {
     this.dataSetup();
@@ -39,10 +40,15 @@ export class ComposeThreadPage {
   }
 
   getNumOfComments() {
-    return new Promise((resolve) => {
-      const numOfCommentsRef = app.database().ref(`/organization/${
-        this.user.organizationId}/${this.contentType}/${this.postKey}/numOfComments/`);
-      numOfCommentsRef.on('value', (snapshot) => {
+    return new Promise(resolve => {
+      const numOfCommentsRef = app
+        .database()
+        .ref(
+          `/organization/${this.user.organizationId}/${this.contentType}/${
+            this.postKey
+          }/numOfComments/`,
+        );
+      numOfCommentsRef.on('value', snapshot => {
         resolve(snapshot.val());
       });
     });
@@ -52,12 +58,18 @@ export class ComposeThreadPage {
     let numOfComments;
     numOfComments = await this.getNumOfComments();
     const updates = {};
-    updates[`/organization/${this.user.organizationId}/${this.contentType}/${
-      this.postKey}/numOfComments/`] = numOfComments + 1;
-    app.database().ref().update(updates).then(() => {
-    }).catch((error) => {
-      console.log(error);
-    });
+    const path = `/organization/${this.user.organizationId}/${this.contentType}/${
+      this.postKey
+    }/numOfComments/`;
+    updates[path] = numOfComments + 1;
+    app
+      .database()
+      .ref()
+      .update(updates)
+      .then(() => {})
+      .catch(error => {
+        console.log(error);
+      });
   }
 
   composeThread(tempPost: Post) {
@@ -73,11 +85,17 @@ export class ComposeThreadPage {
       tempPost.numOfLikes = 0;
       tempPost.contentType = ContentType.Thread;
       if (this.contentType === ContentType.Broadcast) {
-        tempPost.key = this.firebaseService
-        .addCommentToBroadcast(tempPost, this.user.organizationId, this.postKey);
+        tempPost.key = this.firebaseService.addCommentToBroadcast(
+          tempPost,
+          this.user.organizationId,
+          this.postKey,
+        );
       } else if (this.contentType === ContentType.Message) {
-        tempPost.key = this.firebaseService
-        .addCommentToMessage(tempPost, this.user.organizationId, this.postKey);
+        tempPost.key = this.firebaseService.addCommentToMessage(
+          tempPost,
+          this.user.organizationId,
+          this.postKey,
+        );
       }
       if (tempPost.key) {
         this.updateUserPostListAndCommentNumber(tempPost);
@@ -91,7 +109,7 @@ export class ComposeThreadPage {
 
   resize() {
     this.comment.nativeElement.style.height = 'auto';
-    this.comment.nativeElement.style.height = this.comment.nativeElement.scrollHeight + 'px';
+    this.comment.nativeElement.style.height = `${this.comment.nativeElement.scrollHeight}px`;
   }
 
   closeModal() {

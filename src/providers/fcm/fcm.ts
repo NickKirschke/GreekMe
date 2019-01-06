@@ -13,13 +13,12 @@ import { User } from '../../models/user';
 */
 @Injectable()
 export class FcmProvider {
-
   constructor(
     public firebaseNative: Firebase,
     public afs: AngularFirestore,
     public platform: Platform,
-    private userService: UserServiceProvider) {
-  }
+    private userService: UserServiceProvider,
+  ) {}
 
   async getToken() {
     let token;

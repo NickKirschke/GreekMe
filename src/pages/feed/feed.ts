@@ -27,16 +27,18 @@ export class FeedPage {
   notificationsSubscription: Subscription;
   notificationsIcon = 'notifications-outline';
 
-  constructor(private afAuth: AngularFireAuth,
-              public navCtrl: NavController,
-              public firebaseService: FirebaseServiceProvider,
-              private userService: UserServiceProvider,
-              private modalController: ModalController) {
-  }
+  constructor(
+    private afAuth: AngularFireAuth,
+    public navCtrl: NavController,
+    public firebaseService: FirebaseServiceProvider,
+    private userService: UserServiceProvider,
+    private modalController: ModalController,
+  ) {}
 
   goToComposeFeed() {
-    const myModal = this.modalController
-    .create(ComposePostPage, { contentType: ContentType.Message });
+    const myModal = this.modalController.create(ComposePostPage, {
+      contentType: ContentType.Message,
+    });
     myModal.present();
   }
 
@@ -50,10 +52,10 @@ export class FeedPage {
   }
 
   buildSubscriptions() {
-    let message : Post;
+    let message: Post;
     // Subscriptions for handling the user's likes and the broadcasts on the page
     // Data is passed into a Set
-    this.userLikeSubscription = this.userLikeListRef.stateChanges().subscribe((action) => {
+    this.userLikeSubscription = this.userLikeListRef.stateChanges().subscribe(action => {
       if (action.type === 'value' || action.type === 'child_added') {
         this.userLikeItems.add(action.key);
       } else if (action.type === 'child_removed') {
@@ -62,8 +64,7 @@ export class FeedPage {
     });
 
     // Message data is stored in a Map
-    this.messageItemSubscription = this.messageItemRef.stateChanges()
-    .subscribe((action) => {
+    this.messageItemSubscription = this.messageItemRef.stateChanges().subscribe(action => {
       if (action.type === 'value' || action.type === 'child_added') {
         message = {
           key: action.payload.key,
@@ -80,16 +81,16 @@ export class FeedPage {
           ...action.payload.val(),
           iconName: expectedIconName,
         };
-        Object.keys(this.messageItems.get(message.key)).forEach((aProperty) => {
+        Object.keys(this.messageItems.get(message.key)).forEach(aProperty => {
           // If the value of the new broadcast is different, replace it on the previous one
-          if (previousMessage[aProperty] !==  message[aProperty]) {
+          if (previousMessage[aProperty] !== message[aProperty]) {
             previousMessage[aProperty] = message[aProperty];
           }
         });
       }
     });
     this.notificationsSubscription = this.userService.notificationSizeSubject.subscribe({
-      next: (size) => {
+      next: size => {
         if (size > 0) {
           this.notificationsIcon = 'notifications';
         } else {
@@ -119,8 +120,7 @@ export class FeedPage {
   }
 
   goToNotifications() {
-    const myModal = this.modalController
-      .create(NotificationsPage);
+    const myModal = this.modalController.create(NotificationsPage);
     myModal.present();
   }
 

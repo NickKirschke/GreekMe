@@ -11,11 +11,12 @@ import { UserServiceProvider } from '../../providers/userService/userService';
 export class NotificationsPage {
   notifications = new Map<string, Post>();
   user = {} as User;
-  constructor(public navCtrl: NavController,
-              public navParams: NavParams,
-              private view: ViewController,
-              private userService: UserServiceProvider) {
-  }
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    private view: ViewController,
+    private userService: UserServiceProvider,
+  ) {}
 
   ionViewWillEnter() {
     this.dataSetup();

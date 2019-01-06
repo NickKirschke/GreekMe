@@ -40,16 +40,17 @@ export class ProfilePage {
   notificationsIcon = 'notifications-outline';
   notificationsSubscription: Subscription;
 
-  constructor(private afAuth: AngularFireAuth,
-              public navCtrl: NavController,
-              private firebaseService: FirebaseServiceProvider,
-              private userService: UserServiceProvider,
-              private popoverCtrl: PopoverController,
-              public navParams: NavParams,
-              private storage: Storage,
-              private modal: ModalController,
-              private app: App) {
-  }
+  constructor(
+    private afAuth: AngularFireAuth,
+    public navCtrl: NavController,
+    private firebaseService: FirebaseServiceProvider,
+    private userService: UserServiceProvider,
+    private popoverCtrl: PopoverController,
+    public navParams: NavParams,
+    private storage: Storage,
+    private modal: ModalController,
+    private app: App,
+  ) {}
 
   ionViewWillLoad() {
     this.dataSetup();
@@ -61,8 +62,9 @@ export class ProfilePage {
       // Check to see if it is a user navigating through profile pictures, if so hide the options
       if (guestUser) {
         this.isUser = false;
-        const guestProfileUserGrab = await this.firebaseService
-        .getUserDetailsProfilePage(guestUser);
+        const guestProfileUserGrab = await this.firebaseService.getUserDetailsProfilePage(
+          guestUser,
+        );
         this.user = guestProfileUserGrab as User;
       } else {
         this.isUser = true;
@@ -73,17 +75,24 @@ export class ProfilePage {
       this.postItemRef = this.firebaseService.getUserPostList(this.user.uid);
       this.eventItemsRef = this.firebaseService.getUserEventsAttending(this.user.uid);
       this.buildSubscriptions();
-      this.eventItems$ = this.eventItemsRef.snapshotChanges().map((action) => {
-        return action.map(c => ({
-          key: c.payload.key, ...c.payload.val(),
-        }));
+      this.eventItems$ = this.eventItemsRef.snapshotChanges().map(action => {
+        return action.map(c => {
+          return {
+            key: c.payload.key,
+            ...c.payload.val(),
+          };
+        });
       });
       if (this.user.avatarUrl === '../../assets/icon/GMIcon.png') {
-        this.avatar = 'https://firebasestorage.googleapis.com/v0/b/greekme-7475a.appspot.com/o/' +
-        'GM_Default.png?alt=media&token=6bc30d40-17a2-40bb-9af7-edff78112780';
+        this.avatar =
+          'https://firebasestorage.googleapis.com/v0/b/greekme-7475a.appspot.com/o/' +
+          'GM_Default.png?alt=media&token=6bc30d40-17a2-40bb-9af7-edff78112780';
       } else {
         const avatarPath = `${this.user.organizationId}/profilePhotos/${this.user.uid}`;
-        this.avatar = await firebase.storage().ref(avatarPath).getDownloadURL();
+        this.avatar = await firebase
+          .storage()
+          .ref(avatarPath)
+          .getDownloadURL();
       }
       this.buildSubscriptions();
       // this.notFirstEnter = true;
@@ -93,11 +102,11 @@ export class ProfilePage {
   }
 
   buildSubscriptions() {
-    let broadcast : Post;
+    let broadcast: Post;
     let anEvent: Event;
     // Subscriptions for handling the user's posts
     // Broadcast data is stored in a Map
-    this.userLikeSubscription = this.userLikeListRef.stateChanges().subscribe((action) => {
+    this.userLikeSubscription = this.userLikeListRef.stateChanges().subscribe(action => {
       if (action.type === 'value' || action.type === 'child_added') {
         this.userLikeItems.add(action.key);
       } else if (action.type === 'child_removed') {
@@ -105,8 +114,7 @@ export class ProfilePage {
       }
     });
 
-    this.postItemSubscription = this.postItemRef.stateChanges()
-    .subscribe((action) => {
+    this.postItemSubscription = this.postItemRef.stateChanges().subscribe(action => {
       if (action.type === 'value' || action.type === 'child_added') {
         broadcast = {
           key: action.payload.key,
@@ -123,17 +131,16 @@ export class ProfilePage {
           iconName: expectedIconName,
         };
         const previousBroadcast = this.postItems.get(broadcast.key);
-        Object.keys(this.postItems.get(broadcast.key)).forEach((aProperty) => {
+        Object.keys(this.postItems.get(broadcast.key)).forEach(aProperty => {
           // If the value of the new broadcast is different, replace it on the previous one
-          if (previousBroadcast[aProperty] !==  broadcast[aProperty]) {
+          if (previousBroadcast[aProperty] !== broadcast[aProperty]) {
             previousBroadcast[aProperty] = broadcast[aProperty];
           }
         });
       }
     });
 
-    this.eventItemsSubscription = this.eventItemsRef.stateChanges()
-    .subscribe((action) => {
+    this.eventItemsSubscription = this.eventItemsRef.stateChanges().subscribe(action => {
       if (action.type === 'value' || action.type === 'child_added') {
         anEvent = {
           key: action.payload.key,
@@ -152,16 +159,16 @@ export class ProfilePage {
           ...action.payload.val(),
         };
         const previousEvent = this.eventItems.get(anEvent.key);
-        Object.keys(this.eventItems.get(anEvent.key)).forEach((aProperty) => {
+        Object.keys(this.eventItems.get(anEvent.key)).forEach(aProperty => {
           // If the value of the new broadcast is different, replace it on the previous one
-          if (previousEvent[aProperty] !==  anEvent[aProperty]) {
+          if (previousEvent[aProperty] !== anEvent[aProperty]) {
             previousEvent[aProperty] = anEvent[aProperty];
           }
         });
       }
     });
     this.notificationsSubscription = this.userService.notificationSizeSubject.subscribe({
-      next: (size) => {
+      next: size => {
         if (size > 0) {
           this.notificationsIcon = 'notifications';
         } else {
@@ -178,12 +185,12 @@ export class ProfilePage {
       avatar: this.avatar,
     });
     myModal.present();
-    myModal.onWillDismiss((userData) => {
+    myModal.onWillDismiss(userData => {
       if (userData) {
         const updatedUser = JSON.parse(userData.user) as User;
-        Object.keys(this.user).forEach((aProperty) => {
+        Object.keys(this.user).forEach(aProperty => {
           // If the value of the new user is different, replace it on the previous one
-          if (this.user[aProperty] !==  updatedUser[aProperty]) {
+          if (this.user[aProperty] !== updatedUser[aProperty]) {
             this.user[aProperty] = updatedUser[aProperty];
           }
           this.avatar = userData.avatar;
@@ -204,7 +211,7 @@ export class ProfilePage {
       items: [{ name: 'Edit Profile' }, { name: 'Settings' }, { name: 'Log Out' }],
     });
     popover.present({ ev: popOverEvent });
-    popover.onWillDismiss((data) => {
+    popover.onWillDismiss(data => {
       if (data) {
         if (data.name === 'Log Out') {
           this.logout();
@@ -222,12 +229,12 @@ export class ProfilePage {
       user: JSON.stringify(this.user),
     });
     myModal.present();
-    myModal.onWillDismiss((userData) => {
+    myModal.onWillDismiss(userData => {
       if (userData) {
         const updatedUser = JSON.parse(userData.user) as User;
-        Object.keys(this.user).forEach((aProperty) => {
+        Object.keys(this.user).forEach(aProperty => {
           // If the value of the new user is different, replace it on the previous one
-          if (this.user[aProperty] !==  updatedUser[aProperty]) {
+          if (this.user[aProperty] !== updatedUser[aProperty]) {
             this.user[aProperty] = updatedUser[aProperty];
           }
         });
@@ -251,12 +258,15 @@ export class ProfilePage {
   }
 
   logout(): void {
-    this.afAuth.auth.signOut().then(() => {
-      this.app.getRootNavs()[0].setRoot(LoginPage);
-      this.storage.remove('user');
-    }).catch((e) => {
-      console.log(e);
-      console.log(e.message);
-    });
+    this.afAuth.auth
+      .signOut()
+      .then(() => {
+        this.app.getRootNavs()[0].setRoot(LoginPage);
+        this.storage.remove('user');
+      })
+      .catch(e => {
+        console.log(e);
+        console.log(e.message);
+      });
   }
 }

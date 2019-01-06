@@ -26,12 +26,13 @@ export class ThreadPage {
   post = {} as Post;
   organizationId = '';
   user = {} as User;
-  constructor(public navCtrl: NavController,
-              private navParams: NavParams,
-              private firebaseService: FirebaseServiceProvider,
-              private modal: ModalController,
-              private userService: UserServiceProvider) {
-  }
+  constructor(
+    public navCtrl: NavController,
+    private navParams: NavParams,
+    private firebaseService: FirebaseServiceProvider,
+    private modal: ModalController,
+    private userService: UserServiceProvider,
+  ) {}
 
   ionViewWillLoad() {
     this.dataSetup();
@@ -46,10 +47,12 @@ export class ThreadPage {
 
     if (this.post.contentType === ContentType.Broadcast) {
       this.postItems$ = this.firebaseService
-        .getCommentListBroadcast(this.organizationId, this.post.key).valueChanges();
+        .getCommentListBroadcast(this.organizationId, this.post.key)
+        .valueChanges();
     } else if (this.post.contentType === ContentType.Message) {
       this.postItems$ = this.firebaseService
-        .getCommentListMessage(this.organizationId, this.post.key).valueChanges();
+        .getCommentListMessage(this.organizationId, this.post.key)
+        .valueChanges();
     }
   }
 

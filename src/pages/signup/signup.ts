@@ -16,12 +16,13 @@ export class SignupPage {
   error;
   // this tells the tabs component which Pages
   // should be each tab's root Page
-  constructor(private afAuth: AngularFireAuth,
-              public navCtrl: NavController,
-              public firebaseService: FirebaseServiceProvider,
-              public loadingCtrl: LoadingController,
-              private formBuilder: FormBuilder) {
-  }
+  constructor(
+    private afAuth: AngularFireAuth,
+    public navCtrl: NavController,
+    public firebaseService: FirebaseServiceProvider,
+    public loadingCtrl: LoadingController,
+    private formBuilder: FormBuilder,
+  ) {}
 
   ionViewWillLoad() {
     this.signupForm = this.formBuilder.group({
@@ -48,25 +49,30 @@ export class SignupPage {
     });
     try {
       loader.present();
-      firebase.database().ref(`organization/${user.organizationId}`)
-      .once('value').then((snapshot) => {
-        if (snapshot.val()) {
-          this.afAuth.auth
-          .createUserWithEmailAndPassword(user.email, this.signupForm.value.password)
-          .then((res) => {
-            user.uid = res.user.uid;
-            this.firebaseService.addUserDetails(user).then(() => {
-              this.navCtrl.setRoot(TabsControllerPage);
-            });
-          }).catch((e: Error) => {
-            this.errorMessageDigest(e);
-          });
-        } else {
-          throw new Error('Invalid organization code');
-        }
-      }).catch((e: Error) => {
-        this.errorMessageDigest(e);
-      });
+      firebase
+        .database()
+        .ref(`organization/${user.organizationId}`)
+        .once('value')
+        .then(snapshot => {
+          if (snapshot.val()) {
+            this.afAuth.auth
+              .createUserWithEmailAndPassword(user.email, this.signupForm.value.password)
+              .then(res => {
+                user.uid = res.user.uid;
+                this.firebaseService.addUserDetails(user).then(() => {
+                  this.navCtrl.setRoot(TabsControllerPage);
+                });
+              })
+              .catch((e: Error) => {
+                this.errorMessageDigest(e);
+              });
+          } else {
+            throw new Error('Invalid organization code');
+          }
+        })
+        .catch((e: Error) => {
+          this.errorMessageDigest(e);
+        });
     } finally {
       loader.dismiss();
     }

@@ -21,7 +21,7 @@ export class GreekMePage {
   validRole = false;
   image = '../../assets/img/8d9YHCdTlOXCBqO65zNP_GM_Master01.png';
   loadCap = 10;
-  reserveBroadcasts =  [];
+  reserveBroadcasts = [];
   broadcastItemRef: AngularFireList<any>;
   broadcastItems = new Map<string, Post>();
   broadcastItemSubscription: Subscription;
@@ -31,12 +31,13 @@ export class GreekMePage {
   notificationsSubscription: Subscription;
   notificationsIcon = 'notifications-outline';
   notificationCount = 0;
-  constructor(public navCtrl: NavController,
-              public firebaseService: FirebaseServiceProvider,
-              private userService: UserServiceProvider,
-              private modalController: ModalController,
-              private fcm: FcmProvider) {
-  }
+  constructor(
+    public navCtrl: NavController,
+    public firebaseService: FirebaseServiceProvider,
+    private userService: UserServiceProvider,
+    private modalController: ModalController,
+    private fcm: FcmProvider,
+  ) {}
 
   async dataSetup() {
     try {
@@ -49,14 +50,8 @@ export class GreekMePage {
       if (this.isValidBroadcastRole()) {
         this.validRole = true;
       }
-      const imageGrab = this.firebaseService.getGreetingImage(this.user.organizationId);
-      imageGrab.then(
-        (result) => {
-          this.image = result;
-        },
-        () => {
-          this.image = 'assets/img/8d9YHCdTlOXCBqO65zNP_GM_Master01.png';
-        });
+      const imageGrab = await this.firebaseService.getGreetingImage(this.user.organizationId);
+      this.image = imageGrab ? imageGrab : 'assets/img/8d9YHCdTlOXCBqO65zNP_GM_Master01.png';
       this.buildSubscriptions();
     } catch (e) {
       console.log(e);
@@ -64,17 +59,19 @@ export class GreekMePage {
   }
 
   isValidBroadcastRole() {
-    return this.user.role === 'President' ||
-    this.user.role === 'Vice President' ||
-    this.user.role === 'Chair Member';
+    return (
+      this.user.role === 'President' ||
+      this.user.role === 'Vice President' ||
+      this.user.role === 'Chair Member'
+    );
   }
 
   buildSubscriptions() {
-    let broadcast : Post;
+    let broadcast: Post;
     let broadcastCounter = 0;
     // Subscriptions for handling the user's likes and the broadcasts on the page
     // Data is passed into a Set
-    this.userLikeSubscription = this.userLikeListRef.stateChanges().subscribe((action) => {
+    this.userLikeSubscription = this.userLikeListRef.stateChanges().subscribe(action => {
       if (action.type === 'value' || action.type === 'child_added') {
         this.userLikeItems.add(action.key);
       } else if (action.type === 'child_removed') {
@@ -83,8 +80,7 @@ export class GreekMePage {
     });
 
     // Broadcast data is stored in a Map
-    this.broadcastItemSubscription = this.broadcastItemRef.stateChanges()
-    .subscribe((action) => {
+    this.broadcastItemSubscription = this.broadcastItemRef.stateChanges().subscribe(action => {
       if (action.type === 'value' || action.type === 'child_added') {
         broadcast = {
           key: action.payload.key,
@@ -102,16 +98,16 @@ export class GreekMePage {
           ...action.payload.val(),
           iconName: expectedIconName,
         };
-        Object.keys(this.broadcastItems.get(broadcast.key)).forEach((aProperty) => {
+        Object.keys(this.broadcastItems.get(broadcast.key)).forEach(aProperty => {
           // If the value of the new broadcast is different, replace it on the previous one
-          if (previousBroadcast[aProperty] !==  broadcast[aProperty]) {
+          if (previousBroadcast[aProperty] !== broadcast[aProperty]) {
             previousBroadcast[aProperty] = broadcast[aProperty];
           }
         });
       }
     });
     this.notificationsSubscription = this.userService.notificationSizeSubject.subscribe({
-      next: (size) => {
+      next: size => {
         if (size > 0) {
           this.notificationsIcon = 'notifications';
         } else {
@@ -128,14 +124,14 @@ export class GreekMePage {
   }
 
   goToComposeBroadcast() {
-    const myModal = this.modalController
-      .create(ComposePostPage, { contentType: ContentType.Broadcast });
+    const myModal = this.modalController.create(ComposePostPage, {
+      contentType: ContentType.Broadcast,
+    });
     myModal.present();
   }
 
   goToNotifications() {
-    const myModal = this.modalController
-      .create(NotificationsPage);
+    const myModal = this.modalController.create(NotificationsPage);
     myModal.present();
   }
 
@@ -152,7 +148,8 @@ export class GreekMePage {
       }
       console.log('Async operation has ended');
       infiniteScroll.complete();
-    },         500);
+      // tslint:disable-next-line:align
+    }, 500);
   }
 
   ionViewWillLoad() {
@@ -162,5 +159,4 @@ export class GreekMePage {
   ionViewWillUnload() {
     this.destroySubscriptions();
   }
-
 }
