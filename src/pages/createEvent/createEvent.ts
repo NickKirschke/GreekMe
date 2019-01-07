@@ -49,10 +49,6 @@ export class CreateEventPage {
     this.attendingItems$ = this.firebaseService.getUserEventList(this.user.uid).valueChanges();
   }
 
-  logout() {
-    this.afAuth.auth.signOut();
-  }
-
   createEvent() {
     this.event.creator = this.user.name;
     this.event.creatorUid = this.user.uid;

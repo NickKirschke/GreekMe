@@ -72,7 +72,6 @@ import { NotificationRowComponent } from '../components/notification-row/notific
     MomentModule,
     NgPipesModule,
     PipesModule,
-
   ],
   bootstrap: [IonicApp],
   entryComponents: [

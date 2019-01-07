@@ -14,23 +14,24 @@ export class NotificationRowComponent {
   @Input('user') user: User;
   @Input('notification') notification: Post;
   avatar = '';
-  constructor(public navCtrl: NavController,
-              private userService: UserServiceProvider) {
-
-  }
+  constructor(public navCtrl: NavController, private userService: UserServiceProvider) {}
 
   ngOnInit() {
     this.setupAvatar();
   }
 
   async setupAvatar() {
+    this.avatar =
+      'https://firebasestorage.googleapis.com/v0/b/greekme-7475a.appspot.com/o/' +
+      'GM_Default.png?alt=media&token=6bc30d40-17a2-40bb-9af7-edff78112780';
     // Avatar url === default, use it, otherwise fetch it from storage
-    if (this.notification.avatarUrl === '../../assets/icon/GMIcon.png') {
-      this.avatar = 'https://firebasestorage.googleapis.com/v0/b/greekme-7475a.appspot.com/o/' +
-        'GM_Default.png?alt=media&token=6bc30d40-17a2-40bb-9af7-edff78112780';
-    } else {
+    if (this.notification.avatarUrl !== '../../assets/icon/GMIcon.png') {
       const path = `${this.user.organizationId}/profilePhotos/${this.notification.uid}`;
-      this.avatar = await app.storage().ref(path).getDownloadURL();
+      const img = await app
+        .storage()
+        .ref(path)
+        .getDownloadURL();
+      this.avatar = img;
     }
   }
 
