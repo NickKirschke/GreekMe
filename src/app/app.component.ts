@@ -17,17 +17,19 @@ import { Subscription, timer } from 'rxjs';
   templateUrl: 'app.html',
 })
 export class MyApp {
-  rootPage:any = LoginPage;
+  rootPage: any = LoginPage;
   @ViewChild(Nav) nav: Nav;
   notificationSubscription: Subscription;
   showSplash = true;
-  constructor(private platform: Platform,
-              statusBar: StatusBar,
-              splashScreen: SplashScreen,
-              private fcm: FcmProvider,
-              afAuth: AngularFireAuth,
-              firebaseService: FirebaseServiceProvider,
-              userService: UserServiceProvider) {
+  constructor(
+    private platform: Platform,
+    statusBar: StatusBar,
+    splashScreen: SplashScreen,
+    private fcm: FcmProvider,
+    afAuth: AngularFireAuth,
+    firebaseService: FirebaseServiceProvider,
+    userService: UserServiceProvider,
+  ) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
@@ -35,36 +37,37 @@ export class MyApp {
       splashScreen.hide();
       // timer(2000).subscribe(() => this.showSplash = false);
       this.notificationSubscription = new Subscription();
-          // If user is logged in retrieve uid then access user info from db..
-      afAuth.authState.subscribe((data) => {
+      // If user is logged in retrieve uid then access user info from db..
+      afAuth.authState.subscribe(data => {
         if (data) {
-          firebaseService.getUserDetails(data.uid)
-            .then(async () => {
-              try {
-                if (this.platform.is('cordova')) {
-                  console.log('cordova');
-                  await this.fcm.getToken();
-                  this.notificationSubscription = this.fcm.listenToNotifications().pipe(
-                  tap((notification) => {
-                    const aNotification = {
-                      name: notification.name,
-                      key: notification.key,
-                      contentType: notification.contentType,
-                      date: notification.date,
-                      text: notification.message,
-                      avatarUrl: notification.avatarUrl,
-                      uid: notification.uid,
-                    } as Post;
-                    userService.updateNotifications(notification.key, aNotification);
-                  }),
+          firebaseService.getUserDetails(data.uid).then(async () => {
+            try {
+              if (this.platform.is('cordova')) {
+                console.log('cordova');
+                await this.fcm.getToken();
+                this.notificationSubscription = this.fcm
+                  .listenToNotifications()
+                  .pipe(
+                    tap(notification => {
+                      const aNotification = {
+                        name: notification.name,
+                        key: notification.key,
+                        contentType: notification.contentType,
+                        date: notification.date,
+                        text: notification.message,
+                        avatarUrl: notification.avatarUrl,
+                        uid: notification.uid,
+                      } as Post;
+                      userService.updateNotifications(notification.key, aNotification);
+                    }),
                   )
                   .subscribe();
-                }
-              } catch (e) {
-                console.log(e);
               }
-              this.nav.setRoot(TabsControllerPage);
-            });
+            } catch (e) {
+              console.log(e);
+            }
+            this.nav.setRoot(TabsControllerPage);
+          });
         } else {
           if (this.platform.is('cordova')) {
             this.notificationSubscription.unsubscribe();
