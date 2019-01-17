@@ -9,7 +9,8 @@
     "lint": "ionic-app-scripts lint",
     "ionic:build": "ionic-app-scripts build",
     "ionic:serve": "ionic-app-scripts serve",
-    "buildFunctions": "./node_modules/.bin/tslint -p tslint.json && ./node_modules/.bin/tsc"
+    "buildFunctions": "./node_modules/.bin/tslint -p tslint.json && ./node_modules/.bin/tsc",
+    "build": "ionic build"
   },
   "dependencies": {
     "@angular/common": "7.1.0",
