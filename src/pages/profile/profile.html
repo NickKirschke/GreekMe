@@ -1,13 +1,11 @@
 <ion-header>
   <ion-navbar>
     <ion-buttons start>
-      <button *ngIf="isUser" ion-button icon-only id="notifications">
-        <ion-icon name="notifications-outline"></ion-icon>
+      <button *ngIf="isUser" ion-button icon-only id="notifications" (click)="goToNotifications()">
+        <ion-icon [name]="notificationsIcon"></ion-icon>
       </button>
     </ion-buttons>
-    <ion-title>
-      {{user.name}}
-    </ion-title>
+    <ion-title> {{ user.name }} </ion-title>
     <ion-buttons end>
       <button *ngIf="isUser" ion-button icon-only (click)="presentPopover($event)" id="settings">
         <ion-icon name="settings" outline></ion-icon>
@@ -20,31 +18,23 @@
     <ion-row>
       <ion-col col-12>
         <div class="profile-image">
-          <img id="profilePicture" [src]="avatar" id="profile-picture"/>
+          <img id="profilePicture" [src]="avatar" id="profile-picture" />
         </div>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col col-12>
-        <h6 class="role" id="user-role">{{user.role}}</h6>
+        <h6 class="role" id="user-role">{{ user.role }}</h6>
         <div>
-          <p class="bio" id="user-bio">
-            {{user.bio}}
-          </p>
+          <p class="bio" id="user-bio">{{ user.bio }}</p>
         </div>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-segment [(ngModel)]="profileContent">
-        <ion-segment-button value="posts" id="user-posts">
-          Posts
-        </ion-segment-button>
-        <ion-segment-button value="eventsAttending" id="user-events">
-          Events
-        </ion-segment-button>
-        <ion-segment-button value="photos" id="user-photots">
-          Photos
-        </ion-segment-button>
+        <ion-segment-button value="posts" id="user-posts"> Posts </ion-segment-button>
+        <ion-segment-button value="eventsAttending" id="user-events"> Events </ion-segment-button>
+        <ion-segment-button value="photos" id="user-photots"> Photos </ion-segment-button>
       </ion-segment>
     </ion-row>
     <div [ngSwitch]="profileContent">
@@ -53,8 +43,14 @@
           You have not posted yet!
         </p>
         <ion-list class="pepSwitcher">
-          <post-row text-wrap *ngFor="let item of postItems | iterable; let i = index; trackBy: trackByFn" class="chat-boxes" [post]="item.key"
-            [user]="user" [userLikeItems]="userLikeItems"></post-row>
+          <post-row
+            text-wrap
+            *ngFor="let item of (postItems | iterable); let i = index; trackBy: trackByFn"
+            class="chat-boxes"
+            [post]="item.key"
+            [user]="user"
+            [userLikeItems]="userLikeItems"
+          ></post-row>
         </ion-list>
       </div>
       <div *ngSwitchCase="'eventsAttending'">
@@ -63,13 +59,20 @@
         </p>
 
         <ion-list no-lines class="pepSwitcher">
-          <button ion-item text-wrap *ngFor="let item of eventItems |  iterable" (click)="goToEvent(item.key.key)">
-            <h2>{{item.key.name}}</h2>
-            <h3>Happening on: {{item.key.date | amDateFormat: 'LL'}}</h3>
+          <button
+            ion-item
+            text-wrap
+            *ngFor="let item of (eventItems | iterable)"
+            (click)="goToEvent(item.key.key)"
+          >
+            <h2>{{ item.key.name }}</h2>
+            <h3>Happening on: {{ item.key.date | amDateFormat: 'LL' }}</h3>
           </button>
         </ion-list>
       </div>
-      <p *ngSwitchCase="'photos'" class="emptyMessage" id="empty-photos">There are no posted photos</p>
+      <p *ngSwitchCase="'photos'" class="emptyMessage" id="empty-photos">
+        There are no posted photos
+      </p>
     </div>
   </ion-grid>
 </ion-content>

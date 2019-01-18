@@ -6,7 +6,9 @@ import { NavController } from 'ionic-angular';
 import { ProfilePage } from '../../pages/profile/profile';
 import { ThreadPage } from '../../pages/thread/thread';
 import { FirebaseServiceProvider } from '../../providers/firebaseService/firebaseService';
+
 import app from 'firebase/app';
+import { GlobalsProvider } from '../../providers/globals/globals';
 
 @Component({
   selector: 'post-row',
@@ -18,9 +20,15 @@ export class PostRowComponent {
   @Input('userLikeItems') userLikeItems: Set<string> = new Set<string>();
   @Input('showComments') showComments: boolean = true;
   @Input('showLikes') showLikes: boolean = true;
-  avatar: string = '';
+  avatar: string;
   firstLoad: boolean = true;
-  constructor(public navCtrl: NavController, private firebaseService: FirebaseServiceProvider) {}
+  constructor(
+    public navCtrl: NavController,
+    private firebaseService: FirebaseServiceProvider,
+    globalsProvider: GlobalsProvider,
+  ) {
+    this.avatar = globalsProvider.DEFAULT_IMAGE_PATH;
+  }
 
   ngOnInit() {
     this.setupAvatar();
@@ -29,11 +37,7 @@ export class PostRowComponent {
 
   async setupAvatar() {
     // Avatar url === default, use it, otherwise fetch it from storage
-    if (this.post.avatarUrl === '../../assets/icon/GMIcon.png') {
-      this.avatar =
-        'https://firebasestorage.googleapis.com/v0/b/greekme-7475a.appspot.com/o/' +
-        'GM_Default.png?alt=media&token=6bc30d40-17a2-40bb-9af7-edff78112780';
-    } else {
+    if (this.post.avatarUrl !== this.avatar) {
       const path = `${this.user.organizationId}/profilePhotos/${this.post.uid}`;
       this.avatar = await app
         .storage()

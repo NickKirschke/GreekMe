@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { NavController, NavParams, ToastController, ModalController } from 'ionic-angular';
 import { AngularFireList, AngularFireObject } from 'angularfire2/database';
 import { FirebaseServiceProvider } from '../../providers/firebaseService/firebaseService';
-import { AngularFireAuth } from 'angularfire2/auth';
 import { User } from '../../models/user';
 import { UserServiceProvider } from '../../providers/userService/userService';
 import * as firebase from 'firebase/app';
@@ -12,6 +11,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs';
 import { CreateEventPage } from '../createEvent/createEvent';
 import * as moment from 'moment';
+import { GlobalsProvider } from '../../providers/globals/globals';
 
 @Component({
   selector: 'page-eventView',
@@ -49,6 +49,7 @@ export class EventViewPage {
     public navParams: NavParams,
     public toastCtrl: ToastController,
     private modalController: ModalController,
+    private globalsProvider: GlobalsProvider,
   ) {}
 
   async dataSetup() {
@@ -81,10 +82,9 @@ export class EventViewPage {
           if (action.type === 'value' || action.type === 'child_added') {
             const vals = action.payload.val();
             let avatar;
-            if (vals.avatarUrl === '../../assets/icon/GMIcon.png') {
-              avatar = `https://firebasestorage.googleapis.com/v0/b/greekme-7475a.appspot.com/o/GM_
-              Default.png?alt=media&token=6bc30d40-17a2-40bb-9af7-edff78112780`;
-            } else {
+
+            // Avatar url === default, use it, otherwise fetch it from storage
+            if (vals.avatarUrl !== this.globalsProvider.DEFAULT_IMAGE_PATH) {
               const path = `${this.user.organizationId}/profilePhotos/${action.payload.key}`;
               avatar = await firebase
                 .storage()

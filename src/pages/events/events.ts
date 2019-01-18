@@ -13,6 +13,7 @@ import * as moment from 'moment';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs';
 import { Event, Repeat } from '../../models/event';
+import { NotificationsPage } from '../notifications/notifications';
 
 @Component({
   selector: 'page-events',
@@ -66,6 +67,11 @@ export class EventsPage {
       eventId: key,
     };
     this.navCtrl.push(EventViewPage, data);
+  }
+
+  goToNotifications() {
+    const myModal = this.modalController.create(NotificationsPage);
+    myModal.present();
   }
 
   buildSubscription() {

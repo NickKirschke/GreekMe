@@ -38,6 +38,7 @@ import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { SettingsPage } from '../pages/settings/settings';
 import { NotificationsPage } from '../pages/notifications/notifications';
 import { NotificationRowComponent } from '../components/notification-row/notification-row';
+import { GlobalsProvider } from '../providers/globals/globals';
 @NgModule({
   declarations: [
     MyApp,
@@ -105,6 +106,7 @@ import { NotificationRowComponent } from '../components/notification-row/notific
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     FirebaseServiceProvider,
     UserServiceProvider,
+    GlobalsProvider,
   ],
 })
 export class AppModule {}
