@@ -5,11 +5,15 @@
         <ion-icon [name]="notificationsIcon" id="notifications"></ion-icon>
       </button>
     </ion-buttons>
-    <ion-title>
-      GreekMe
-    </ion-title>
+    <ion-title> GreekMe </ion-title>
     <ion-buttons end>
-      <button ion-button icon-only *ngIf="validRole" (click)="goToComposeBroadcast()" id="compose-post">
+      <button
+        ion-button
+        icon-only
+        *ngIf="validRole"
+        (click)="goToComposeBroadcast()"
+        id="compose-post"
+      >
         <ion-icon name="add"></ion-icon>
       </button>
     </ion-buttons>
@@ -17,12 +21,17 @@
 </ion-header>
 
 <ion-content>
-  <div>
-    <img class="headerPicture" [src]="image" id="organization-image"/>
-  </div>
+  <div><img class="headerPicture" [src]="image" id="organization-image" /></div>
   <ion-list>
-    <post-row text-wrap *ngFor="let item of broadcastItems | iterable; let i = index; trackBy: trackByFn" class="chat-boxes"
-     [post]="item.key" [user]="user" [userLikeItems]="userLikeItems" #PostRow ></post-row>
+    <post-row
+      text-wrap
+      *ngFor="let item of (broadcastItems | iterable); let i = index; trackBy: trackByFn"
+      class="chat-boxes"
+      [post]="item.key"
+      [user]="user"
+      [userLikeItems]="userLikeItems"
+      #PostRow
+    ></post-row>
   </ion-list>
   <!-- <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
     <ion-infinite-scroll-content></ion-infinite-scroll-content>

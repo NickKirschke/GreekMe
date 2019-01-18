@@ -5,6 +5,7 @@ import { User } from '../../models/user';
 import { Post } from '../../models/post';
 import { UserServiceProvider } from '../../providers/userService/userService';
 import app from 'firebase/app';
+import { GlobalsProvider } from '../../providers/globals/globals';
 
 @Component({
   selector: 'notification-row',
@@ -14,24 +15,26 @@ export class NotificationRowComponent {
   @Input('user') user: User;
   @Input('notification') notification: Post;
   avatar = '';
-  constructor(public navCtrl: NavController, private userService: UserServiceProvider) {}
+  constructor(
+    public navCtrl: NavController,
+    private userService: UserServiceProvider,
+    globalsProvider: GlobalsProvider,
+  ) {
+    this.avatar = globalsProvider.DEFAULT_IMAGE_PATH;
+  }
 
   ngOnInit() {
     this.setupAvatar();
   }
 
   async setupAvatar() {
-    this.avatar =
-      'https://firebasestorage.googleapis.com/v0/b/greekme-7475a.appspot.com/o/' +
-      'GM_Default.png?alt=media&token=6bc30d40-17a2-40bb-9af7-edff78112780';
     // Avatar url === default, use it, otherwise fetch it from storage
-    if (this.notification.avatarUrl !== '../../assets/icon/GMIcon.png') {
+    if (this.notification.avatarUrl !== this.avatar) {
       const path = `${this.user.organizationId}/profilePhotos/${this.notification.uid}`;
-      const img = await app
+      this.avatar = await app
         .storage()
         .ref(path)
         .getDownloadURL();
-      this.avatar = img;
     }
   }
 

@@ -9,13 +9,18 @@ import { Post } from '../../models/post';
 import { Event } from '../../models/event';
 import { UserLike } from '../../models/userLike';
 import { Observable } from '@firebase/util';
+import { GlobalsProvider } from '../globals/globals';
 
 @Injectable()
 export class FirebaseServiceProvider {
   user: Observable<any>;
   firebaseStorage = app.storage();
   firebaseDb = app.database();
-  constructor(private afDB: AngularFireDatabase, private storage: Storage) {}
+  constructor(
+    private afDB: AngularFireDatabase,
+    private storage: Storage,
+    private globalsProvider: GlobalsProvider,
+  ) {}
   // Get organization's image
   getGreetingImage(organizationId: string) {
     return this.firebaseStorage
@@ -155,7 +160,7 @@ export class FirebaseServiceProvider {
       userDetails.bio =
         'A sample bio: Lorem ipsum dolor sit amet, consectetur adipiscing elit.' +
         'Sed placerat nulla sit amet tempor viverra.';
-      userDetails.avatarUrl = '../../assets/icon/GMIcon.png';
+      userDetails.avatarUrl = this.globalsProvider.DEFAULT_IMAGE_PATH;
       this.afDB.object(`/users/${userDetails.uid}`).set(userDetails);
       await this.storage.set('user', JSON.stringify(userDetails));
       resolve(true);

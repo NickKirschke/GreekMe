@@ -17,6 +17,8 @@ import { Subscription } from 'rxjs';
 import * as firebase from 'firebase/app';
 import { Event } from '../../models/event';
 import { SettingsPage } from '../settings/settings';
+import { NotificationsPage } from '../notifications/notifications';
+import { GlobalsProvider } from '../../providers/globals/globals';
 @Component({
   selector: 'page-profile',
   templateUrl: 'profile.html',
@@ -50,7 +52,10 @@ export class ProfilePage {
     private storage: Storage,
     private modal: ModalController,
     private app: App,
-  ) {}
+    globalsProvider: GlobalsProvider,
+  ) {
+    this.avatar = globalsProvider.DEFAULT_IMAGE_PATH;
+  }
 
   ionViewWillLoad() {
     this.dataSetup();
@@ -83,11 +88,7 @@ export class ProfilePage {
           };
         });
       });
-      if (this.user.avatarUrl === '../../assets/icon/GMIcon.png') {
-        this.avatar =
-          'https://firebasestorage.googleapis.com/v0/b/greekme-7475a.appspot.com/o/' +
-          'GM_Default.png?alt=media&token=6bc30d40-17a2-40bb-9af7-edff78112780';
-      } else {
+      if (this.user.avatarUrl !== this.avatar) {
         const avatarPath = `${this.user.organizationId}/profilePhotos/${this.user.uid}`;
         this.avatar = await firebase
           .storage()
@@ -255,6 +256,11 @@ export class ProfilePage {
 
   trackByFn(index: number, item: Post): string {
     return item.key;
+  }
+
+  goToNotifications() {
+    const myModal = this.modal.create(NotificationsPage);
+    myModal.present();
   }
 
   logout(): void {
