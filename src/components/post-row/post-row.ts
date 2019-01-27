@@ -9,6 +9,7 @@ import { FirebaseServiceProvider } from '../../providers/firebaseService/firebas
 
 import app from 'firebase/app';
 import { GlobalsProvider } from '../../providers/globals/globals';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'post-row',
@@ -21,7 +22,9 @@ export class PostRowComponent {
   @Input('showComments') showComments: boolean = true;
   @Input('showLikes') showLikes: boolean = true;
   avatar: string;
+  avatarSubscription: Subscription;
   firstLoad: boolean = true;
+
   constructor(
     public navCtrl: NavController,
     private firebaseService: FirebaseServiceProvider,
@@ -35,6 +38,22 @@ export class PostRowComponent {
     this.avatarWatch();
   }
 
+  ionViewWillUnload() {
+    this.destroySubscriptions();
+  }
+
+  destroySubscriptions() {
+    this.avatarSubscription.unsubscribe();
+  }
+
+  listExistsAndValidLength(aList: object) {
+    return aList && this.getListLength(aList) > 0;
+  }
+
+  getListLength(aList: object) {
+    return Object.keys(aList).length;
+  }
+
   async setupAvatar() {
     // Avatar url === default, use it, otherwise fetch it from storage
     if (this.post.avatarUrl !== this.avatar) {
@@ -46,10 +65,12 @@ export class PostRowComponent {
     }
   }
 
+  getIconName() {}
+
   avatarWatch() {
     // References the avatarUrl of the post's creator, any changes it will refetch the downloadlink
     const postAvatarRef = this.firebaseService.getUserAvatar(this.post.uid);
-    postAvatarRef.snapshotChanges().subscribe(action => {
+    this.avatarSubscription = postAvatarRef.snapshotChanges().subscribe(action => {
       if (action.type === 'value' && !this.firstLoad) {
         this.setupAvatar();
       }
@@ -64,44 +85,50 @@ export class PostRowComponent {
   }
 
   doLike() {
-    this.post.iconName = this.post.iconName === 'heart-outline' ? 'heart' : 'heart-outline';
+    const isLiked = this.userLikeItems.has(this.post.key);
     const updates = {};
-    // Paths for the updates regarding data that are push out upon like
+    const postToSubmit = { ...this.post };
     const postLikeListPath = `/organization/${this.user.organizationId}/${this.post.contentType}/${
       this.post.key
     }/likeList/${this.user.uid}`;
     const userLikeListPath = `/users/${this.user.uid}/likeList/${this.post.key}`;
-    const numOfLikePath = `/organization/${this.user.organizationId}/${this.post.contentType}/${
-      this.post.key
-    }/numOfLikes/`;
-    // TODO Post list acting weird with the liking
-    // const ownerPostPath = `/users/${this.post.uid}/postList/${this.post.key}`;
+    const ownerPostPath = `/users/${this.post.uid}/postList/${this.post.key}`;
 
-    const isLiked = this.userLikeItems.has(this.post.key);
+    this.post.iconName = isLiked ? 'heart-outline' : 'heart';
+    postToSubmit.iconName = null;
     if (isLiked) {
       // Do unlike
-      this.post.numOfLikes -= 1;
       updates[postLikeListPath] = null;
-      updates[userLikeListPath] = null;
-      updates[numOfLikePath] = this.post.numOfLikes;
+      postToSubmit.likeList[this.user.uid] = null;
+      app
+        .database()
+        .ref(userLikeListPath)
+        .set(null);
     } else {
       // Do like
-      // This is the object stored on the post like list
-      this.post.numOfLikes += 1;
+      // This is the object stored on the post's like list
       const userLikeObj = {
         name: this.user.name,
         key: this.user.uid,
       } as UserLike;
       // This is the object stored on the user's like list
       const postLikeObj = {
-        name: this.post.text,
+        text: this.post.text,
         key: this.post.key,
       };
+      if (postToSubmit.likeList) {
+        postToSubmit.likeList[this.user.uid] = userLikeObj;
+      } else {
+        postToSubmit.likeList = {};
+        postToSubmit.likeList[this.user.uid] = userLikeObj;
+      }
       updates[postLikeListPath] = userLikeObj;
-      updates[userLikeListPath] = postLikeObj;
-      updates[numOfLikePath] = this.post.numOfLikes;
+      app
+        .database()
+        .ref(userLikeListPath)
+        .set(postLikeObj);
     }
-    // TODO updates[ownerPostPath] = this.post;
+    updates[ownerPostPath] = postToSubmit;
     app
       .database()
       .ref()

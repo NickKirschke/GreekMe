@@ -54,7 +54,7 @@ export class GreekMePage {
       this.image = imageGrab ? imageGrab : 'assets/img/8d9YHCdTlOXCBqO65zNP_GM_Master01.png';
       this.buildSubscriptions();
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   }
 
@@ -79,7 +79,6 @@ export class GreekMePage {
       }
     });
 
-    // Broadcast data is stored in a Map
     this.broadcastItemSubscription = this.broadcastItemRef.stateChanges().subscribe(action => {
       if (action.type === 'value' || action.type === 'child_added') {
         broadcast = {
@@ -90,17 +89,24 @@ export class GreekMePage {
         this.broadcastItems.set(broadcast.key, broadcast);
         broadcastCounter += 1;
       } else if (action.type === 'child_changed') {
+        const iconName = this.userLikeItems.has(action.key) ? 'heart' : 'heart-outline';
         const previousBroadcast = this.broadcastItems.get(action.key);
-        const expectedIconName = previousBroadcast.iconName;
         // Construct the replacement broadcast
         broadcast = {
           key: action.payload.key,
           ...action.payload.val(),
-          iconName: expectedIconName,
+          iconName,
         };
-        Object.keys(this.broadcastItems.get(broadcast.key)).forEach(aProperty => {
-          // If the value of the new broadcast is different, replace it on the previous one
-          if (previousBroadcast[aProperty] !== broadcast[aProperty]) {
+
+        Object.keys(previousBroadcast).forEach(aProperty => {
+          if (!broadcast[aProperty]) {
+            previousBroadcast[aProperty] = null;
+          } else if (previousBroadcast[aProperty] !== broadcast[aProperty]) {
+            previousBroadcast[aProperty] = broadcast[aProperty];
+          }
+        });
+        Object.keys(broadcast).forEach(aProperty => {
+          if (!previousBroadcast[aProperty]) {
             previousBroadcast[aProperty] = broadcast[aProperty];
           }
         });

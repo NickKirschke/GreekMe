@@ -72,24 +72,29 @@ export class FirebaseServiceProvider {
   }
 
   addToBroadcastList(broadcast: Post, organizationId: string) {
-    // console.log(broadcast);
     return this.afDB.list(`/organization/${organizationId}/broadcast/`).push(broadcast).key;
   }
 
-  // Adds a comment to a broadcast commentList
+  // Adds a comment to a broadcast commentList.
   addCommentToBroadcast(broadcast: Post, organizationId: string, key: string) {
-    // console.log(broadcast);
-    return this.afDB
+    const commentKey = this.afDB
       .list(`/organization/${organizationId}/broadcast/${key}/commentList/`)
       .push(broadcast).key;
+    this.firebaseDb
+      .ref(`users/${broadcast.uid}/postList/${key}/commentList/${commentKey}`)
+      .set(broadcast);
+    return commentKey;
   }
 
   // Adds a comment to a message commentList
   addCommentToMessage(broadcast: Post, organizationId: string, key: string) {
-    // console.log(broadcast);
-    return this.afDB
+    const commentKey = this.afDB
       .list(`/organization/${organizationId}/message/${key}/commentList/`)
       .push(broadcast).key;
+    this.firebaseDb
+      .ref(`users/${broadcast.uid}/postList/${key}/commentList/${commentKey}`)
+      .set(broadcast);
+    return commentKey;
   }
 
   // Returns the feed list for the organization
@@ -157,9 +162,6 @@ export class FirebaseServiceProvider {
   // Add new user details to firebase storage
   addUserDetails(userDetails: User) {
     return new Promise(async resolve => {
-      userDetails.bio =
-        'A sample bio: Lorem ipsum dolor sit amet, consectetur adipiscing elit.' +
-        'Sed placerat nulla sit amet tempor viverra.';
       userDetails.avatarUrl = this.globalsProvider.DEFAULT_IMAGE_PATH;
       this.afDB.object(`/users/${userDetails.uid}`).set(userDetails);
       await this.storage.set('user', JSON.stringify(userDetails));

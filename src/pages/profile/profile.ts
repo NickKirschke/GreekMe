@@ -19,6 +19,7 @@ import { Event } from '../../models/event';
 import { SettingsPage } from '../settings/settings';
 import { NotificationsPage } from '../notifications/notifications';
 import { GlobalsProvider } from '../../providers/globals/globals';
+
 @Component({
   selector: 'page-profile',
   templateUrl: 'profile.html',
@@ -103,7 +104,7 @@ export class ProfilePage {
   }
 
   buildSubscriptions() {
-    let broadcast: Post;
+    let post: Post;
     let anEvent: Event;
     // Subscriptions for handling the user's posts
     // Broadcast data is stored in a Map
@@ -117,25 +118,32 @@ export class ProfilePage {
 
     this.postItemSubscription = this.postItemRef.stateChanges().subscribe(action => {
       if (action.type === 'value' || action.type === 'child_added') {
-        broadcast = {
+        post = {
           key: action.payload.key,
           ...action.payload.val(),
           iconName: this.userLikeItems.has(action.key) ? 'heart' : 'heart-outline',
         };
-        this.postItems.set(broadcast.key, broadcast);
+        this.postItems.set(post.key, post);
       } else if (action.type === 'child_changed') {
-        const expectedIconName = this.userLikeItems.has(action.key) ? 'heart-outline' : 'heart';
+        const iconName = this.userLikeItems.has(action.key) ? 'heart' : 'heart-outline';
+        const previousPost = this.postItems.get(action.key);
         // Construct the replacement broadcast
-        broadcast = {
+        post = {
           key: action.payload.key,
           ...action.payload.val(),
-          iconName: expectedIconName,
+          iconName,
         };
-        const previousBroadcast = this.postItems.get(broadcast.key);
-        Object.keys(this.postItems.get(broadcast.key)).forEach(aProperty => {
-          // If the value of the new broadcast is different, replace it on the previous one
-          if (previousBroadcast[aProperty] !== broadcast[aProperty]) {
-            previousBroadcast[aProperty] = broadcast[aProperty];
+
+        Object.keys(previousPost).forEach(aProperty => {
+          if (!post[aProperty]) {
+            previousPost[aProperty] = null;
+          } else if (previousPost[aProperty] !== post[aProperty]) {
+            previousPost[aProperty] = post[aProperty];
+          }
+        });
+        Object.keys(post).forEach(aProperty => {
+          if (!previousPost[aProperty]) {
+            previousPost[aProperty] = post[aProperty];
           }
         });
       }
@@ -175,7 +183,6 @@ export class ProfilePage {
         } else {
           this.notificationsIcon = 'notifications-outline';
         }
-        console.log(size);
       },
     });
   }
@@ -271,8 +278,8 @@ export class ProfilePage {
         this.storage.remove('user');
       })
       .catch(e => {
-        console.log(e);
-        console.log(e.message);
+        console.error(e);
+        console.error(e.message);
       });
   }
 }

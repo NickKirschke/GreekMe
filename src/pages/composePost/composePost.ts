@@ -58,8 +58,6 @@ export class ComposePostPage {
       tempPost.avatarUrl = this.user.avatarUrl;
       tempPost.uid = this.user.uid;
       tempPost.name = this.user.name;
-      tempPost.numOfComments = 0;
-      tempPost.numOfLikes = 0;
       tempPost.date = moment().toISOString();
       tempPost.contentType = this.contentType;
       if (this.contentType === ContentType.Broadcast) {

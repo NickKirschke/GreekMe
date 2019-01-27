@@ -74,16 +74,22 @@ export class FeedPage {
         this.messageItems.set(message.key, message);
       } else if (action.type === 'child_changed') {
         const previousMessage = this.messageItems.get(action.key);
-        const expectedIconName = previousMessage.iconName;
-        // Construct the replacement broadcast
+        const iconName = this.userLikeItems.has(action.key) ? 'heart' : 'heart-outline';
+        // Construct the replacement message
         message = {
           key: action.payload.key,
           ...action.payload.val(),
-          iconName: expectedIconName,
+          iconName,
         };
-        Object.keys(this.messageItems.get(message.key)).forEach(aProperty => {
-          // If the value of the new broadcast is different, replace it on the previous one
-          if (previousMessage[aProperty] !== message[aProperty]) {
+        Object.keys(previousMessage).forEach(aProperty => {
+          if (!message[aProperty]) {
+            previousMessage[aProperty] = null;
+          } else if (previousMessage[aProperty] !== message[aProperty]) {
+            previousMessage[aProperty] = message[aProperty];
+          }
+        });
+        Object.keys(message).forEach(aProperty => {
+          if (!previousMessage[aProperty]) {
             previousMessage[aProperty] = message[aProperty];
           }
         });
@@ -96,7 +102,6 @@ export class FeedPage {
         } else {
           this.notificationsIcon = 'notifications-outline';
         }
-        console.log(size);
       },
     });
   }

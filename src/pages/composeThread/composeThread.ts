@@ -39,39 +39,6 @@ export class ComposeThreadPage {
     this.user = userGrab as User;
   }
 
-  getNumOfComments() {
-    return new Promise(resolve => {
-      const numOfCommentsRef = app
-        .database()
-        .ref(
-          `/organization/${this.user.organizationId}/${this.contentType}/${
-            this.postKey
-          }/numOfComments/`,
-        );
-      numOfCommentsRef.on('value', snapshot => {
-        resolve(snapshot.val());
-      });
-    });
-  }
-
-  async updateUserPostListAndCommentNumber(tempPost: Post) {
-    let numOfComments;
-    numOfComments = await this.getNumOfComments();
-    const updates = {};
-    const path = `/organization/${this.user.organizationId}/${this.contentType}/${
-      this.postKey
-    }/numOfComments/`;
-    updates[path] = numOfComments + 1;
-    app
-      .database()
-      .ref()
-      .update(updates)
-      .then(() => {})
-      .catch(error => {
-        console.log(error);
-      });
-  }
-
   composeThread(tempPost: Post) {
     if (tempPost.text == null || tempPost.text === '') {
       this.error = 'Message cannot be blank!';
@@ -81,8 +48,6 @@ export class ComposeThreadPage {
       tempPost.uid = this.user.uid;
       tempPost.name = this.user.name;
       tempPost.date = moment().toISOString();
-      tempPost.numOfComments = 0;
-      tempPost.numOfLikes = 0;
       tempPost.contentType = ContentType.Thread;
       if (this.contentType === ContentType.Broadcast) {
         tempPost.key = this.firebaseService.addCommentToBroadcast(
@@ -98,7 +63,6 @@ export class ComposeThreadPage {
         );
       }
       if (tempPost.key) {
-        this.updateUserPostListAndCommentNumber(tempPost);
         this.view.dismiss();
       } else {
         // Add logging here
