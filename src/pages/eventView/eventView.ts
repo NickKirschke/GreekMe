@@ -150,7 +150,7 @@ export class EventViewPage {
           }/attendingList/${this.user.uid}`;
           const userAttendingPath = `/users/${this.user.uid}/eventsAttending/${this.eventId}`;
           updates[eventAttendingPath] = nameObj;
-          updates[`/users/${this.user.uid}/eventsAttending/${this.eventId}`] = eventObj;
+          updates[userAttendingPath] = eventObj;
           firebase
             .database()
             .ref()
