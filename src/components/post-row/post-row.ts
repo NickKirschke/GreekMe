@@ -55,27 +55,21 @@ export class PostRowComponent {
   }
 
   async setupAvatar() {
-    // Avatar url === default, use it, otherwise fetch it from storage
-    if (this.post.avatarUrl !== this.avatar) {
-      const path = `${this.user.organizationId}/profilePhotos/${this.post.uid}`;
-      this.avatar = await app
-        .storage()
-        .ref(path)
-        .getDownloadURL();
-    }
+    const path = `${this.user.organizationId}/profilePhotos/${this.post.uid}`;
+    this.avatar = await app
+      .storage()
+      .ref(path)
+      .getDownloadURL();
   }
-
-  getIconName() {}
 
   avatarWatch() {
     // References the avatarUrl of the post's creator, any changes it will refetch the downloadlink
     const postAvatarRef = this.firebaseService.getUserAvatar(this.post.uid);
-    this.avatarSubscription = postAvatarRef.snapshotChanges().subscribe(action => {
-      if (action.type === 'value' && !this.firstLoad) {
+    this.avatarSubscription = postAvatarRef.valueChanges().subscribe(avatarUrl => {
+      if (avatarUrl !== this.avatar) {
         this.setupAvatar();
       }
     });
-    this.firstLoad = false;
   }
 
   goToProfile() {
