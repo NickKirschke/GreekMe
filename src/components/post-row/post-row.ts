@@ -10,6 +10,7 @@ import { FirebaseServiceProvider } from '../../providers/firebaseService/firebas
 import app from 'firebase/app';
 import { GlobalsProvider } from '../../providers/globals/globals';
 import { Subscription } from 'rxjs';
+import { UserServiceProvider } from '../../providers/userService/userService';
 
 @Component({
   selector: 'post-row',
@@ -21,6 +22,7 @@ export class PostRowComponent {
   @Input('userLikeItems') userLikeItems: Set<string> = new Set<string>();
   @Input('showComments') showComments: boolean = true;
   @Input('showLikes') showLikes: boolean = true;
+  @Input('deleteable') deleteable: boolean = false;
   avatar: string;
   avatarSubscription: Subscription;
   firstLoad: boolean = true;
@@ -29,6 +31,7 @@ export class PostRowComponent {
     public navCtrl: NavController,
     private firebaseService: FirebaseServiceProvider,
     globalsProvider: GlobalsProvider,
+    private userService: UserServiceProvider,
   ) {
     this.avatar = globalsProvider.DEFAULT_IMAGE_PATH;
   }
@@ -140,5 +143,9 @@ export class PostRowComponent {
       post: aPost,
     };
     this.navCtrl.push(ThreadPage, data);
+  }
+
+  deleteNotification() {
+    this.userService.removeNotification(this.post.key);
   }
 }

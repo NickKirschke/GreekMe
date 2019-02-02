@@ -1,26 +1,33 @@
-<ion-item text-wrap class="chat-boxes">
-  <ion-avatar (click)="goToProfile()" item-start> <img [src]="avatar" /> </ion-avatar>
-  <h2 style="margin-left: -1px;">{{ this.post.name }}</h2>
-  <p class="width:auto" style="color:black">{{ this.post.text }}</p>
-  <ion-note style="position: absolute;top:0;">{{ this.post.date | amTimeAgo }}</ion-note>
-  <ion-row class="comments">
-    <ion-col col-4>
-      <label *ngIf="showComments" (click)="itemSelected()">Comments</label>
-      <ion-badge *ngIf="listExistsAndValidLength(this.post.commentList)" class="comment-badge">{{
-        getListLength(this.post.commentList)
-      }}</ion-badge>
-    </ion-col>
-    <ion-col col-4>
-      <ion-icon
-        *ngIf="showLikes"
-        [name]="this.post.iconName"
-        [ngClass]="{ redHeart: this.post.iconName === 'heart' }"
-        (click)="doLike()"
-        class="like-icon"
-      ></ion-icon>
-      <ion-badge *ngIf="listExistsAndValidLength(this.post.likeList)" class="like-badge"
-        >{{ getListLength(this.post.likeList) }}
-      </ion-badge>
-    </ion-col>
-  </ion-row>
-</ion-item>
+<ion-item-sliding>
+  <ion-item text-wrap class="chat-boxes">
+    <ion-avatar (click)="goToProfile()" item-start> <img [src]="avatar" /> </ion-avatar>
+    <h2 style="margin-left: -1px;">{{ this.post.name }}</h2>
+    <p class="width:auto" style="color:black">{{ this.post.text }}</p>
+    <ion-note style="position: absolute;top:0;">{{ this.post.date | amTimeAgo }}</ion-note>
+    <ion-row class="comments" *ngIf="showComments || showLikes">
+      <ion-col col-4>
+        <label *ngIf="showComments" (click)="itemSelected()">Comments</label>
+        <ion-badge *ngIf="listExistsAndValidLength(this.post.commentList)" class="comment-badge">{{
+          getListLength(this.post.commentList)
+        }}</ion-badge>
+      </ion-col>
+      <ion-col col-4>
+        <ion-icon
+          *ngIf="showLikes"
+          [name]="this.post.iconName"
+          [ngClass]="{ redHeart: this.post.iconName === 'heart' }"
+          (click)="doLike()"
+          class="like-icon"
+        ></ion-icon>
+        <ion-badge *ngIf="listExistsAndValidLength(this.post.likeList)" class="like-badge"
+          >{{ getListLength(this.post.likeList) }}
+        </ion-badge>
+      </ion-col>
+    </ion-row>
+  </ion-item>
+  <ion-item-options side="right" *ngIf="deleteable">
+    <button ion-button (click)="deleteNotification()" color="danger">
+      <ion-icon name="trash"></ion-icon>Delete
+    </button>
+  </ion-item-options>
+</ion-item-sliding>
