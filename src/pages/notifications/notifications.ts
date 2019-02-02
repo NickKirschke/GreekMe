@@ -22,14 +22,10 @@ export class NotificationsPage {
     this.dataSetup();
   }
 
-  ionViewWillLoad() {
-    this.notifications = this.userService.notifications;
-    console.log(this.notifications);
-  }
-
   async dataSetup() {
     const userGrab = await this.userService.currentUserInfo();
     this.user = userGrab as User;
+    this.notifications = this.userService.notifications;
   }
 
   trackByFn(index: number, item: any) {
